@@ -1,0 +1,105 @@
+<zk>
+	<script type="text/javascript"><![CDATA[
+		var oldUpdateDrag = zk.Draggable.prototype._updateDrag;
+		zk.afterLoad("zk", function () {
+			zk.Draggable.prototype._updateDrag = function (pt, evt) {
+				// call original _updateDrag method
+				oldUpdateDrag.apply(this, arguments);
+
+				var control = this.control, // original listitem
+					node = this.node; // cloned listitem, the drag node
+				if (control.$instanceof(zul.sel.Listitem)) {
+					// get original listbox
+					var listbox = control.getListbox(),
+						dir;
+					// start scroll if has a direction,
+					// or clear the scroll timer 
+					if (dir = shouldScroll(jq(node), jq(listbox)))
+						startScroll(dir, listbox);
+					else
+						clearScroll(listbox);
+				}
+			}
+		});
+		// return the scroll direction if have to scroll,
+		// return null otherwise.
+		function shouldScroll ($node, $listbox) {
+			var top = $listbox.offset().top,
+				itemTop = $node.offset().top;
+			if (itemTop < top)
+				return 'up';
+			else {
+				var bottom = top + $listbox.height(),
+					itemBottom = itemTop + $node.height();
+				return itemBottom > bottom? 'down' : null;
+			}
+		}
+		// create scroll timer with the specified direction
+		function startScroll (dir, listbox) {
+			if (!listbox._scrollStarted)
+				listbox._scrollStarted = setInterval(function () {
+					var body = listbox.$n('body'),
+						oldValue = body.scrollTop;
+					body.scrollTop += dir == 'down'? 20 : (-20);
+					// can not scroll any more
+					if (body.scrollTop == oldValue)
+						clearScroll(listbox);
+				}, 50);
+		}
+		// clear scroll timer
+		function clearScroll(listbox) {
+			if (listbox._scrollStarted) {
+				clearInterval(listbox._scrollStarted);
+				listbox._scrollStarted = null;
+			}
+		}
+	]]></script>
+	<div height="15px" />
+	<listbox model="${model}" height="120px" width="200px" droppable="true">
+		<listitem draggable="true" droppable="true">
+			<listcell label="Item 1" />
+		</listitem>
+		<listitem draggable="true" droppable="true">
+			<listcell label="Item 2" />
+		</listitem>
+		<listitem draggable="true" droppable="true">
+			<listcell label="Item 3" />
+		</listitem>
+		<listitem draggable="true" droppable="true">
+			<listcell label="Item 4" />
+		</listitem>
+		<listitem draggable="true" droppable="true">
+			<listcell label="Item 5" />
+		</listitem>
+		<listitem draggable="true" droppable="true">
+			<listcell label="Item 6" />
+		</listitem>
+		<listitem draggable="true" droppable="true">
+			<listcell label="Item 7" />
+		</listitem>
+		<listitem draggable="true" droppable="true">
+			<listcell label="Item 8" />
+		</listitem>
+		<listitem draggable="true" droppable="true">
+			<listcell label="Item 9" />
+		</listitem>
+		<listitem draggable="true" droppable="true">
+			<listcell label="Item 10" />
+		</listitem>
+		<listitem draggable="true" droppable="true">
+			<listcell label="Item 11" />
+		</listitem>
+		<listitem draggable="true" droppable="true">
+			<listcell label="Item 12" />
+		</listitem>
+		<listitem draggable="true" droppable="true">
+			<listcell label="Item 13" />
+		</listitem>
+		<listitem draggable="true" droppable="true">
+			<listcell label="Item 14" />
+		</listitem>
+		<listitem draggable="true" droppable="true">
+			<listcell label="Item 15" />
+		</listitem>
+	</listbox>
+</zk>
