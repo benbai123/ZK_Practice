@@ -1,0 +1,103 @@
+<zk>
+	<script type="text/javascript"><![CDATA[
+		zk.afterLoad("zk", function () {
+			// store the old ghost and getDrop function
+			var oldGhost = zk.DnD.ghost;
+			var oldGetDrop = zk.DnD.getDrop;
+			zk.DnD.ghost = function (drag, ofs, msg) {
+				if (jq(drag.node).hasClass('z-window-embedded')) {
+					// the dgelm is the drag node follows the mouse cursor,
+					var dgelm = document.createElement("div");
+					dgelm.id = "zk_ddghost";
+			
+					zk.copy(dgelm.style, {
+						position: "absolute", left: ofs[0] + "px",
+						top: ofs[1] + "px"
+					});
+					
+					dgelm.appendChild(getVisualGhost (drag, ofs));
+					jq(dgelm).addClass("z-drag-ghost");
+					document.body.appendChild(dgelm);
+					return dgelm;
+				} else // call old ghost if not embedded window
+					return oldGhost.apply(this, arguments);
+			};
+			// called while end drag
+			zk.DnD.getDrop = function (drag, pt, evt) {
+				if (jq(drag.node).hasClass('z-window-embedded')) {
+					restoreWindow(drag, pt);
+				}
+				// call old getDrop if not embedded window
+				return oldGetDrop.apply(this, arguments);
+			};
+		});
+		// get the visual ghost node
+		function getVisualGhost (drag, ofs) {
+			// span is a child with position=relative in drag node,
+			// node is a clone of dragged widget,
+			// with position=absolute in span
+			var span = document.createElement("span"),
+				wgt = drag.node,
+				node = jq(wgt).clone()[0],
+				nstyle = node.style;
+
+			// need a relative positioned span
+			// to absolute position the cloned window
+			span.style.position = 'relative';
+			nstyle.position = 'absolute';
+			nstyle.left = wgt.offsetLeft - ofs[0] + 'px';
+			nstyle.top = wgt.offsetTop - ofs[1] + 'px';
+
+			// save the diffX and diffY for end drag
+			// for update the position in restoreWindow
+			wgt.diffX = wgt.offsetLeft - ofs[0]+7;
+			wgt.diffY = wgt.offsetTop - ofs[1]+5;
+
+			// hide the original window
+			wgt.style.display = 'none';
+			span.appendChild(node);
+
+			return span;
+		}
+		// update the position of original window,
+		// and show it
+		function restoreWindow(drag, pt) {
+			var wgt = drag.control,
+				n = wgt.$n(),
+				wstyle = n.style,
+				diffX = n.diffX,
+				diffY = n.diffY;
+			if ((typeof diffX) == 'number' && (typeof diffY) == 'number') {
+				wstyle.left = pt[0] + diffX + 'px';
+				wstyle.top = pt[1] + diffY + 'px';
+				wstyle.display = 'block';
+				n.diffX = n.diffY = null;
+				drag.control._fireOnMove();
+			}
+		}
+	]]></script>
+	<vbox>
+		<hbox>
+			<div height="350px" width="350px" style="background-color: red;">
+				<button label="test" draggable="true" ></button>
+			</div>
+			<div height="350px" width="350px" style="background-color: green;">
+				<label id="posX" value="position left: " style="font-size: 20px;" />
+				<div></div>
+				<label id="posY" value="position top: " style="font-size: 20px;" />
+			</div>
+		</hbox>
+		<hbox>
+			<div height="350px" width="350px" style="background-color: brown;"></div>
+			<div height="350px" width="350px" style="background-color: blue;"></div>
+		</hbox>
+	</vbox>
+	<window width="300px" height="300px" border="normal"
+		title="test" draggable="true"
+		style="position: absolute; left: 100px; top: 100px;">
+		<attribute name="onMove">
+			posX.setValue("position left: " + event.getLeft());
+			posY.setValue("position top: " + event.getTop());
+		</attribute>
+	</window>
+</zk>
