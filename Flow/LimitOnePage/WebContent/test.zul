@@ -1,0 +1,14 @@
+<zk>
+	<button label="go to page 1">
+		<attribute name="onClick">
+			Long time = test.Maps.keyMap.get("userName");
+			if (time == null || (System.currentTimeMillis()-time) > 10000) {
+				test.Maps.keyMap.put("userName", System.currentTimeMillis());
+				test.Maps.tmpKeyMap.put("userName", test.Maps.keyMap.get("userName"));
+				Executions.getCurrent().sendRedirect("page1.zul");
+			}
+			else
+				Executions.getCurrent().sendRedirect("");
+		</attribute>
+	</button>
+</zk>

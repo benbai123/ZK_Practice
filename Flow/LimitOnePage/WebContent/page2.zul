@@ -1,0 +1,24 @@
+<zk>
+	<div visible="false">
+		<attribute name="onCreate">
+			Long time = test.Maps.tmpKeyMap.get("userName");
+			if (time == null || (System.currentTimeMillis()-time) > 10000)
+				Executions.getCurrent().sendRedirect("test.zul");
+			else
+				self.setVisible(true);
+		</attribute>
+		page2<div></div>
+		<button label="go to page 1">
+			<attribute name="onClick">
+				test.Maps.tmpKeyMap.put("userName", test.Maps.keyMap.get("userName"));
+				Executions.getCurrent().sendRedirect("page1.zul");
+			</attribute>
+		</button>
+	</div>
+	<timer repeats="true" running="true" delay="1000">
+		<attribute name="onTimer">
+			test.Maps.keyMap.put("userName", System.currentTimeMillis());
+			test.Maps.tmpKeyMap.remove("userName");
+		</attribute>
+	</timer>
+</zk>
