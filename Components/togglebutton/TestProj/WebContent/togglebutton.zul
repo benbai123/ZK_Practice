@@ -1,0 +1,4 @@
+<window style="display: inline-block;">
+	<checkbox id="mc_togglebutton_checkbox" visible="false" />
+	<image id="mc_togglebutton_image" src="img/battery.gif" />
+</window>

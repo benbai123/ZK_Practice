@@ -1,0 +1,10 @@
+<?component name="togglebutton" macroURI="/togglebutton.zul"
+   class="com.ToggleButton"?>
+<zk>
+	<togglebutton onCheck="alert(self.isChecked());" checked="true"
+		disableImage="img/star_empty.png"
+		enableImage="img/star_fullfill.png" />
+	<togglebutton onCheck="alert(self.isChecked());" checked="false"
+		disableImage="img/star_empty.png"
+		enableImage="img/star_fullfill.png" />
+</zk>
