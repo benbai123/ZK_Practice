@@ -5,6 +5,7 @@ Tested with ZK 5.0.8
 ## Components_Practice
 ### drag_embedded_window_everywhere
 Reference:
+
 [ZK Custom Component - Window dragging every where](http://ben-bai.blogspot.com/2012/01/zk-custom-component-window-dragging.html)
 			
 [R6.0 - dragging overlapped or embedded windows - different drag shapes/positions](http://www.zkoss.org/forum/listComment/18345-R6-0-dragging-overlapped-or-embedded-windows-different-drag-shapes-positions)
