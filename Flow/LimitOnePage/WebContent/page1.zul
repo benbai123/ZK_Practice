@@ -18,7 +18,8 @@
 	<timer repeats="true" running="true" delay="1000">
 		<attribute name="onTimer">
 			test.Maps.keyMap.put("userName", System.currentTimeMillis());
-			test.Maps.tmpKeyMap.remove("userName");
+			if (test.Maps.tmpKeyMap.get("userName") != null)
+				test.Maps.tmpKeyMap.remove("userName");
 		</attribute>
 	</timer>
 </zk>
