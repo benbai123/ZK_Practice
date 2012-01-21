@@ -21,3 +21,11 @@ Tested with ZK 5.0.8
 			[ZK Custom Component - Listbox Auto-scroll while Dragging](http://ben-bai.blogspot.com/2012/01/zk-custom-component-listbox-auto-scroll.html)
 			
 			[how to auto scroll a listbox when dragging a listtiem??](http://www.zkoss.org/forum/listComment/18391-how-to-auto-scroll-a-listbox-when-dragging-a-listtiem)
+
+# Flow
+### LimitOnePage
+References:
+
+[ZK Flow Control - Prevent Opening Multiple Tabs](http://ben-bai.blogspot.com/2012/01/zk-flow-control-prevent-opening.html)
+
+[max desktop count per session](http://www.zkoss.org/forum/listComment/10165-max-desktop-count-per-session)
