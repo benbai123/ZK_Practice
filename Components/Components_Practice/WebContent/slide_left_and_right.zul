@@ -1,0 +1,33 @@
+<zk>
+	<script type="text/javascript"><![CDATA[
+		function slide (first, dir) {
+			var $firstDiv = jq('#'+first),
+				left = parseInt($firstDiv.css('left'),10),
+				toSlide = (dir == 'left')? left > -300 : left < 0;
+			if (toSlide) {
+				for (var c = $firstDiv[0]; c; c = c.nextSibling) {
+					var $c = jq(c),
+						$cLeft = parseInt($c.css('left'),10);
+					$c.animate({
+						left: dir == 'left' ? $cLeft - 150 : $cLeft + 150
+					}, 400);
+				}
+			}
+		}
+	]]></script>
+	<window id="win" border="normal" title="window" height="300px" width="150px" style="position: relative; overflow: hidden;">
+		<div height="250px" width="130px" style="position: absolute; background-color: #009900; margin-left: 10px; left: 0px;" />
+		<div height="250px" width="130px" style="position: absolute; background-color: #000099; margin-left: 10px; left: 150px;" />
+		<div height="250px" width="130px" style="position: absolute; background-color: #009999; margin-left: 10px; left: 300px;" />
+	</window>
+	<button label="slide left">
+		<attribute name="onClick">
+			Clients.evalJavaScript("slide ('"+win.getFirstChild().getUuid()+"', 'left');");
+		</attribute>
+	</button>
+	<button label="slide right">
+		<attribute name="onClick">
+			Clients.evalJavaScript("slide ('"+win.getFirstChild().getUuid()+"', 'right');");
+		</attribute>
+	</button>
+</zk>
