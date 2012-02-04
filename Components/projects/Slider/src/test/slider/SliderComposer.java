@@ -30,7 +30,6 @@ public class SliderComposer extends GenericForwardComposer {
 	public void onClick$start () {
 		int delay = interval.getValue();
 		String command = "startSlideShow(" + delay*1000 + ")";
-		System.out.println(command);
 		Clients.evalJavaScript(command);
 	}
 	public void onClick$stop () {
