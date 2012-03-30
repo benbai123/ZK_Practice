@@ -1,0 +1,22 @@
+<zk xmlns:w="client">
+	<timer delay="1000" repeats="true">
+		<attribute name="onCreate">
+			import javax.servlet.http.HttpSession;
+			((HttpSession)Executions.getCurrent()
+				.getSession().getNativeSession())
+					.setAttribute("checker_id", self.getUuid());
+		</attribute>
+		<attribute name="onTimer">
+			import javax.servlet.http.HttpSession;
+			HttpSession sess = ((HttpSession)Executions.getCurrent()
+									.getSession().getNativeSession());
+			Long max = sess.getMaxInactiveInterval();
+			Long realLast = (Long)sess.getAttribute("real_last");
+			Long inactiveInterval = (System.currentTimeMillis() - realLast)/1000;
+			
+			lb.setValue("Time remaining (seconds): " + (max - inactiveInterval));
+		</attribute>
+	</timer>
+	<button label="active!" onClick="" />
+	<label id="lb" value="" />
+</zk>
