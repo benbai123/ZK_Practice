@@ -97,6 +97,7 @@ Copyright (C) 2004 Potix Corporation. All Rights Reserved.
 		<url-pattern>/zkau/*</url-pattern>
 	</servlet-mapping>
 
+	<!-- The filter put the real last access time into session -->
 	<filter>
 		<filter-name>lastAccessFilter</filter-name>
 		<filter-class>test.LastAccessFilter</filter-class>
@@ -131,7 +132,7 @@ Copyright (C) 2004 Potix Corporation. All Rights Reserved.
 	<!-- //// -->
 
 	<!-- /////////// -->
-	<!-- Miscellaneous -->
+	<!-- Timeout in 60 minutes (3600 seconds) -->
 	<session-config>
 		<session-timeout>60</session-timeout>
 	</session-config>

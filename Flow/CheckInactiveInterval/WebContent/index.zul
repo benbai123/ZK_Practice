@@ -1,22 +1,58 @@
-<zk xmlns:w="client">
+<zk>
+	<zscript>
+		long timeToNotify = 3590;
+		long logoutAfterNotify = 10;
+	</zscript>
 	<timer delay="1000" repeats="true">
 		<attribute name="onCreate">
 			import javax.servlet.http.HttpSession;
+			// put self id into session
 			((HttpSession)Executions.getCurrent()
 				.getSession().getNativeSession())
 					.setAttribute("checker_id", self.getUuid());
 		</attribute>
-		<attribute name="onTimer">
+		<attribute name="onTimer"><![CDATA[
 			import javax.servlet.http.HttpSession;
+			// get the http session
 			HttpSession sess = ((HttpSession)Executions.getCurrent()
 									.getSession().getNativeSession());
+			// get the specified timeout seconds
 			Long max = sess.getMaxInactiveInterval();
+			// get the real_last attribute
 			Long realLast = (Long)sess.getAttribute("real_last");
+			// calculate the real inactive interval
 			Long inactiveInterval = (System.currentTimeMillis() - realLast)/1000;
-			
-			lb.setValue("Time remaining (seconds): " + (max - inactiveInterval));
-		</attribute>
+			// calculate the real remaining time
+			long realSecRemaining = (max - inactiveInterval);
+
+			if (realSecRemaining < timeToNotify) { // in notify or logout range
+				// logout
+				if (logoutAfterNotify == -1) {
+					Executions.getCurrent()
+							.getSession().invalidate();
+				} else if (logoutAfterNotify == 0) { // in logout range
+					// show logout if count down finished (logoutAfterNotify is zero)
+					self.stop();
+					lb.setValue("You are logged out");
+					btn.setVisible(false);
+					logoutAfterNotify--;
+				} else { // in notify range
+					// show active button and start count down
+					if (!btn.isVisible())
+						btn.setVisible(true);
+					lb.setValue("You will be logged out in "+logoutAfterNotify+" seconds, "
+						+ "click active button to keep alive");
+					logoutAfterNotify--;
+				}
+			} else { // in active range
+				lb.setValue("Time remaining (seconds): " + realSecRemaining);
+				// reset logoutAfterNotify
+				if (logoutAfterNotify < 10) {
+					logoutAfterNotify = 10;
+				}
+			}
+		]]></attribute>
 	</timer>
-	<button label="active!" onClick="" />
+	<button id="btn" label="active!" onClick="self.setVisible(false)" visible="false" />
 	<label id="lb" value="" />
 </zk>
