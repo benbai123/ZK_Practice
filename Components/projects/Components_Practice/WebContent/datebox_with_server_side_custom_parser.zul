@@ -1,0 +1,57 @@
+<zk xmlns:w="client">
+	<div style="margin: 20px;">
+		<!-- The datebox that use the custom comopnent at server side
+			 Note that the 'onCustomParse=""' is required for
+			 listen to onCustomParse event -->
+		<datebox lenient="true"
+			use="test.custom.component.datebox.CustomParserDatebox"
+			onCustomParse="">
+			<attribute w:name="doBlur_">
+				function (evt) {
+					// store the user input
+					var userInput = this.$n('real').value;
+					// do original doBlur_
+					this.$doBlur_(evt);
+					// store the client side parsed value
+					this._oriParsedValue = this.$n('real').value;
+					// tmp set the old value to input
+					this.$n('real').value = userInput;
+					// ask a custom parse from server
+					// the parsed value will be updated by setValue at server side
+					this.fire('onCustomParse', {value: userInput});
+					// show busy to prevent any action when parse date
+					zAu.cmd0.showBusy(null, 'Busy, parsing...');
+					// show client side parsed value in label valO, can be removed
+					jq('$valO')[0].innerHTML = this._oriParsedValue;
+				}
+			</attribute>
+			<attribute w:name="setBackToOriginal">
+				// called when the server side parse is finished,
+				// clear the stored client side parsed value if
+				// custom parser parse the value without any problem
+				// if the parse failed at server side,
+				// reset input value with the original client side parsed value
+				function (v) {
+					// reset to original value as need then clear it
+					if (this._oriParsedValue) {
+						if (v == 'reset') {
+							this.$n('real').value = this._oriParsedValue;
+							// clear valN label, can be removed
+							jq('$valN')[0].innerHTML = "";
+						} else { // the else fragment can be removed
+							// show client side parsed value in label valO
+							jq('$valN')[0].innerHTML = this.$n('real').value;
+						}
+						this._oriParsedValue = null;
+					}
+					// clear the busy state
+					zAu.cmd0.clearBusy(null);
+				}
+			</attribute>
+		</datebox>
+		<div height="25px"></div>
+		the client side parsed value: <label id="valO" />
+		<div height="25px"></div>
+		the value parsed by custom parser: <label id="valN" />
+	</div>
+</zk>
