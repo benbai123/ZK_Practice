@@ -1,0 +1,103 @@
+<zk xmlns:w="client">
+	<!--
+		tree_mix-state_checkbox.zul
+		tested with ZK 5.0.8
+	-->
+	<style>
+		<!-- The mix-state style,
+			 remove the margin then add blue border -->
+		.mixed-state {
+			margin: 0px;
+			border: 2px solid #3E48AE;
+		}
+	</style>
+	<!-- Override the Treeitem#doSelect_ -->
+	<script type="text/javascript"><![CDATA[
+	zk.afterLoad("zul.sel", function () {
+		var oldSelect = zul.sel.Treeitem.prototype.doSelect_;
+		zul.sel.Treeitem.prototype.doSelect_ = function (evt) {
+			// do original doSelect_
+			oldSelect.apply(this, arguments);
+
+			var $dom = jq(evt.domTarget), // the dom within the target row
+				row = $dom.hasClass('z-treerow')? $dom[0] : $dom.parents('.z-treerow')[0], // the root dom of target row
+				isSelected = jq(row).hasClass('z-treerow-seld'), // the selected status of target row
+				isSelfSelected = jq(this.treerow.$n()).hasClass('z-treerow-seld'), // the selected status of self
+				_selectedChild = this._selectedChild, // the array that store the dom of the selected children
+				index, isRecord;
+
+			// create _selectedChild array if not exists.
+			if (!_selectedChild)
+				_selectedChild = this._selectedChild = [];
+
+			// find the position of target row
+			index = _selectedChild.indexOf(row);
+			// whether the target row is already stored
+			isRecord = index > -1;
+			// push the root dom of target row into array if
+			// it is selected but not stored
+			if (isSelected && !isRecord)
+				_selectedChild.push(row);
+			// remove the root dom of target row from array if
+			// it is not selected but stored
+			else if (!isSelected && isRecord)
+				_selectedChild.splice(index, 1);
+
+			// set self style to mix-state if self is not selected
+			// and some children is selected
+			if (_selectedChild.length > 0 && !isSelfSelected)
+				jq(this.treerow.$n()).find('.z-treerow-img-checkbox').addClass('mixed-state');
+			else
+				jq(this.treerow.$n()).find('.z-treerow-img-checkbox').removeClass('mixed-state');
+		}
+	});
+	]]></script>
+	<div style="margin: 30px;">
+		<tree id="tree" rows="5" multiple="true" checkmark="true" width="500px" vflex="200px">
+			<treecols>
+				<treecol label="Name"/>
+				<treecol label="Description"/>
+			</treecols>
+			<treechildren>
+				<treeitem>
+					<treerow>
+						<treecell label="Item 1"/>
+						<treecell label="Item 1 description"/>
+					</treerow>
+				</treeitem>
+				<treeitem>
+					<treerow>
+						<treecell label="Item 2"/>
+						<treecell label="Item 2 description"/>
+					</treerow>
+					<treechildren>
+						<treeitem>
+							<treerow>
+								<treecell label="Item 2.1"/>
+							</treerow>
+							<treechildren>
+								<treeitem>
+									<treerow>
+										<treecell label="Item 2.1.1"/>
+									</treerow>
+								</treeitem>
+								<treeitem>
+									<treerow>
+										<treecell label="Item 2.1.2"/>
+									</treerow>
+								</treeitem>
+							</treechildren>
+						</treeitem>
+						<treeitem>
+							<treerow>
+								<treecell label="Item 2.2"/>
+								<treecell label="Item 2.2 is something who cares"/>
+							</treerow>
+						</treeitem>
+					</treechildren>
+				</treeitem>
+				<treeitem label="Item 3"/>
+			</treechildren>
+		</tree>
+	</div>
+</zk>
