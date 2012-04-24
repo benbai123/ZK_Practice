@@ -1,0 +1,86 @@
+<zk xmlns:w="client">
+	<!-- The style make upload button not visible
+		instead of the red border -->
+	<style>
+		.z-button *,
+		.z-upload * {
+			background: transparent !important;
+			margin: 0 !important;
+			border: 0 !important;
+			cursor: default !important;
+		}
+		.z-button-cm {
+			display: none;
+		}
+		<!-- remove the red border below to make the
+			upload button completely invisible -->
+		.z-button {
+			border: 1px solid red;
+		}
+	</style>
+	<window>
+		<!-- Click button by client side programming,
+			override label's doClick_ function
+			may not work in IE -->
+		<label value="open upload dialog by client side programming">
+			<attribute w:name="doClick_">
+				function (evt) {
+					// call the original doClick_ function
+					this.$doClick_(evt);
+					//---- update domTarget and domEvent as need ----//
+					// evt.domEvent = THE_NEW_EVENT;                 //
+					// evt.domTarget = THE_NEW_TARGET;               //
+					//---- ------------------------------------- ----//
+					// click the upload button by JQuery
+					jq('$btn').next().find('input').click();
+				}
+			</attribute>
+		</label>
+		<div></div>
+		<!-- Click button by Clients.evalJavascript
+			may not work in some browsers -->
+		<label value="open upload dialog by javascript that executed by server">
+			<attribute name="onClick">
+				Clients.evalJavaScript("jq('$btn').next().find('input').click();");
+			</attribute>
+		</label>
+		<div></div>
+		<!-- Click button directly
+			the style of upload button is overridden
+			to make it invisible, and will change position
+			while mouseover one of the 3 labels below
+			
+			should work in most browsers -->
+		<div style="position: relative; cursor: default;" height="30px"
+			onMouseOver="uploadDiv.setParent(self);">
+			<label value="open upload by real click on it" />
+		</div>
+		<div style="position: relative; cursor: default;" height="30px"
+			onMouseOver="uploadDiv.setParent(self);">
+			<label value="also open upload by real click on it" />
+		</div>
+		<div style="position: relative; cursor: default;" height="30px"
+			onMouseOver="uploadDiv.setParent(self);">
+			<label value="still open upload by real click on it" />
+		</div>
+		result: <label id="result" />
+		<div style="position: relative;">
+			<div id="uploadDiv" style="position: absolute; left: 0px; top: 0px; z-index: 100;">
+				<button id="btn" label="Upload" upload="true"
+					width="200px" height="15px">
+					<attribute name="onUpload"><![CDATA[
+						import org.zkoss.util.media.Media;
+						Media[] media = event.getMedias();
+						if (media != null) { // show the infprmation of updated media
+							StringBuilder sb = new StringBuilder("");
+							for (int i = 0; i < media.length; i++) {
+								sb.append(media[i].getName() + ", "+media[i].getByteData().length +" bytes\n");
+							}
+							result.setValue(sb.toString());
+						}
+						]]></attribute>
+				</button>
+			</div>
+		</div>
+	</window>
+</zk>
