@@ -2,6 +2,8 @@ package test;
 
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.zk.ui.*;
@@ -14,12 +16,12 @@ public class TestVM {
 	private String _rpcTarget = "http://localhost:8080/CreateViewByRPCService/generateViewRpc/user/ben/page/1";
 	// target address to require service
 	private String _target = "http://localhost:8080/CreateViewByRPCService/generateViewRpc";
-	// the key mapping to the stored components
-	private String _mappingKey = null;
 	// id used in zul file for timer
 	private String _timerId = "timer";
 	// id used in zul file for container div
 	private String _containerId = "container";
+	// the list to store generated components
+	private List<Component> components = new ArrayList<Component>();
 	// for prevent race
 	private Integer _lock = 0;
 	// request counter
@@ -73,22 +75,26 @@ public class TestVM {
 	@Command
 	public void checkGenerate () {
 		synchronized (_lock) {
-			_cnt--;
-			if (_mappingKey != null) { // has response
-				Timer t;
+			if (components.size() > 0) { // has response
+				Timer t = null;
 				Div container = null;
 				for (Component c : Executions.getCurrent().getDesktop().getComponents()) {
-					if (_timerId.equals(c.getId()) && _cnt == 0) {
-						// stop the timer
-						((Timer)c).stop();
+					if (_timerId.equals(c.getId())) {
+						// get the timer
+						t = ((Timer)c);
 					} else if (_containerId.equals(c.getId())) {
 						// get the container
 						container = (Div)c;
 					}
 				}
 				// put generated components into container
-				GenerateViewService.getComponent(_mappingKey).setParent(container);
-				_mappingKey = null;
+				while (components.size() > 0) {
+					_cnt--;
+					components.remove(0).setParent(container);
+				}
+				// stop the timer if no more component
+				if (_cnt == 0)
+					t.stop();
 			}
 		}
 	}
@@ -100,8 +106,8 @@ public class TestVM {
 		public void onFault(int faultCode, java.lang.String faultMessage) {}
 		// response
 		public void onResult(java.lang.Object result) {
-			// store the mapping key
-			_mappingKey = (String)result;
+			// store the component
+			components.add(GenerateViewService.getComponent((String)result));
 		}
 	};
 }

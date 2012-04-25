@@ -1,15 +1,18 @@
 <zk>
 	<window apply="org.zkoss.bind.BindComposer"
 		viewModel="@id('vm') @init('test.TestVM')">
-		<combobox value="@bind(vm.rpcTarget)">
+		<!-- The combobox contains the rpc target,
+			will trigger the request to require service when onChange -->
+		<combobox value="@bind(vm.rpcTarget)" onChange="@command('generateComponent')">
 			<comboitem label="http://localhost:8080/CreateViewByRPCService/generateViewRpc/user/ben/page/1" />
 			<comboitem label="http://localhost:8080/CreateViewByRPCService/generateViewRpc/user/ben/page/2" />
 			<comboitem label="http://localhost:8080/CreateViewByRPCService/generateViewRpc/user/bai/page/1" />
 			<comboitem label="http://localhost:8080/CreateViewByRPCService/generateViewRpc/user/bai/page/2" />
 		</combobox>
-		<button label="generate" onClick="@command('generateComponent')" />
+		<!-- start it to check the rpc service status -->
 		<timer id="@load(vm.timerId)" repeats="true" onTimer="@command('checkGenerate')" running="false"
 			delay="1000" />
+		<!-- The generated components will be here -->
 		<div id="@load(vm.containerId)" />
 	</window>
 </zk>
