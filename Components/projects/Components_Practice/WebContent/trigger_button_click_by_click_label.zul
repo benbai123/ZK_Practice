@@ -18,6 +18,10 @@
 			border: 1px solid red;
 		}
 	</style>
+	<zscript>
+		import java.util.Locale;
+		Locale.setDefault(Locale.ENGLISH);
+	</zscript>
 	<window>
 		<!-- Click button by client side programming,
 			override label's doClick_ function
