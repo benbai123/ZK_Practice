@@ -1,0 +1,15 @@
+<zk>
+	<window apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('test.TestVM')">
+		<combobox value="@bind(vm.rpcTarget)">
+			<comboitem label="http://localhost:8080/CreateViewByRPCService/generateViewRpc/user/ben/page/1" />
+			<comboitem label="http://localhost:8080/CreateViewByRPCService/generateViewRpc/user/ben/page/2" />
+			<comboitem label="http://localhost:8080/CreateViewByRPCService/generateViewRpc/user/bai/page/1" />
+			<comboitem label="http://localhost:8080/CreateViewByRPCService/generateViewRpc/user/bai/page/2" />
+		</combobox>
+		<button label="generate" onClick="@command('generateComponent')" />
+		<timer id="@load(vm.timerId)" repeats="true" onTimer="@command('checkGenerate')" running="false"
+			delay="1000" />
+		<div id="@load(vm.containerId)" />
+	</window>
+</zk>
