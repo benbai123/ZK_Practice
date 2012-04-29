@@ -1,0 +1,155 @@
+<zk xmlns:w="client">
+	<script type="text/javascript">
+		/**
+		 * make a component focusable and can handle onCtrlKey event
+		 * by the given component's uuid
+		 */
+		function makeFocusable (uuid) {
+			var wgt = zk.Widget.$('#'+uuid);
+			overrideFunctions(wgt);
+		}
+		/**
+		 * Override several functions to handle the focus/blur event
+		 * and handle the onCtrlKey event
+		 */
+		function overrideFunctions (wgt) {
+			if (wgt) {
+				var oldClick = wgt.doClick_,
+					oldFocus = wgt.doFocus_,
+					oldBlur = wgt.doBlur_,
+					oldListen = wgt.isListen;
+	
+				wgt.doClick_ = function (evt) {
+					// the focusable anchor not exist, create it
+					if (!wgt.$n('custom-anchor')) {
+						createFocusableAnchor(wgt);
+						// rebind to enable added events
+						wgt.unbind().bind();
+					}
+				 	// focus the anchor if click on self to trigger the onFocus event
+				 	if (evt.domTarget == wgt.$n())
+				 		jq(wgt.$n('custom-anchor')).focus();
+				 	// do original function
+				 	oldClick.apply(wgt, arguments);
+				 }
+				 wgt.doFocus_ = function (evt) {
+				 	// do original function
+				 	oldFocus.apply(wgt, arguments);
+				 	// mantain focus status
+				 	if (evt.domTarget == wgt.$n('custom-anchor'))
+				 		wgt._focused = true;
+				 }
+				 wgt.doBlur_ = function (evt) {
+				 	// do original function
+				 	oldBlur.apply(wgt, arguments);
+				 	// mantain focus status
+				 	if (evt.domTarget == wgt.$n('custom-anchor'))
+				 		wgt._focused = false;
+				 }
+				 wgt.isListen = function (evt, opts) {
+					// ignore onCtrlKey event if self not focused
+					// see Widget.js#afterKeyDown_
+					if (evt == 'onCtrlKey')
+						return wgt._focused
+					// do original function
+					return oldListen.apply(wgt, arguments);
+				}
+			}
+		}
+		/**
+		 * Create a focusable anchor to make the widget focusable
+		 * and can handle the onCtrlKey event
+		 */
+		function createFocusableAnchor (wgt) {
+			if (wgt) {
+				// create an anchor that can receive the focus
+				var anchor = zk.ie || zk.gecko ? document.createElement("a") : document.createElement("button");
+	
+				// make it focusable
+				anchor.href = 'javascript:;';
+				// make it catchable
+				anchor.id = wgt.uuid + '-custom-anchor';
+	
+				// make it out of the screen
+				anchor.style.position = 'absolute';
+				anchor.style.left = '-3000px';
+				anchor.style.top = '-3000px';
+	
+				// make it as a part of the div component
+				wgt.$n().appendChild(anchor);
+				// listen to event focus, blur and keydown 
+				wgt.domListen_(anchor, 'onFocus', 'doFocus_')
+					.domListen_(anchor, 'onKeyDown', 'doKeyDown_')
+					.domListen_(anchor, 'onBlur', 'doBlur_');
+			}
+		}
+	</script>
+	<div style="margin: 10px;">
+		<div>1. Click on 1st label then press ctrl+s, you should see the textbox below not changed and the save dialog may appeared.</div>
+		<div>2. Click on 1st block then press ctrl+s, you should see the textbox below not changed and the save dialog may appeared.</div>
+		<div>3. Click on 2nd block then press ctrl+s, you should see the textbox below not changed and the save dialog may appeared.</div>
+		<div>4. Click on 2nd label then press ctrl+s, you should see one line '2nd label onCtrlKey' added to the textbox below.</div>
+		<div>5. Click on 3rd block then press ctrl+s, you should see one line '3rd div onCtrlKey' added to the textbox below.</div>
+		<div>6. Click on 4th block then press ctrl+s, you should see one line '4th div onCtrlKey' added to the textbox below.</div>
+		<div>Note the save dialog should not appear in step 4, step 5 and step 6</div>
+		<textbox id="msg" value="msg: " rows="6" width="500px" />
+		<hbox>
+			<label value="1st label"
+				ctrlKeys="^s">
+				<attribute name="onCtrlKey">
+					msg.setValue(msg.getValue() + "\n1st label onCtrlKey");
+				</attribute>
+			</label>
+			<div width="100px" height="100px"
+				style="background-color: #4477DD;"
+				ctrlKeys="^s">
+				<attribute name="onCtrlKey">
+					msg.setValue(msg.getValue() + "\n1st div onCtrlKey");
+				</attribute>
+				1st block
+			</div>
+			<div width="100px" height="100px"
+				style="background-color: #6699DD;"
+				ctrlKeys="^s">
+				<attribute name="onCtrlKey">
+					msg.setValue(msg.getValue() + "\n2nd div onCtrlKey");
+				</attribute>
+				2nd block
+			</div>
+			<label value="2nd label"
+				ctrlKeys="^s">
+				<attribute name="onCreate">
+					<!-- make this component focusable and can handle onCtrlKey event -->
+					Clients.evalJavaScript("makeFocusable('"+self.getUuid()+"')");
+				</attribute>
+				<attribute name="onCtrlKey">
+					msg.setValue(msg.getValue() + "\n2nd label onCtrlKey");
+				</attribute>
+			</label>
+			<div width="100px" height="100px"
+				style="background-color: #44DD77;"
+				ctrlKeys="^s">
+				<attribute name="onCreate">
+					<!-- make this component focusable and can handle onCtrlKey event -->
+					Clients.evalJavaScript("makeFocusable('"+self.getUuid()+"')");
+				</attribute>
+				<attribute name="onCtrlKey">
+					msg.setValue(msg.getValue() + "\n3rd div onCtrlKey");
+				</attribute>
+				3rd block
+			</div>
+			<div width="100px" height="100px"
+				style="background-color: #66DD99;"
+				ctrlKeys="^s">
+				<attribute name="onCreate">
+					<!-- make this component focusable and can handle onCtrlKey event -->
+					Clients.evalJavaScript("makeFocusable('"+self.getUuid()+"')");
+				</attribute>
+				<attribute name="onCtrlKey">
+					msg.setValue(msg.getValue() + "\n4th div onCtrlKey");
+				</attribute>
+				4th block
+			</div>
+		</hbox>
+	</div>
+</zk>
