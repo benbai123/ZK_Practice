@@ -1,0 +1,77 @@
+
+Talking about how to getting it start quickly, NO ZK Studio, NO Maven, only simple clear traditional way.
+
+Let's go.
+
+1. Download Eclipse:
+1.1: Go to Eclipse official site (http://www.eclipse.org/, for 2012-06-06)
+1.2: Click Downloads
+    [imgs/ZKQS_001.png]
+1.3: Click Eclipse IDE for Java EE Developers (I choose 32 Bit version)
+    [imgs/ZKQS_002.png]
+1.4: Click download button to download it.
+    [imgs/ZKQS_003.png]
+
+2. Download Tomcat:
+2.1: Go to Tomcat official site (http://tomcat.apache.org/, for 2012-06-06)
+2.2: Click 'Tomcat 7.0'
+    [imgs/ZKQS_004.png]
+2.3: Find the 'Binary Distributions' and download it
+    [imgs/ZKQS_005.png]
+
+3. Download ZK
+3.1: Go to ZK official site (http://www.zkoss.org/, for 2012-06-06)
+3.2: Click Downloads -> ZK
+    [imgs/ZKQS_006.png]
+3.3: Click 'Download ZK CE' to download it
+    [imgs/ZKQS_007.png]
+
+
+4. Start Eclipse:
+4.1: Extract the downloaded file eclipse-jee-indigo-SR2-win32.zip
+    [imgs/ZKQS_008.png]
+4.2: Create a workspace folder for Eclipse
+    [imgs/ZKQS_009.png]
+4.3: Double-click on eclipse/eclipse.exe to open it, choose the workspace then click 'OK'
+    [imgs/ZKQS_010.png]
+4.4: Click 'Workbench' to enter workbench
+    [imgs/ZKQS_011.png]
+
+5. Add Tomcat Server in Eclipse
+5.1: Extract the downloaded file apache-tomcat-7.0.27-windows-x86.zip
+    [imgs/ZKQS_012.png]
+5.2: Right-click in Eclipse's Servers view -> New -> Server
+    [imgs/ZKQS_013.png]
+5.3: Select Apache/Tomcat v7.0 Server, click next
+    [imgs/ZKQS_014.png]
+5.4: Choose server folder, click finish
+    [imgs/ZKQS_015.png]
+
+6. Create Test Project
+6.1: Click File -> New -> Dynamic Web Project
+    [imgs/ZKQS_016.png]
+6.2: Enter Project name then click Finish
+    [imgs/ZKQS_017.png]
+6.3: Extract the downloaded file zk-bin-6.0.1.zip
+    [imgs/ZKQS_018.png]
+6.4: Copy all jar files under zk-bin-6.0.1\dist\lib to WebContent/WEB-INF/lib
+6.5: Copy zk-bin-6.0.1\dist\WEB-INF\web.xml to WebContent/WEB-INF/
+    [imgs/ZKQS_019.png]
+6.6: Right-click on WebContent -> New -> File, create a file 'index.zul' under WebContent
+    [imgs/ZKQS_020.png]
+6.7: Edit index.zul as below:
+	[imgs/ZKQS_021.png]
+
+7. Run Test Project
+7.1: Right-click on server, click Add and Remove
+    [imgs/ZKQS_022.png]
+7.2: Select test project, click Add then click Finish
+    [imgs/ZKQS_023.png]
+7.3: Click 'Run' button
+    [imgs/ZKQS_024.png]
+7.4: Open browser then go to the test project
+    [imgs/ZKQS_025.png]
+7.6: Click the test button, a label will appear
+    [imgs/ZKQS_026.png]
+
+Finish
