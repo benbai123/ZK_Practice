@@ -1,0 +1,122 @@
+<zk xmlns:w="client"><!-- ** Added ** namespace for Client Side Programming -->
+	<!-- Tested with ZK 6.0.1 CE and ZK Pivottable 2.0.0 -->
+	<vlayout>
+		<div>
+			<!-- ** Added ** the description of how to use sort feature -->
+			<vbox>
+				<label value="Description:" />
+				<label value="Click data cell to choose the column field to sort" />
+				<label value="The sort level will be the latest extended level of the clicked row" />
+				<label value="Click row header node to change the sort level" />
+				<label value="Click 'sort ascending' / 'sort descending' button to sort" />
+			</vbox>
+		</div>
+		<!-- window, apply a SelectorComposer -->
+		<window id="win" xmlns:w="client"
+			apply="test.TestComposer">
+			<!-- pivottable, get model from window's composer -->
+			<pivottable id="pivottable" model="${win$composer.pivotModel}">
+				<!-- ** Added ** Blank block for position the sort button -->
+				<div></div>
+				<!-- ** Added ** the sort button to do sort ascending / descending -->
+				<div>
+					<!-- The sort ascending button -->
+					<button id="btnSortAsc" label="Sort Ascending" />
+					<!-- The sort descending button -->
+					<button id="btnSortDesc" label="Sort Descending" />
+				</div>
+			</pivottable>
+		</window>
+	</vlayout>
+	<!-- ** Added ** define some style and override some function
+					for better user experience
+					actually the 'style' fragment and the 'script' fragment
+					are not related to the sort feature -->
+	<style>
+		<!-- style for focused data cell / row head -->
+		.focused-data-cell .z-pivottable-field-wrapper {
+			background-color: #CCCCCC;
+		}
+		.focused-row-head .z-pivottable-field-wrapper {
+			background-color: #AADDDD;
+		}
+	</style>
+	<script type="text/javascript"><![CDATA[
+		var _Pwgt = {},
+			_Bwgt = {};
+		// override pivottable js function
+		zk.afterLoad("pivot", function () {
+			zk.override(pivot.Pivottable.prototype, _Pwgt, {
+				// override pivottable bind_ for restore the scrollLeft
+				bind_: function(desktop, skipper, after) {
+					_Pwgt.bind_.apply(this, arguments); //call the original method
+					var oldLeft;
+					if (this.id == 'pivottable') { // limit the affect target
+						if (oldLeft = pivot.Pivottable.pivottableOldLeft) {
+							var wgt = this;
+
+							setTimeout(function (){
+								wgt.$n('scroll').scrollLeft = oldLeft;
+								pivot.Pivottable.pivottableOldLeft = null;
+							}, 200);
+						}
+					}
+				},
+				// override pivottable doClick_ for style the clicked data cell or row head
+				doClick_: function (evt) {
+					_Pwgt.doClick_.apply(this, arguments); //call the original method
+					// clear old scroll if any
+					pivot.Pivottable.pivottableOldLeft = null;
+					if (this.id == 'pivottable') { // limit the affect target
+						var tar = evt.domTarget,
+							jtar = jq(tar),
+							old;
+						if (!jtar.hasClass('z-pivottable-icon')) {
+							// click on data cell
+							if (jtar.hasClass('z-pivottable-cell-field')
+								|| ((tar = tar.parentNode) && (jtar = jq(tar)) && jtar.hasClass('z-pivottable-cell-field'))) {
+								// remove old focus
+								if (old = this._oldFocusDataCell) {
+									jq(old).removeClass('focused-data-cell');
+								}
+								// also remove old row head's style, denotes use latest level as sort level
+								if (old = this._oldFocusRowHead) {
+									jq(old).removeClass('focused-row-head');
+								}
+								// add focus for denotes use clicked data field to do sort
+								jtar.addClass('focused-data-cell');
+								this._oldFocusDataCell = jtar[0];
+							} else if (jtar.hasClass('z-pivottable-row-field')
+									|| ((tar = tar.parentNode) && (jtar = jq(tar)) && jtar.hasClass('z-pivottable-row-field'))) {
+								// click on row header node
+								// remove old focus
+								if (old = this._oldFocusRowHead) {
+									jq(old).removeClass('focused-row-head');
+								}
+								// add focus for denotes use specific sort level
+								jtar.addClass('focused-row-head');
+								this._oldFocusRowHead = jtar[0];
+							}
+						}
+					}
+				}
+			});
+		});
+		// override button js function
+		zk.afterLoad("zul.wgt", function () {
+			zk.override(zul.wgt.Button.prototype, _Bwgt, {
+				// override doClick_ for store old pivottable scrollLeft
+				doClick_: function (evt) {
+					_Bwgt.doClick_.apply(this, arguments); //call the original method
+					var id = this.id;
+					if (id == 'btnSortAsc'
+						|| id == 'btnSortDesc') { // limit the affect target
+						// store the old scrollLeft of pivottable
+						pivot.Pivottable.pivottableOldLeft =
+							zk.Widget.$('$pivottable').$n('scroll').scrollLeft;
+					}
+				}
+			});
+		});
+	]]></script>
+</zk>
