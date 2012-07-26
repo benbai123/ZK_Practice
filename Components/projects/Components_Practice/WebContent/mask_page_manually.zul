@@ -1,0 +1,24 @@
+<zk>
+	<script type="text/javascript"><![CDATA[
+		// mask a while
+		zAu.cmd0.showBusy('Loading...');
+		// fake loading some data
+		setTimeout(function () {
+			some = {};
+			some.loaded = {};
+			some.loaded.data = 'data';
+		}, 2000);
+		// clear mask after data loaded
+		var timer = setInterval(function () {
+			// log, can be removed
+			zk.log(' checking... ');
+			if (some && some.loaded && some.loaded.data) {
+				zAu.cmd0.clearBusy(null);
+				clearInterval(timer);
+			}
+		}, 500);
+	]]></script>
+	<window border="normal" title="test win">
+		test
+	</window>
+</zk>
