@@ -1,0 +1,19 @@
+<zk>
+<!-- 	an errmsg thst display msg and will -->
+<!-- 	alert its discription while clicked -->
+
+<!-- 	the id attribute is specified in the super class -->
+<!-- 	the onClick event also listened by super class -->
+<!-- 	we can just simply use them -->
+	<errmsg id="errMsg" msg="error"
+		description="this is a test message to test component errmsg"
+		onClick="alert(self.getDescription());" />
+<!-- 	use a ZK button to change errmsg's property -->
+<!-- 	the 'errMsg' below is an errmsg instance that has id 'errMsg' -->
+	<button label="test">
+		<attribute name="onClick">
+			errMsg.setMsg(" new message");
+			errMsg.setDescription(" new description");
+		</attribute>
+	</button>
+</zk>

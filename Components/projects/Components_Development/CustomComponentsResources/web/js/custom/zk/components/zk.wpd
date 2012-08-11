@@ -1,0 +1,8 @@
+<!-- this file define the package name and the order to load widgets -->
+<!-- depends="zul" denotes this package should -->
+<!-- be loaded after the zul package, -->
+<!-- i.e., if you load this package but the zul package is not loaded, -->
+<!-- the framework will load zul package first automatically -->
+<package name="custom.zk.components" language="xul/html" depends="zul">
+	<widget name="Errmsg"/>
+</package>

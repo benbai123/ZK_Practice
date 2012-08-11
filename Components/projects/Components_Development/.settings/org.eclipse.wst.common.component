@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="Components_Development">
+        <wb-resource deploy-path="/" source-path="/WebContent"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/CustomComponentsResources"/>
+        <property name="context-root" value="Components_Development"/>
+        <property name="java-output-path" value="/Components_Development/build/classes"/>
+    </wb-module>
+</project-modules>

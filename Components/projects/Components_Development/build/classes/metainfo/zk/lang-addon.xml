@@ -1,0 +1,71 @@
+<!-- ZK will load this file
+	(classpath/metainfo/zk/lang-addon.xml) automatically -->
+
+<language-addon>
+	<!-- addon name, 
+		required, it's better to be unique -->
+	<addon-name>custom</addon-name>
+	<!-- specifies the name of a language definition
+		should be unique in a language definition,
+		xul/html is predefinied language in ZK
+		so can be used in lang-addon directly -->
+	<language-name>xul/html</language-name>
+
+	<!-- version
+		optional,
+		if the version specified in version-class is not
+		the same as version-uid, or the real ZK version is smaller
+		then zk-version, the addon will be ignored -->
+	<version>
+		<version-class>custom.zk.Version</version-class>
+		<version-uid>0.0.1</version-uid>
+		<zk-version>5.0.0</zk-version><!-- or later -->
+	</version>
+
+	<!-- define a component -->
+	<component>
+		<!-- the tag name of this component
+			required,
+			must be unique -->
+		<component-name>errmsg</component-name>
+		<!-- fully-qualified java class name at server side
+			required for a new component that not extends another component -->
+		<component-class>custom.zk.components.Errmsg</component-class>
+		<!-- widget class, 'custom.zk.components.Errmsg'
+			also specify the
+			package of widget class 'custom.zk.components'
+			required for a new component that not extends another component
+
+			from my test,
+			when you say a widget class is custom.zk.components.Errmsg
+			it denotes there should have a file
+			web/js/custom/zk/components/Errmsg.js under classpath,
+			and have "<package name="custom.zk.components" ...>...</package>"
+			in web/js/custom/zk/components/zk.wpd
+			and "custom.zk.components.Errmsg = ..."
+			in Errmsg.js to define that client widget
+			
+			You may try play around to find whether you can
+			make them different, but it's better to let them
+			sync even if you can make them different -->
+		<widget-class>custom.zk.components.Errmsg</widget-class>
+		<!-- mold
+			required for a new component that not extends another component
+			or has self widget-class
+			
+			a mold denotes the files that to render and style this comopnent -->
+		<mold>
+			<!-- default mold is required -->
+			<mold-name>default</mold-name>
+			<!-- relative path based on widget-class' path
+				(web/js/custom/zk/components/)
+				
+				where errmsg.js (required) contains a function that
+				will render the html of the comopnent,
+				errmsg.css.dsp (optional) contains
+				css styles of this component -->
+			<mold-uri>mold/errmsg.js</mold-uri>
+			<css-uri>css/errmsg.css.dsp</css-uri>
+		</mold>
+	</component>
+</language-addon>
