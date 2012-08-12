@@ -1,4 +1,4 @@
-package gmapsextended.gmaps;
+package org.zkoss.gmaps.extended.components;
 
 import org.zkoss.gmaps.Gmaps;
 import org.zkoss.zk.ui.WrongValueException;

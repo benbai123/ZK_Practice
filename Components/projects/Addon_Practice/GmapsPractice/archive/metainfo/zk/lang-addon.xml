@@ -4,7 +4,7 @@
 	<language-name>xul/html</language-name>
 	
 	<version>
-		<version-class>gmapsextended.Version</version-class>
+		<version-class>org.zkoss.gmaps.extended.Version</version-class>
 		<version-uid>0.0.1</version-uid>
 		<zk-version>5.0.0</zk-version><!-- or later -->
 	</version>
@@ -13,7 +13,7 @@
 	<component>
 		<component-name>gdirection</component-name>
 		<!-- fully-qualified java class name -->
-		<component-class>gmapsextended.gmaps.Gdirection</component-class>
+		<component-class>org.zkoss.gmaps.extended.components.Gdirection</component-class>
 		<!-- widget class,
 			when you say a widget class is gmapsextended.Gdirection
 			it denotes there should have a file
@@ -23,13 +23,12 @@
 			in web/js/gmapsextended/zk.wpd
 			and "gmapsextended.Gdirection = ..."
 			in Gdirection.js to define that client widget -->
-		<widget-class>gmapsextended.Gdirection</widget-class>
+		<widget-class>gmaps.extended.Gdirection</widget-class>
 		<!-- default mold is required -->
 		<mold>
 			<mold-name>default</mold-name>
 			<!-- relative path based on widget-class' path (web/js/gmapsextended/) -->
 			<mold-uri>mold/gdirection.js</mold-uri>
-			<css-uri>css/gdirection.css.dsp</css-uri>
 		</mold>
 	</component>
 </language-addon>

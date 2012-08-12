@@ -1,10 +1,31 @@
 <zk xmlns:w="client">
+	<combobox id="cbxOne" value="Chicago">
+		<comboitem label="Chicago" />
+		<comboitem label="Hammond" />
+		<comboitem label="Joliet" />
+		<comboitem label="Kankakee" />
+		<comboitem label="St Louis" />
+		<comboitem label="Peoria" />
+		<attribute name="onChange">
+			gdirection.setDirection(self.getValue(), cbxTwo.getValue());
+		</attribute>
+	</combobox>
+	to
+	<combobox id="cbxTwo" value="St Louis">
+		<comboitem label="Chicago" />
+		<comboitem label="Hammond" />
+		<comboitem label="Joliet" />
+		<comboitem label="Kankakee" />
+		<comboitem label="St Louis" />
+		<comboitem label="Peoria" />
+		<attribute name="onChange">
+			gdirection.setDirection(cbxOne.getValue(), self.getValue());
+		</attribute>
+	</combobox>
 	<hbox id="hbox">
 		<gmaps id="gmaps" width="500px" height="500px" />
 		<div id="panel" width="300px" height="500px" style="overflow: auto;" />
 	</hbox>
-	<button label="test"
-		onClick='gdirection.setDirection("chicago", "peoria");' />
 	<gdirection id="gdirection" start="chicago" end="st louis"
 		onCreate='self.setMap(gmaps); self.setPanel(panel);' />
 </zk>

@@ -1,0 +1,4 @@
+
+<package name="gmaps.extended" language="xul/html" depends="gmaps,zul">
+	<widget name="Gdirection"/>
+</package>

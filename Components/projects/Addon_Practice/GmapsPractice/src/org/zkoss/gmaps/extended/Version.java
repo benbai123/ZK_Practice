@@ -1,4 +1,4 @@
-package gmapsextended;
+package org.zkoss.gmaps.extended;
 
 
 public class Version {

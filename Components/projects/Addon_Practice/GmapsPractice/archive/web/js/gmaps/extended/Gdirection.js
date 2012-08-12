@@ -1,4 +1,4 @@
-gmapsextended.Gdirection = zk.$extends(zul.Widget, {
+gmaps.extended.Gdirection = zk.$extends(zul.Widget, {
 	$define: {
 		/**
 		 * sets the mapId of the map for direction display
@@ -61,14 +61,16 @@ gmapsextended.Gdirection = zk.$extends(zul.Widget, {
 		}
 	},
 	bind_: function () {
-		this.$supers(gmapsextended.Gdirection, 'bind_', arguments);
+		this.$supers(gmaps.extended.Gdirection, 'bind_', arguments);
 		this._tryBind();
 	},
 	
 	_tryBind: function () {
 		var mapId, panelId;
-		// init if google api is ready
-		if (window.google && window.google.maps)
+		// init if google api, mapId and panelId are ready
+		if (window.google && window.google.maps
+			&& (mapId = this._mapId)
+			&& (panelId = this._panelId))
 			this._init();
 		else if ((mapId = this._mapId)
 				&& (panelId = this._panelId)) {
@@ -89,10 +91,11 @@ gmapsextended.Gdirection = zk.$extends(zul.Widget, {
 			map = this._map = zk.Widget.$('#' + mapId);
 		if (!(panel = this._panel))
 			panel = this._panel = jq('#' + panelId)[0];
-		// only init while map and panel are ready
+		// prevent multiple init
 		if (directionsDisplay = this._directionsDisplay)
 			return;
 
+		// while map and panel are ready
 		if (map && map._gmaps && panel) {
 			this._directionsService = new google.maps.DirectionsService();
 			this._directionsDisplay = directionsDisplay = new google.maps.DirectionsRenderer();
