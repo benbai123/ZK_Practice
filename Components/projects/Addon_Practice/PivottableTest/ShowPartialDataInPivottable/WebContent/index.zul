@@ -1,0 +1,26 @@
+<zk>
+	<window id="win" xmlns:w="client"
+		apply="test.PartialRenderComposer">
+		Page: <intbox value="1" id="paging" />
+		Pivot model data size: <intbox id="info" />
+		<div></div>
+
+		Nodes limit: <intbox id="nodes" />
+		Memory used (MB): <intbox id="memInfo" />
+		<div></div>
+
+		Rows: <chosenbox id="rowFieldChosen" width="300px" />
+		Columns: <chosenbox id="columnFieldChosen" width="300px" />
+		<div></div>
+		Datas: <chosenbox id="dataFieldChosen" width="300px" />
+		<vlayout>
+			<!-- double paging, the pageSize denotes how many rows to display in one page,
+				you can set it as data size if you want display all data in one page
+				the spinner outside is the custom paging that control data loading partially -->
+			<pivottable id="pivottable" model="${win$composer.pivotModel}"
+				pageSize="30"
+				onPivotNodeOpen="" />
+		</vlayout>
+		<timer id="checkTimer" delay="1000" repeats="true" />
+	</window>
+</zk>
