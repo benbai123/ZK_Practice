@@ -1,0 +1,117 @@
+<zk>
+	<script type="text/javascript"><![CDATA[
+		function showBusy () {
+			// show busy mask
+			zAu.cmd0.showBusy('Loading...');
+			// move abort button under busy message
+			jq('.z-loading')[0].appendChild(jq('$abortButton')[0]);
+		}
+		function clearBusy () {
+			// move abort button back under abort div
+			jq('$abortDiv')[0].appendChild(jq('$abortButton')[0]);
+			// clear busy mask
+			zAu.cmd0.clearBusy(null);
+		}
+	]]></script>
+	<zscript><![CDATA[
+		/** A class that implement Runnable to do
+		 * the long operation
+		 */
+		class AbortableRunnable implements Runnable {
+			boolean stopped = true;
+			int i = 0;
+			public void run () {
+				stopped = false;
+				while (true) {
+					// do somoething
+					i++;
+					try {
+						Thread.sleep(1000);
+					} catch (Exception e) {
+						System.out.println(e);
+					}
+					// finish or aborted
+					if (i == 5 || stopped)
+						break;
+				}
+			}
+			public void abort () {
+				stopped = true;
+			}
+			public boolean isRunning () {
+				return !stopped;
+			}
+			public int getI () {
+				return i;
+			}
+		}
+		AbortableRunnable ar = new AbortableRunnable();
+		
+		void start () {
+			// start thread
+			new Thread(ar).start();
+		}
+		void abort () {
+			// update status
+			status.setValue("aborted i = " + ar.getI());
+			// stop thread
+			ar.abort();
+			// reset
+			ar = new AbortableRunnable();
+		}
+		void finish () {
+			// update status
+			status.setValue("finished i = " + ar.getI());
+			// reset
+			ar = new AbortableRunnable();
+		}
+	]]></zscript>
+	<!-- abort div to keep the abort button,
+		display outside the screen -->
+	<div id="abortDiv" style="position: absolute; left: -1000px;">
+		<!-- abort button stop the running thread any time
+			and clear busy mask -->
+		<button id="abortButton" label="abort">
+			<attribute name="onClick">
+				// abort the running process
+				abort();
+				// stop the checking timer
+				checkTimer.stop();
+				// move self element back to abort div
+				// and clear the busy mask
+				Clients.evalJavaScript("clearBusy();");
+			</attribute>
+		</button>
+	</div>
+	<div style="margin: 50px;">
+		<!-- start button atart the thread
+			and show busy mask -->
+		<button label="do something long">
+			<attribute name="onClick">
+				// start to run the process
+				start();
+				// start the checking timer
+				checkTimer.start();
+				// show busy mask and move
+				// the element of abort button under busy message
+				Clients.evalJavaScript("showBusy();");
+			</attribute>
+		</button>
+		<!-- checking timer clear busy mask after thread finished successfully -->
+		<timer id="checkTimer" running="false" repeats="true" delay="100">
+			<attribute name="onTimer">
+				if (ar.isRunning()) // update status if is running
+					status.setValue("running... i = " + ar.getI());
+				if (ar.getI() == 5) { // finish condition
+					finish();
+					// stop self
+					self.stop();
+					// move self element back to abort div
+					// and clear the busy mask
+					Clients.evalJavaScript("clearBusy();");
+				}
+			</attribute>
+		</timer>
+		Status: <label id="status" value="" />
+	</div>
+</zk>
