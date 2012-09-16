@@ -1,0 +1,60 @@
+<zk xmlns:w="client">
+	<!-- 
+		Tested with ZK 6.0.2 and ZK-Gmaps 3.0.1
+ 	-->
+	<script type="text/javascript"><![CDATA[
+		function init (wgt) {
+			var loadAPI = setInterval(function() {
+				// wait until places library ready
+				if (window.google && window.google.maps && window.google.maps.places) {
+					var maps = google.maps,
+						complete = wgt._autocomplete = new google.maps.places.Autocomplete(wgt.getInputNode());
+
+					// listen to google's place_changed event
+					wgt._placeChanged = google.maps.event.addListener(wgt._autocomplete, 'place_changed', function () {
+						var p = complete.getPlace();
+						// triggered wrong
+						if (!p || !p.geometry)
+							return;
+						// prepare event data
+						var node = jq(wgt.getInputNode()),
+							location = p.geometry.location,
+							data = {place: p,
+									lat: location.lat(),
+									lng: location.lng()};
+						// fire onPlaceChanged event to CustomTextbox
+						wgt.fire('onPlaceChanged', data);
+					});
+					clearInterval(loadAPI);
+				}
+			}, 100);
+		}
+	]]></script>
+	<!-- This textbox uses the CustomTextbox which
+		listen to onPlaceChanged event to receive the
+		lat/lng from Google Maps Places Autocomplete
+	 -->
+	<div style="margin: 20px;">
+		<textbox use="test.geo.autocomplete.CustomTextbox">
+			<attribute w:name="bind_"><![CDATA[
+				function (a, b, c) {
+					// call original bind_ function
+					this.$bind_(a, b, c);
+					// attach to geo-autocomplete
+					init (this);
+				}		
+			]]></attribute>
+			<attribute name="onPlaceChanged"><![CDATA[
+				import test.geo.autocomplete.PlaceChangedEvent;
+				PlaceChangedEvent evt = (PlaceChangedEvent)event;
+				gmap.setLat(evt.getLat());
+				gmap.setLng(evt.getLng());
+			]]></attribute>
+		</textbox>
+		<!-- load Google Maps Places library
+			by gmaps
+		 -->
+		<gmaps id="gmap" width="500px" height="500px"
+			libraries="geometry,places" />
+	</div>
+</zk>
