@@ -1,0 +1,71 @@
+<zk>
+	<vbox>
+		<hbox>
+			<!-- choose the file type for export report -->
+			Choose a File Type :
+			<listbox id="format" mold="select" >
+				<listitem label="PDF" value="pdf" selected="true" />
+				<listitem label="HTML" value="html" />
+				<listitem label="Word (RTF)" value="rtf" />
+				<listitem label="Excel" value="xls" />
+				<listitem label="Excel (JXL)" value="jxl" />
+				<listitem label="CSV" value="csv" />
+				<listitem label="OpenOffice (ODT)" value="odt" unless="false" />
+			</listbox>
+			<button label="Get Report">
+				<attribute name="onClick">
+					String title = titleValue.getValue();
+					String author = authorValue.getValue();
+					Date date = new Date();
+					showReport(title, author, date);
+				</attribute>
+			</button>
+		</hbox>
+		<hbox>
+			<!-- input field to set title and author param -->
+			Input Title: <textbox id="titleValue" />
+			Input Author: <textbox id="authorValue" />
+		</hbox>
+		<hbox>
+			<radiogroup id="rgroup">
+				<hlayout>
+					<!-- for choose image file using in report -->
+					<radio label="circle" value="testimg.png" selected="true"/>
+					<radio label="cube" value="testimg2.png"/>
+				</hlayout>
+			</radiogroup>
+		</hbox>
+		<!-- the report component, used to generate report -->
+		<jasperreport id="report" width="1024px" height="768px" />
+	</vbox>
+	<zscript><![CDATA[
+		import test.report.InfoResource;
+		import java.io.*;
+		
+		void showReport(String title, String author, Date date) {
+			String realPath = Executions.getCurrent().getDesktop().getSession().getWebApp().getRealPath("/");
+			File img = new File(realPath+File.separator+"WEB-INF"+File.separator+"images"+File.separator+rgroup.getSelectedItem().getValue());
+			//Preparing parameters
+			Map parameters = new HashMap();
+			
+			// set parameters for generate report
+			parameters.put("reportTitle", title);
+			parameters.put("author", author);
+			parameters.put("startDate", date.toString());
+			parameters.put("image", img);
+			parameters.put("C1", "product");
+			parameters.put("C2", "total cal");
+			parameters.put("C3", "product price");
+
+			// get report template
+			report.setSrc("/WEB-INF/template/template.jasper");
+			// set params
+			report.setParameters(parameters);
+			// set data (InfoResource.java)
+			report.setDatasource(new InfoResource());
+			// set report type (pdf, xls, ...)
+			report.setType((String) format.getSelectedItem().getValue());
+		}
+		]]>
+	</zscript>
+</zk>
