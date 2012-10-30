@@ -1,0 +1,20 @@
+<zk>
+	<!-- Tested with ZK 6.0.2 EE Eval -->
+
+	<!-- A window, apply a custom GenericForwardComposer
+		we usually use an component that is an Id Space
+		such like window to apply GenericForwardComposer
+		so we can maintain the subset of components separately
+		without the need to worry if there is any conflicts
+		with other subsets
+		-->
+	<window apply="test.basic.mvc.BasicGenericForwardComposer">
+		Input your name then click button:
+		<textbox id="tb" />
+		<button id="btn" label="Say Hello" />
+		<div height="50px" width="100px"
+			style="margin: 10px; background-color: #A6C3EA;">
+			<label id="lb" />
+		</div>
+	</window>
+</zk>
