@@ -1,0 +1,10 @@
+<zk>
+	<!-- Tested with ZK 6.0.1 CE and ZK Pivottable 2.0.0 -->
+	<!-- window, apply a SelectorComposer -->
+	<window id="win" xmlns:w="client"
+	apply="test.TestComposer">
+	<!-- pivottable, get model and renderer from window's composer -->
+	<pivottable id="pivottable" model="${win$composer.pivotModel}"
+		pivotRenderer="${win$composer.pivotRenderer}" />
+	</window>
+</zk>
