@@ -1,0 +1,17 @@
+<zk>
+	<!-- Tested with ZK 6.0.2 EE Eval -->
+
+	<!-- A window, apply a custom SelectorComposer
+		the selector composer can wire components/listen events
+		by jquery-selector like way, it is not required to assign
+		id to components -->
+	<window apply="test.basic.mvc.BasicSelectorComposer">
+		Input your name then click button:
+		<textbox id="tb" />
+		<button label="Say Hello" />
+		<div height="50px" width="100px"
+			style="margin: 10px; background-color: #A6C3EA;">
+			<label />
+		</div>
+	</window>
+</zk>
