@@ -1,0 +1,25 @@
+<zk>
+	<!-- both buttons call tbx.setValue(...) when clicked,
+			they will set the value into the component with id "tbx"
+			under the same namespace -->
+	<window>
+		<button label="test">
+			<attribute name="onClick">
+				tbx.setValue("button 'test' is clicked");
+			</attribute>
+		</button>
+		<textbox id="tbx" />
+	</window>
+	<window>
+		<button label="test2">
+			<attribute name="onClick">
+				tbx.setValue("button 'test2' is clicked");
+			</attribute>
+		</button>
+		<!-- the id "tbx" already used in previous textbox,
+			but the previous textbox is in different IdSpace
+			(under different window), the page will be
+			rendered correctly -->
+		<textbox id="tbx" />
+	</window>
+</zk>

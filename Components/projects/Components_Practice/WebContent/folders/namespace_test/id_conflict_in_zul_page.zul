@@ -1,0 +1,17 @@
+<zk>
+	<button label="test">
+		<attribute name="onClick">
+			tbx.setValue("button 'test' is clicked");
+		</attribute>
+	</button>
+	<textbox id="tbx" />
+	<button label="test2">
+		<attribute name="onClick">
+			tbx.setValue("button 'test2' is clicked");
+		</attribute>
+	</button>
+	<!-- the id "tbx" already used in previous textbox,
+		will throw an org.zkoss.zk.ui.UiException
+		with respect to "Not unique in ID space" -->
+	<textbox id="tbx" />
+</zk>
