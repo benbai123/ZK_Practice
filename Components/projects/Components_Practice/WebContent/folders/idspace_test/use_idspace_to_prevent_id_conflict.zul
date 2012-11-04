@@ -1,7 +1,7 @@
 <zk>
 	<!-- both buttons call tbx.setValue(...) when clicked,
 			they will set the value into the component with id "tbx"
-			under the same namespace -->
+			under the same IdSpace -->
 	<window>
 		<button label="test">
 			<attribute name="onClick">
