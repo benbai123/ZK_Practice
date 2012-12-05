@@ -1,0 +1,49 @@
+<zk>
+	<!-- Tested with ZK 6.0.2 -->
+
+	<!-- The basic patterns:
+			apply="org.zkoss.bind.BindComposer" the composer that handle MVVM
+			@id: the 'Name' for the View-Model under the window
+			@init: the java-class that will be instantiate as a View-Model
+
+		The two lines below means use BasicViewModel as a View-Model,
+		and give it a name "basicVM"
+	 -->
+	<window apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('basicVM') @init('test.basic.mvvm.BasicViewModel')">
+
+		Input your name then click button:
+
+		<!-- @bind(basicVM.name):
+				load the 'name' from basicVM
+				Which means there should a getName method in basicVM (BasicViewModel)
+
+				save value to basicVM by setName method in basicVM
+
+			This line below means get value from basicVM's getName method and
+			save value to basicVM by setName method
+		 -->
+		<textbox value="@bind(basicVM.name)" />
+
+		<!-- @command('sayHello'):
+				Trigger the method of View-Model,
+				the View-Model will be detected automatically,
+				it will call basicVM's sayHello method here
+
+			This line below means when button clicked,
+			call basicVM's sayHello method
+		 -->
+		<button label="Say hello" onClick="@command('sayHello')" />
+
+		<div height="50px" width="100px"
+			style="margin: 10px; background-color: #A6C3EA;">
+			<!-- @load(basicVM.message):
+					load the 'message' from basicVM
+					Which means there should a getMessage method in basicVM (BasicViewModel)
+	
+				This line below means get value from basicVM's getMessage method
+			 -->
+			<label value="@load(basicVM.message)" />
+		</div>
+	</window>
+</zk>
