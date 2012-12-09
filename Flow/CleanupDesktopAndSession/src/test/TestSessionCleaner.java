@@ -15,7 +15,7 @@ import org.zkoss.zk.ui.http.HttpSessionListener;
  */
 public class TestSessionCleaner extends HttpSessionListener {
 
-	private Map<String, Object> MapOfVeryBigDataPerSession = new HashMap<String, Object>();
+	private static Map<String, Object> MapOfVeryBigDataPerSession = new HashMap<String, Object>();
 	// called while session created
 	public void sessionCreated(HttpSessionEvent evt) {
 		super.sessionCreated(evt);
