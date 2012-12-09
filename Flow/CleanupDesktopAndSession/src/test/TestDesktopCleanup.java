@@ -12,7 +12,7 @@ public class TestDesktopCleanup implements DesktopCleanup {
 	// the cleanup function that will be called by ZK
 	// while desktop destroy
 	public void cleanup (Desktop desktop) {
-		System.out.println(" desktop cleanup " + desktop.getId());
+		System.out.println(" desktop cleanup " + desktop.getId() + ", path = " + desktop.getRequestPath());
 		TestDesktopInit.removeDataFromMapOfVeryBigDataPerDesktop(desktop.getId());
 		System.out.println(" remove data from MapOfVeryBigDataPerDesktop, size = "
 					+ TestDesktopInit.getSizeOfMapOfVeryBigDataPerDesktop());

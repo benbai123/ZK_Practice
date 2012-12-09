@@ -6,14 +6,14 @@
 		default (which is usually specified in web.xml).
 	 -->
 	<session-config>
-		<session-timeout>20</session-timeout>
+		<session-timeout>10</session-timeout>
 	</session-config>
 	<!-- specifies the time, in seconds, between client requests before
 		a desktop is invalidated. A negative time indicates the
 		desktop should never timeout.
 	 -->
 	<desktop-config>
-		<desktop-timeout>10</desktop-timeout>
+		<desktop-timeout>5</desktop-timeout>
 	</desktop-config>
 	<!-- Classes that implement DesktopCleanup and DesktopInit,
 

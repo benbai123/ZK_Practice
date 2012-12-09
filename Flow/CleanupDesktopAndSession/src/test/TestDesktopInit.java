@@ -16,7 +16,7 @@ public class TestDesktopInit implements DesktopInit {
 	// the init function that will be called by ZK
 	// while desktop initiated
 	public void init(Desktop desktop, java.lang.Object request) {
-		System.out.println(" desktop init " + desktop.getId());
+		System.out.println(" desktop init, id = " + desktop.getId() + ", path = " + desktop.getRequestPath());
 		MapOfVeryBigDataPerDesktop.put(desktop.getId(), desktop.getId());
 		System.out.println(" put data into MapOfVeryBigDataPerDesktop, size = " + MapOfVeryBigDataPerDesktop.size());
 		System.out.println();
