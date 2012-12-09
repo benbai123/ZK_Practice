@@ -1,0 +1,19 @@
+<zk>
+	<!-- Tested with ZK 6.0.2 -->
+	<div>
+		<!-- create window component and set properties -->
+		<window title="test window" border="normal">
+			<!-- add event listener for onClick event of window -->
+			<attribute name="onClick"><![CDATA[
+				alert("test window is clicked !");
+			]]></attribute>
+			<!-- create label component and set properties -->
+			<label value="test label" style="color: green;">
+				<!-- add event listener for onClick event of label -->
+				<attribute name="onClick"><![CDATA[
+					alert("test label is clicked !");
+				]]></attribute>
+			</label>
+		</window>
+	</div>
+</zk>
