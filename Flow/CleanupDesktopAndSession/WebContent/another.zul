@@ -1,0 +1,12 @@
+<zk>
+	<!-- Tested with ZK 6.0.2 -->
+	<div>test desktop cleanup and session cleanup</div>
+	<div>click 'to index.zul' button than you will see the cleanup message for desktop in console</div>
+	<div>or wait 10 secondes than you will see cleanup message for session desktop(s) in console</div>
+	
+	<button label="to index.zul">
+		<attribute name="onClick"><![CDATA[
+			Executions.getCurrent().sendRedirect("/index.zul");
+		]]></attribute>
+	</button>
+</zk>

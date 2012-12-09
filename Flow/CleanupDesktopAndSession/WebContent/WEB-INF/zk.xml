@@ -1,0 +1,33 @@
+<zk>
+	<!-- Tested with ZK 6.0.2 -->
+	<!-- specifies the time, in seconds, between client requests before
+		a session is invalidated. A negative time indicates the session
+		should never timeout. The default zero means to use the system
+		default (which is usually specified in web.xml).
+	 -->
+	<session-config>
+		<session-timeout>20</session-timeout>
+	</session-config>
+	<!-- specifies the time, in seconds, between client requests before
+		a desktop is invalidated. A negative time indicates the
+		desktop should never timeout.
+	 -->
+	<desktop-config>
+		<desktop-timeout>10</desktop-timeout>
+	</desktop-config>
+	<!-- Classes that implement DesktopCleanup and DesktopInit,
+
+		From official site:
+		Notice that ZK will instantiate an object from the class you
+		registered for each callback. For example, an object is
+		instantiated to invoke DesktopInit.init(Desktop, Object), and
+		another object instantiated to invoke DesktopCleanup.cleanup(Desktop),
+		even if you register a class that implements both DesktopInit and DesktopCleanup.
+	 -->
+	<listener>
+		<listener-class>test.TestDesktopCleanup</listener-class>
+	</listener>
+	<listener>
+		<listener-class>test.TestDesktopInit</listener-class>
+	</listener>
+</zk>
