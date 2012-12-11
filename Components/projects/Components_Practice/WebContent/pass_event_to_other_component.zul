@@ -1,0 +1,7 @@
+<zk>
+	<!-- Tested with ZK 6.0.2 -->
+	<window apply="test.event.passeventtest.PasseventTestComposer">
+		<label id="lb" value="label" />
+		<textbox id="tbx" />
+	</window>
+</zk>
