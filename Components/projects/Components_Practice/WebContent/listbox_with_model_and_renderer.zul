@@ -1,0 +1,22 @@
+<zk>
+	<!-- Tested with ZK 6.0.2 -->
+
+	<div style="margin: 10px;"
+		apply="test.listbox.composer.ListboxModelRendererComposer">
+		<vbox>
+			<label value="listbox with string data in ListModel, do not need renderer" />
+			<div height="10px" />
+			<listbox id="lbOne" />
+			<div height="30px" />
+
+			<label value="listbox with Person in ListModel but no renderer, cannot display data well" />
+			<div height="10px" />
+			<listbox id="lbTwo" />
+			<div height="30px" />
+
+			<label value="listbox with Person in ListModel and ListitemRenderer, display person data without any problem" />
+			<div height="10px" />
+			<listbox id="lbThree" />
+		</vbox>
+	</div>
+</zk>
