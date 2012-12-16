@@ -1,0 +1,35 @@
+<zk>
+	<!-- Tested with ZK 6.0.2 -->
+	<div apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('test.viewmodel.TestVM')">
+		<hbox>
+			<!-- simply get itemModel from vm, use ItemRenderer
+				to render items and to preprocess inner event
+				and trigger orderItem event while the onOrderEvent
+				custom event -->
+			<listbox width="400px" model="@load(vm.itemModel)"
+				itemRenderer="test.renderer.ItemRenderer"
+				onOrderEvent="@command('orderItem')">
+				<listhead>
+					<listheader label="Item Name" />
+					<listheader label="Available Amount" />
+					<listheader label="Order Amount" />
+					<listheader label="Order Button" />
+				</listhead>	
+			</listbox>
+			<!-- simply get orderModel from vm, use OrderRenderer
+				to render items and to preprocess inner event
+				and trigger cancelOrder event while the onOrderEvent
+				custom event -->
+			<listbox width="400px" model="@load(vm.orderModel)"
+				itemRenderer="test.renderer.OrderRenderer"
+				onOrderEvent="@command('cancelOrder')">
+				<listhead>
+					<listheader label="Item Name" />
+					<listheader label="Ordered Amount" />
+					<listheader label="Cancel Button" />
+				</listhead>
+			</listbox>
+		</hbox>
+	</div>
+</zk>
