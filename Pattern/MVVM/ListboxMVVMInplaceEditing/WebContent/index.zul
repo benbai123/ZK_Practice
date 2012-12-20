@@ -1,0 +1,21 @@
+<zk>
+	<!-- Tested with ZK 6.0.2 -->
+	<div apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('test.viewmodel.TestVM')">
+		<hlayout>
+			<vlayout>
+				<listbox width="400px" model="@load(vm.personModel)"
+					selectedIndex="@bind(vm.selectedIndex)"
+					itemRenderer="test.renderer.InplaceEditingPersonRenderer"
+					onModelDataChange="@command('updateModelData')">
+				</listbox>
+				<hlayout>
+					<button label="show current data" onClick="@command('displayCurrentData')" />
+					<button label="add new" onClick="@command('addNew')" />
+					<button label="delete selected" onClick="@command('delSel')" />
+				</hlayout>
+			</vlayout>
+			<textbox rows="10" width="350px" value="@load(vm.currentData)" />
+		</hlayout>
+	</div>
+</zk>

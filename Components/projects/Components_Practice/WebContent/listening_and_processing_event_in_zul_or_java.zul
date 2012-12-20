@@ -1,0 +1,22 @@
+<zk>
+	<!-- tested with ZK 6.0.2 -->
+	<div apply="test.ListeningProcessingEventTestComposer">
+		<textbox id="tb" />
+		<!-- the button below listening and processing in zul page
+			 -->
+		<button label="button one">
+			<!-- the fragment below is equal to
+				addEventListener("onClick", new EventListener () {
+					public void onEvent (Event event) {
+						tb.setValue("button one clicked !");
+					}
+				});
+				where the 'tb' here will mapping to the component that id is 'tb'
+				in the zul page by ZK automatically -->
+			<attribute name="onClick"><![CDATA[
+				tb.setValue("button one clicked !");
+			]]></attribute>
+		</button>
+		<button id="btnTwo" label="button two" />
+	</div>
+</zk>
