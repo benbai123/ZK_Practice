@@ -1,0 +1,22 @@
+<zk>
+	<!-- tested with ZK 6.0.2 -->										   
+	<window apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('test.tree.rod.sample.TestVM')">
+		<tree id="tree" model="@bind(vm.directoryModel)"
+			width="600px" height="200px"
+			onSelect="@command('updateSelectedDirectory')">
+			<treecols>
+				<treecol label="name" />
+				<treecol label="path" />
+			</treecols>
+			<template name="model" var="node" status="s">
+				<treeitem open="@load(node.open)">
+					<treerow>
+						<treecell label="@bind(node.data.name)" />
+						<treecell label="@bind(node.data.path)" />
+					</treerow>
+				</treeitem>
+			</template>
+		</tree>
+	</window>
+</zk>
