@@ -1,0 +1,94 @@
+<zk>
+	<!-- tested with ZK 6.0.2 -->
+	<script><![CDATA[
+		zk.afterLoad("zul.db", function () {
+			// Datebox Calendar Renderer
+			var _Cwgt = {};
+			zk.override(zul.db.CalendarPop.prototype, _Cwgt, {
+				// switch the view after redraw or open as needed
+				redraw: function (out) {
+					_Cwgt.redraw.apply(this, arguments); //call the original method
+					this._customChangeView ();
+				},
+				open: function (silent) {
+					_Cwgt.open.apply(this, arguments); //call the original method
+					this._customChangeView ();
+				},
+				_customChangeView: function () {
+					// cannot show month/day
+					if (jq(this.parent.$n()).hasClass('datebox-year-only')) {
+						var view = this._view;
+						// switch to year view as needed
+						if (view == 'month' || view == 'day')
+							this._setView("year");
+					} else if (jq(this.parent.$n()).hasClass('datebox-month-only')) {
+						// cannot show day view
+						// switch to month view as needed
+						if (this._view == 'day')
+							this._setView("month");
+					}
+				},
+				// customize the chooseDate function
+				_chooseDate: function (target, val) {
+					var view = this._view;
+					if (jq(this.parent.$n()).hasClass('datebox-month-only')
+						|| jq(this.parent.$n()).hasClass('datebox-year-only')) {
+						// do customize chooseDate if the parent (datebox)
+						// has specific class
+						var date = this.getTime(),
+							year = (view == 'decade' || view == 'year')? val : date.getFullYear(),
+							month = view == 'month'? val : 0,
+							date = 1;
+						// set date value
+						this._setTime(year, month, 1);
+						if (view == 'decade') {
+							// switch to year view if at decade view
+							this._setView("year");
+						} else if (jq(this.parent.$n()).hasClass('datebox-month-only')
+							&& view == 'year') {
+							// switch to month view if at year view and the month view is allowed
+							this._setView("month");
+						} else if (jq(this.parent.$n()).hasClass('datebox-month-only') && view == 'month'
+							|| jq(this.parent.$n()).hasClass('datebox-year-only') && view == 'year') {
+							// close calendar and update value if already at the smallest allowed view
+							this.close();
+							this.parent.updateChange_();
+						}
+					} else {
+						_Cwgt._chooseDate.apply(this, arguments); //call the original method
+					}
+				}
+			});
+		});
+	]]></script>
+	<vbox>
+		<label value="datebox that do not allow the month/day view" />
+		<datebox id="dbx" sclass="datebox-year-only"
+			format="yyyy">
+			<attribute name="onChange"><![CDATA[
+				Date date = self.getValue();
+				alert("Year: " + (date.getYear()+1900));
+			]]></attribute>
+		</datebox>
+
+		<label value="datebox that do not allow the day view" />
+		<datebox id="dbx2" sclass="datebox-month-only"
+			format="yyyy-MM">
+			<attribute name="onChange"><![CDATA[
+				Date date = self.getValue();
+				alert("Year: " + (date.getYear()+1900) + "\n"
+					+ "Month: " + (date.getMonth()+1));
+			]]></attribute>
+		</datebox>
+		<label value="a normal datebox" />
+
+		<datebox id="dbx3">
+			<attribute name="onChange"><![CDATA[
+				Date date = self.getValue();
+				alert("Year: " + (date.getYear()+1900) + "\n"
+					+ "Month: " + (date.getMonth()+1) + "\n"
+					+ "Day: " + date.getDate());
+			]]></attribute>
+		</datebox>
+	</vbox>
+</zk>
