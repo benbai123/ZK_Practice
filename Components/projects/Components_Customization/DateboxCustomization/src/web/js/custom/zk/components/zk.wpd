@@ -1,0 +1,12 @@
+<!-- Tested with ZK 6.0.2 -->
+<!-- note the depends attribute should be zul.db
+	since ZK supports load package on demand 
+	will not load all recuired package if you only
+	specify zul
+	
+	according to lang.xml in zul project, it more
+	likely just load zul and zul.wgt by default -->
+<package name="custom.zk.components" language="xul/html" depends="zul.db">
+	<widget name="Yearbox" />
+	<widget name="Monthbox" />
+</package>

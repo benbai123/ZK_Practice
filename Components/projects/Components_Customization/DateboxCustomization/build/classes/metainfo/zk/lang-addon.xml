@@ -1,0 +1,34 @@
+<!-- Tested with ZK 6.0.2 -->
+
+<language-addon>
+	<addon-name>customDatebox</addon-name>
+	<language-name>xul/html</language-name>
+
+	<!-- It specifies what language addons this addon
+		depends on. If specified, this addon will be
+		parsed after all the specified addons are parsed -->
+	<depends>zul</depends>
+
+	<!-- define yearbox -->
+	<component>
+		<component-name>yearbox</component-name>
+		<!-- extends datebox component,
+			this denotes using all files (java/js/css.dsp)
+			of the original datebox by default if
+			no other file(s) specified -->
+		<extends>datebox</extends>
+		<!-- specify custom widget class file -->
+		<widget-class>custom.zk.components.Yearbox</widget-class>
+	</component>
+	<!-- define monthbox -->
+	<component>
+		<component-name>monthbox</component-name>
+		<!-- extends datebox component,
+			this denotes using all files (java/js/css.dsp)
+			of the original datebox by default if
+			no other file(s) specified -->
+		<extends>datebox</extends>
+		<!-- specify custom widget class file -->
+		<widget-class>custom.zk.components.Monthbox</widget-class>
+	</component>
+</language-addon>

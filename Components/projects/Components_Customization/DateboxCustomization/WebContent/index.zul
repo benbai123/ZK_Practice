@@ -1,0 +1,20 @@
+<zk>
+	<vbox>
+		<label value="yearbox" />
+		<yearbox format="yyyy">
+			<attribute name="onChange"><![CDATA[
+				Date date = self.getValue();
+				alert("Year: " + (date.getYear()+1900));
+			]]></attribute>
+		</yearbox>
+
+		<label value="monthbox" />
+		<monthbox format="yyyy-MM">
+			<attribute name="onChange"><![CDATA[
+				Date date = self.getValue();
+				alert("Year: " + (date.getYear()+1900) + "\n"
+					+ "Month: " + (date.getMonth()+1));
+			]]></attribute>
+		</monthbox>
+	</vbox>
+</zk>
