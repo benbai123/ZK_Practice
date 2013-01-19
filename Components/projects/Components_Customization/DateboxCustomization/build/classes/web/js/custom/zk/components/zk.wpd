@@ -9,4 +9,5 @@
 <package name="custom.zk.components" language="xul/html" depends="zul.db">
 	<widget name="Yearbox" />
 	<widget name="Monthbox" />
+	<script src="override.js"/>
 </package>
