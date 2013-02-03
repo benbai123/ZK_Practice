@@ -1,0 +1,13 @@
+<zk>
+	<!-- Tested with ZK 6.0.2 EE and ZK Pivottable 2.0.0 -->
+	<!-- window, apply a SelectorComposer -->
+	<window id="win" xmlns:w="client"
+		apply="test.TestComposer">
+		<vlayout>
+			<!-- pivottable, get model from window's composer -->
+			<pivottable id="pivottable" model="${win$composer.pivotModel}" />
+			<button id="btn" label="update" />
+			<textbox id="tbx" hflex="1" rows="20" />
+		</vlayout>
+	</window>
+</zk>
