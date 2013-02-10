@@ -1,0 +1,21 @@
+<zk>
+	<!-- Tested with ZK 6.0.2 EE and ZK Pivottable 2.0.0 -->
+	<!-- window, apply a SelectorComposer -->
+	<window id="win" xmlns:w="client"
+		apply="test.PVTCompareStructureComposer">
+		<vlayout>
+			<!-- pivottable, get model from window's composer -->
+			<button id="addRowBtn" label="add RowThree - 3 to second pivottable" />
+			<button id="addCalBtn" label="add Min calculator to RowOne of second pivottable" />
+			<button id="compareBtn" label="show compare result" />
+
+			<pivottable id="pivottable" model="${win$composer.pivotModel}" />
+			<pivottable id="pivottableTwo" model="${win$composer.pivotModelTwo}" />
+
+			 the current view of the two models are structure-equal? 
+			<label id="lbOne" value="" />
+			 the whole structure of the two models are structure-equal? 
+			<label id="lbTwo" value="" />
+		</vlayout>
+	</window>
+</zk>

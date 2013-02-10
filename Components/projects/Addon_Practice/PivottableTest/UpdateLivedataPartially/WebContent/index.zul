@@ -1,0 +1,43 @@
+<zk>
+	<!-- Tested with ZK 6.0.2 EE and ZK Pivottable 2.0.0 -->
+	<!-- window, apply a SelectorComposer -->
+	<script><![CDATA[
+		function update (items) {
+			if (items && items.length > 0) {
+				var dataRow = jq('.z-pivottable-cell-field')[0].parentNode,
+					style,
+					item,
+					rowIdx,
+					colIdx,
+					val,
+					idx,
+					currentRow = 0,
+					dir;
+				for (idx = 0; idx < items.length; idx++) {
+					item = items[idx];
+					rowIdx = item.rowIdx;
+					colIdx = item.colIdx;
+					val = item.val;
+					dir = item.dir;
+					style = '';
+					while (currentRow < rowIdx) {
+						dataRow = dataRow.nextSibling;
+						currentRow++;
+					}
+					cell = jq(dataRow).find('td')[colIdx];
+					if (dir) style = (dir == 'up'? 'style="color: green;"' : 'style="color: red;"');
+					cell.firstChild.innerHTML = '<span '+style+'>' + val + '</span>';
+				}
+			}
+		}
+	]]></script>
+	<window id="win" xmlns:w="client"
+		apply="test.PVTPartialUpdateComposer">
+		<vlayout>
+			<!-- pivottable, get model from window's composer -->
+			<pivottable id="pivottable" model="${win$composer.pivotModel}"
+				pageSize="9999" />
+			<button id="btn" label="test add" />
+		</vlayout>
+	</window>
+</zk>
