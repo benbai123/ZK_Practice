@@ -34,6 +34,7 @@
 	<window id="win" xmlns:w="client"
 		apply="test.PVTPartialUpdateComposer">
 		<vlayout>
+			<textbox id="tbx" value="Added values: " width="800px" rows="10" />
 			<!-- pivottable, get model from window's composer -->
 			<pivottable id="pivottable" model="${win$composer.pivotModel}"
 				pageSize="9999" />

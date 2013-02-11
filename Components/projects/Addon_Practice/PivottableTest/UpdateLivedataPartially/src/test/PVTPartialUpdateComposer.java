@@ -111,37 +111,47 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 		List<List<Object>> result = new ArrayList<List<Object>>();
 		Random r = new Random();
 		int amount = 1;
+		StringBuilder sb = new StringBuilder("");
 
 		for (int i = 0; i < amount; i++) {
 			List<Object> data = new ArrayList<Object>();
 			Object o;
 			o = "RowOne - " + (r.nextInt(5) + 1);
-			System.out.print("add: " + o + "\t");
+			sb.append("add: ")
+				.append(o)
+				.append("\t");
 			data.add(o);
 			o = "RowTwo - " + (r.nextInt(5) + 1);
-			System.out.print(o + "\t");
+			sb.append(o)
+				.append("\t");
 			data.add(o);
 			o = "RowThree - " + (r.nextInt(5) + 1);
-			System.out.print(o + "\t");
+			sb.append(o)
+				.append("\t");
 			data.add(o);
 			o = "ColumnOne - " + (r.nextInt(5) + 1);
-			System.out.print(o + "\t");
+			sb.append(o)
+				.append("\t");
 			data.add(o);
 			o = "ColumnTwo - " + (r.nextInt(5) + 1);
-			System.out.print(o + "\t");
+			sb.append(o)
+				.append("\t");
 			data.add(o);
 			o = "ColumnThree - " + (r.nextInt(5) + 1);
-			System.out.print(o + "\t");
+			sb.append(o)
+				.append("\t");
 			data.add(o);
 			o = -5 + r.nextInt(10);
-			System.out.print(o + "\t");
+			sb.append(o)
+				.append("\t");
 			data.add(o);
 			o = -5 + r.nextInt(10);
-			System.out.print(o + "\t\n");
+			sb.append(o)
+				.append("\t\n");
 			data.add(o);
 			result.add(data);
 		}
-		System.out.println();
+		tbx.setValue(tbx.getValue() + "\n" + sb.toString());
 		return result;
 	}
 	/**
@@ -257,11 +267,10 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 		List<List<Object>> newData = getNewDatas();
 		if (newData.size() > 0) {
 			_latestPivotModel = createNewModel(_pivotModel, newData); 
-			if (isStructureEqual(_pivotModel, _latestPivotModel)) {
+			if (PVTUtils.isStructureEqual(_pivotModel, _latestPivotModel, true)) {
 				updateChangedData(_pivotModel, _latestPivotModel);
 			} else {
 				_currentValues = null;
-				System.out.println(" Structure Changed ");
 
 				pivottable.setModel(_latestPivotModel);
 				doUpdate(true);
@@ -274,103 +283,7 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 		storeValue();
 		doUpdate(false);
 	}
-	/**
-	 * Get all current "leaf" node of row/column
-	 * @param headerTree
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public List<PivotHeaderNode> getNodeList (PivotHeaderTree headerTree) {
-		PivotHeaderNode root = headerTree.getRoot();
-		List<PivotHeaderNode> nodes = new ArrayList<PivotHeaderNode>();
-		List<PivotHeaderNode> tmp = new ArrayList<PivotHeaderNode>();
-		nodes = (List<PivotHeaderNode>)root.getChildren();
 
-		boolean foundAllRows = false;
-		while (!foundAllRows) {
-			foundAllRows = true;
-			for (PivotHeaderNode phn : nodes) {
-				// get only leaf nodes
-				// you can adjust condition as needed
-				if (phn.isOpen()) {
-					List<PivotHeaderNode> children = (List<PivotHeaderNode>)phn.getChildren();
-					if (children != null && children.size() > 0) {
-						tmp.addAll(children);
-						foundAllRows = false;
-					} else {
-						tmp.add(phn);
-					}
-				} else {
-					tmp.add(phn);
-				}
-			}
-			nodes = tmp;
-			tmp = new ArrayList<PivotHeaderNode>();
-		}
-		return nodes;
-	}
-	private boolean isStructureEqual (TabularPivotModel modelOne, TabularPivotModel modelTwo) {
-		boolean equal = true;
-
-		List<PivotHeaderNode> rows = getNodeList(modelOne.getRowHeaderTree());
-		List<PivotHeaderNode> columns = getNodeList(modelOne.getColumnHeaderTree());
-		List<PivotHeaderNode> rowsTwo = getNodeList(modelTwo.getRowHeaderTree());
-		List<PivotHeaderNode> columnsTwo = getNodeList(modelTwo.getColumnHeaderTree());
-		TabularPivotField[] dataFields = modelOne.getDataFields();
-		TabularPivotField[] dataFieldsTwo = modelTwo.getDataFields();
-
-		if (rows.size() != rowsTwo.size()
-			|| columns.size() != columnsTwo.size()
-			|| dataFields.length != dataFieldsTwo.length) {
-			equal = false;
-		} else {
-			equal = compareNodeList(rows, rowsTwo) && compareNodeList(columns, columnsTwo);
-		}
-		return equal;
-	}
-	/**
-	 * Compare two list of PivotHeaderNode
-	 * @param list
-	 * @param listTwo
-	 * @return
-	 */
-	private boolean compareNodeList (List<PivotHeaderNode> list, List<PivotHeaderNode> listTwo) {
-		boolean equal = true;
-		int i, j;
-		// compare rows
-		for (i = 0; i < list.size() && equal; i++) {
-			PivotHeaderNode node = list.get(i);
-			PivotHeaderNode nodeTwo = listTwo.get(i);
-
-			// key should be equal
-			// depth should be equal
-			// subtotal count should be equal
-			if (!node.getKey().equals(nodeTwo.getKey())
-				|| node.getDepth() != nodeTwo.getDepth()
-				|| node.getSubtotalCount(true) != nodeTwo.getSubtotalCount(true)) {
-				equal = false;
-				break;
-			}
-
-			// check calculators if any
-			if (node.getSubtotalCount(true) > 0) {
-				Calculator[] cals = node.getField().getSubtotals();
-				Calculator[] calsTwo = nodeTwo.getField().getSubtotals();
-				for (j = 0; j < cals.length; j++) {
-					Calculator cal = cals[j];
-					Calculator calTwo = calsTwo[j];
-
-					// label and label key should be euqal
-					if (!cal.getLabel().equals(calTwo.getLabel())
-						|| !cal.getLabelKey().equals(calTwo.getLabelKey())) {
-						equal = false;
-						break;
-					}
-				}
-			}
-		}
-		return equal;
-	}
 	public void storeValue () {
 
 		_currentValues = new ArrayList();
@@ -381,8 +294,8 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 		// the length of data fields under a column
 		int dataFieldsLength = _pivotModel.getDataFields().length;
 
-		List<PivotHeaderNode> rows = getNodeList(rowHeaderTree);
-		List<PivotHeaderNode> columns = getNodeList(columnHeaderTree);
+		List<PivotHeaderNode> rows = PVTUtils.getNodeList(rowHeaderTree, true);
+		List<PivotHeaderNode> columns = PVTUtils.getNodeList(columnHeaderTree, true);
 
 		rows.add(rRoot);
 
@@ -421,8 +334,8 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 		// the length of data fields under a column
 		int dataFieldsLength = _latestPivotModel.getDataFields().length;
 
-		List<PivotHeaderNode> rows = getNodeList(rowHeaderTree);
-		List<PivotHeaderNode> columns = getNodeList(columnHeaderTree);
+		List<PivotHeaderNode> rows = PVTUtils.getNodeList(rowHeaderTree, true);
+		List<PivotHeaderNode> columns = PVTUtils.getNodeList(columnHeaderTree, true);
 
 		rows.add(rRoot);
 		Position pos = new Position(0, 0);
@@ -462,9 +375,9 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 		Clients.evalJavaScript(sb.toString());
 		sb.setLength(0);
 	}
+	@SuppressWarnings("unchecked")
 	private void storeCurrentValues (TabularPivotModel model, PivotHeaderNode cRoot, 
 			PivotHeaderNode row, List<PivotHeaderNode> columns, int dataFieldsLength, int rowCalIdx) {
-		TabularPivotField[] dFields = model.getDataFields();
 		Number value;
 		for (PivotHeaderNode column : columns) { // for each column
 			// for each data field
@@ -513,7 +426,6 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 	private void addUpdateElements (TabularPivotModel model, PivotHeaderNode cRoot, 
 			PivotHeaderNode row, List<PivotHeaderNode> columns, int dataFieldsLength, int rowCalIdx,
 			StringBuilder sb, Position pos, boolean syncAll) {
-		TabularPivotField[] dFields = model.getDataFields();
 		Number value;
 		Number oldValue;
 		String dir = null;
@@ -540,7 +452,6 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 				value = model.getValue(row, rowCalIdx, column, -1, i);
 				
 				if (syncAll) {
-					System.out.println("syncAll");
 					dir = getDirection(_pivotModelFirstSnapshot, snapshotRow, snapshotCol, snapshotDataFieldIndex, snapshotRowCalIdx, -1, value);
 					if (dir != null && !dir.isEmpty()) {
 						addUpdateElement(pos._rowIdx, pos._colIdx, value, dir, sb);
@@ -577,7 +488,6 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 									// get data value from pivot model by row node, column node and data index
 									value = model.getValue(row, rowCalIdx, parentColumn, calIdx, j);
 									if (syncAll) {
-										System.out.println("syncAll");
 										dir = getDirection(_pivotModelFirstSnapshot, snapshotRow, snapshotCol, snapshotDataFieldIndex, snapshotRowCalIdx, snapshotColCalIdx, value);
 										if (dir != null && !dir.isEmpty()) {
 											addUpdateElement(pos._rowIdx, pos._colIdx, value, dir, sb);
@@ -608,7 +518,6 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 			// grand total for columns
 			value = model.getValue(row, rowCalIdx, cRoot, -1, i);
 			if (syncAll) {
-				System.out.println("syncAll");
 				dir = getDirection(_pivotModelFirstSnapshot, snapshotRow, snapshotCRoot, snapshotDataFieldIndex, snapshotRowCalIdx, -1, value);
 				if (dir != null && !dir.isEmpty()) {
 					addUpdateElement(pos._rowIdx, pos._colIdx, value, dir, sb);
@@ -664,6 +573,7 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 
 		return dir;
 	}
+	@SuppressWarnings("unchecked")
 	private PivotHeaderNode findNode (TabularPivotModel model, PivotHeaderNode root, PivotHeaderNode node) {
 		List keys = new ArrayList();
 		boolean found = false;
