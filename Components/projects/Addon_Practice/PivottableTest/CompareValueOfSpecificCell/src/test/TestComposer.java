@@ -140,8 +140,8 @@ public class TestComposer extends SelectorComposer {
 	 * @return
 	 * @throws Exception
 	 */
-	public TabularPivotModel getPivotModel (List<List<Object>> data, List<String> Columns) throws Exception {
-		TabularPivotModel pivotModel = new TabularPivotModel(data, Columns);
+	public TabularPivotModel getPivotModel (List<List<Object>> data, List<String> columns) throws Exception {
+		TabularPivotModel pivotModel = new TabularPivotModel(data, columns);
 
 		// assign rows, the order matches to the level of row node field
 		pivotModel.setFieldType("RowOne", PivotField.Type.ROW);
