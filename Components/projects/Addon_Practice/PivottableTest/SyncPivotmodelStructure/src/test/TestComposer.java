@@ -10,8 +10,11 @@ import org.zkoss.pivot.PivotField;
 import org.zkoss.pivot.PivotHeaderNode;
 import org.zkoss.pivot.Pivottable;
 import org.zkoss.pivot.impl.StandardCalculator;
+import org.zkoss.pivot.impl.TabularPivotField;
 import org.zkoss.pivot.impl.TabularPivotModel;
+import org.zkoss.pivot.ui.PivotFieldControl;
 
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
@@ -28,11 +31,18 @@ public class TestComposer extends SelectorComposer {
 	private static final long serialVersionUID = -2897873399288955635L;
 
 	@Wire
+	PivotFieldControl pfc;
+	@Wire
 	private Pivottable pivottableTwo;
 
 	private TabularPivotModel _pivotModel;
 	private TabularPivotModel _pivotModelTwo;
 
+	@SuppressWarnings("unchecked")
+	public void doAfterCompose (Component comp) throws Exception {
+		super.doAfterCompose(comp);
+		pfc.setModel(getPivotModel());
+	}
 	public TabularPivotModel getPivotModel () throws Exception {
 		if (_pivotModel == null) {
 			_pivotModel = getPivotModel(getData(), getColumns());
@@ -65,6 +75,7 @@ public class TestComposer extends SelectorComposer {
 		pivotModel.setFieldSubtotals(field, new Calculator[] {StandardCalculator.SUM, StandardCalculator.MAX});
 		return pivotModel;
 	}
+
 	/**
 	 * prepare the data for pivottable's model
 	 * The order of object put into data list should match
@@ -100,14 +111,41 @@ public class TestComposer extends SelectorComposer {
 				"DataOne"
 		});
 	}
+	/**
+	 * called when the node of first pivottable is opened/closed
+	 */
 	@Listen ("onPivotNodeOpen = #pivottable")
 	public void syncOpenStatus () {
 		syncOpenStatus(_pivotModel.getRowHeaderTree().getRoot(), _pivotModelTwo.getRowHeaderTree().getRoot(), false);
 		syncOpenStatus(_pivotModel.getColumnHeaderTree().getRoot(), _pivotModelTwo.getColumnHeaderTree().getRoot(), false);
 
-		// reset model
 		pivottableTwo.setModel(null);
 		pivottableTwo.setModel(_pivotModelTwo);
+	}
+	/**
+	 * called when the fields of first pivottable are changed
+	 */
+	@Listen ("onPivotFieldControlChange = #pfc")
+	public void syncModelStructure () {
+		TabularPivotField[] fields = _pivotModel.getFields();
+		for (TabularPivotField f : fields) {
+			_pivotModelTwo.setFieldType(f.getFieldName(), f.getType());
+
+			// sync field
+			PivotField field = _pivotModelTwo.getField(f.getFieldName());
+			// sync calculator
+			_pivotModelTwo.setFieldSubtotals(field, f.getSubtotals());
+		}
+		syncOpenStatus();
+	}
+	/**
+	 * called when add button clicked
+	 */
+	@Listen ("onClick = #addBtn")
+	public void addCalculator () {
+		PivotField field = _pivotModel.getField("RowOne");
+		_pivotModel.setFieldSubtotals(field, new Calculator[] {StandardCalculator.SUM, StandardCalculator.MAX, StandardCalculator.MIN});
+		syncModelStructure();
 	}
 	/**
 	 * Synchronize the open status of two pivot header trees

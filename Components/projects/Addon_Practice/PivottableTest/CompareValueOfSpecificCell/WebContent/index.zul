@@ -1,0 +1,16 @@
+<zk>
+	<!-- Tested with ZK 6.0.2 EE and ZK Pivottable 2.0.0 -->
+	<!-- window, apply a SelectorComposer -->
+	<window id="win"
+		apply="test.TestComposer">
+		<vlayout>
+			<!-- textbox, display the compare result -->
+			<textbox id="tbx" rows="13" width="500px" />
+			<!-- button, click to do compare and show result in the textbox above -->
+			<button id="btn" label="show compare result" />
+			<!-- pivottable, get model from window's composer -->
+			<pivottable id="pivottable" model="${win$composer.pivotModel}" />
+			<pivottable id="pivottableTwo" model="${win$composer.pivotModelTwo}" />
+		</vlayout>
+	</window>
+</zk>

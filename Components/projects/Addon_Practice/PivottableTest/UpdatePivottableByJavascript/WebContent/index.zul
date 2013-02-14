@@ -1,0 +1,36 @@
+<zk>
+	<!-- Tested with ZK 6.0.2 EE and ZK Pivottable 2.0.0 -->
+	<script><![CDATA[
+		function update (rowIdx, colIdx, val, dir) {
+			var dataRow = jq('.z-pivottable-cell-field')[0].parentNode,
+				style,
+				currentRow = 0;
+			style = '';
+			// find data tr by rowIdx
+			while (currentRow < rowIdx) {
+				dataRow = dataRow.nextSibling;
+				currentRow++;
+			}
+			// find data td by colIdx
+			cell = jq(dataRow).find('td')[colIdx];
+			// create style by dir ('up' or 'down')
+			if (dir) style = (dir == 'up'? 'style="color: green;"' : 'style="color: red;"');
+			// update data cell
+			cell.firstChild.innerHTML = '<span '+style+'>' + val + '</span>';
+		}
+	]]></script>
+	<!-- window, apply a SelectorComposer -->
+	<window id="win"
+		apply="test.TestComposer">
+		<vlayout>
+			<textbox id="tbx" width="700px" />
+			<button label="updateBtn">
+				<attribute name="onClick"><![CDATA[
+					Clients.evalJavaScript(tbx.getValue());
+				]]></attribute>
+			</button>
+			<!-- pivottable, get model from window's composer -->
+			<pivottable id="pivottable" model="${win$composer.pivotModel}" />
+		</vlayout>
+	</window>
+</zk>

@@ -1,6 +1,5 @@
 <zk>
 	<!-- Tested with ZK 6.0.2 EE and ZK Pivottable 2.0.0 -->
-	<!-- window, apply a SelectorComposer -->
 	<script><![CDATA[
 		function update (items) {
 			if (items && items.length > 0) {
@@ -31,12 +30,13 @@
 			}
 		}
 	]]></script>
-	<window id="win" xmlns:w="client"
-		apply="test.PVTPartialUpdateComposer">
+	<!-- window, apply a SelectorComposer -->
+	<window id="win" apply="test.PVTPartialUpdateComposer">
 		<vlayout>
 			<textbox id="tbx" value="Added values: " width="800px" rows="10" />
 			<!-- pivottable, get model from window's composer -->
 			<pivottable id="pivottable" model="${win$composer.pivotModel}"
+				use="test.CustomPivottable"
 				pageSize="9999" />
 			<button id="btn" label="test add" />
 		</vlayout>
