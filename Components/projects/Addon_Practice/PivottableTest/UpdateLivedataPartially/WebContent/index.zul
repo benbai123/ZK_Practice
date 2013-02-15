@@ -12,6 +12,7 @@
 					idx,
 					currentRow = 0,
 					dir;
+				// for each item
 				for (idx = 0; idx < items.length; idx++) {
 					item = items[idx];
 					rowIdx = item.rowIdx;
@@ -19,12 +20,16 @@
 					val = item.val;
 					dir = item.dir;
 					style = '';
+					// find row
 					while (currentRow < rowIdx) {
 						dataRow = dataRow.nextSibling;
 						currentRow++;
 					}
+					// find cell
 					cell = jq(dataRow).find('td')[colIdx];
+					// create style
 					if (dir) style = (dir == 'up'? 'style="color: green;"' : 'style="color: red;"');
+					// update cell with style
 					cell.firstChild.innerHTML = '<span '+style+'>' + val + '</span>';
 				}
 			}
@@ -39,6 +44,7 @@
 				use="test.CustomPivottable"
 				pageSize="9999" />
 			<button id="btn" label="test add" />
+			<pivot-field-control id="pfc" />
 		</vlayout>
 	</window>
 </zk>

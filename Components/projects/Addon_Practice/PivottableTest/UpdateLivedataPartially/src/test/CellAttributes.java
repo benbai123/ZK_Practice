@@ -2,13 +2,24 @@ package test;
 
 import java.util.List;
 
+/**
+ * attributes used to denotes a specific cell
+ * @author benbai123
+ *
+ */
 public class CellAttributes {
+	// keys to denote a row node
 	private List<Object> _rowKeys;
+	// keys to denote a column node
 	private List<Object> _colKeys;
+	// name to denotes a data field
 	private String _dataFieldName;
+	// labelKey to denote a row calculator
 	private String _rowCalculatorLabelKey;
+	// labelKey to denote a column calculator
 	private String _colCalculatorLabelKey;
 
+	// constructor
 	public CellAttributes (List<Object> rowKeys, List<Object> colKeys, String dataFieldName,
 			String rowCalculatorLabelKey, String colCalculatorLabelKey) {
 		_rowKeys = rowKeys;
@@ -17,6 +28,23 @@ public class CellAttributes {
 		_rowCalculatorLabelKey = rowCalculatorLabelKey;
 		_colCalculatorLabelKey = colCalculatorLabelKey;
 	}
+	/**
+	 * used to reset all attributes
+	 * @param rowKeys
+	 * @param colKeys
+	 * @param dataFieldName
+	 * @param rowCalculatorLabelKey
+	 * @param colCalculatorLabelKey
+	 */
+	public void updateAttributes (List<Object> rowKeys, List<Object> colKeys, String dataFieldName,
+			String rowCalculatorLabelKey, String colCalculatorLabelKey) {
+		_rowKeys = rowKeys;
+		_colKeys = colKeys;
+		_dataFieldName = dataFieldName;
+		_rowCalculatorLabelKey = rowCalculatorLabelKey;
+		_colCalculatorLabelKey = colCalculatorLabelKey;
+	}
+	// setters/getters
 	public void setRowKeys (List<Object> rowKeys) {
 		_rowKeys = rowKeys;
 	}
@@ -46,32 +74,5 @@ public class CellAttributes {
 	}
 	public String getColCalculatorLabelKey () {
 		return _colCalculatorLabelKey;
-	}
-	public String getCellInfo () {
-		StringBuilder sb = new StringBuilder("");
-		sb.append("Row: ");
-		if (_rowKeys == null || _rowKeys.size() == 0) {
-			sb.append("Grand Total");
-		} else {
-			for (Object key : _rowKeys) {
-				sb.append(key).append(" - ");
-			}
-		}
-		sb.append("\nColumn: ");
-		if (_colKeys == null || _colKeys.size() == 0) {
-			sb.append("Grand Total");
-		} else {
-			for (Object key : _colKeys) {
-				sb.append(key).append(" - ");
-			}
-		}
-		sb.append("\nData: ")
-			.append(_dataFieldName)
-			.append("\nRow Calculator: ")
-			.append(_rowCalculatorLabelKey == null? "Data" : _rowCalculatorLabelKey)
-			.append("\nColumn Calculator: ")
-			.append(_colCalculatorLabelKey == null? "Data" : _rowCalculatorLabelKey)
-			.append("\n");
-		return sb.toString();
 	}
 }

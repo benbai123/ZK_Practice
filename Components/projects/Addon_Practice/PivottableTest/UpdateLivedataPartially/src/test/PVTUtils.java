@@ -9,7 +9,41 @@ import org.zkoss.pivot.PivotHeaderTree;
 import org.zkoss.pivot.impl.TabularPivotField;
 import org.zkoss.pivot.impl.TabularPivotModel;
 
+/**
+ * Utilities to handle/retrieve pivot model status
+ * @author benbai123
+ *
+ */
 public class PVTUtils {
+	public static int INDEX_NOT_FOUND = -2;
+	public static PivotHeaderNode NODE_NOT_FOUND = null;
+
+	/**
+	 * Create snapshot of a pivot model
+	 * @param model
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static TabularPivotModel createModelSnapshot (TabularPivotModel model) {
+		List<List<Object>> rawData = (List<List<Object>>)model.getRawData();
+		TabularPivotField[] fields = model.getFields();
+
+		// get columns from old model
+		List<String> columns = new ArrayList<String>();
+		// set field
+		for (TabularPivotField tpf : fields) {
+			columns.add(tpf.getFieldName());
+		}
+
+		TabularPivotModel snapShot = new TabularPivotModel(rawData, columns);
+		for (TabularPivotField f : fields) {
+			snapShot.setFieldType(f.getFieldName(), f.getType());
+
+			PivotField field = snapShot.getField(f.getFieldName());
+			snapShot.setFieldSubtotals(field, f.getSubtotals());
+		}
+		return snapShot;
+	}
 	/**
 	 * Create a new pivot model based on
 	 * current pivot model and new data 
@@ -35,15 +69,20 @@ public class PVTUtils {
 	 * called when the fields of first pivottable are changed
 	 */
 	public static void syncModelStructure (TabularPivotModel model, TabularPivotModel modelTwo) {
-		TabularPivotField[] fields = model.getFields();
-		for (TabularPivotField f : fields) {
-			modelTwo.setFieldType(f.getFieldName(), f.getType());
-
-			PivotField field = modelTwo.getField(f.getFieldName());
-			modelTwo.setFieldSubtotals(field, f.getSubtotals());
-		}
+		syncFields(model.getRowFields(), modelTwo);
+		syncFields(model.getColumnFields(), modelTwo);
+		syncFields(model.getDataFields(), modelTwo);
+		syncFields(model.getFields(PivotField.Type.UNUSED), modelTwo);
 		syncOpenStatus(model.getRowHeaderTree().getRoot(), modelTwo.getRowHeaderTree().getRoot(), false);
 		syncOpenStatus(model.getColumnHeaderTree().getRoot(), modelTwo.getColumnHeaderTree().getRoot(), false);
+	}
+	private static void syncFields (TabularPivotField[] fields, TabularPivotModel model) {
+		for (TabularPivotField f : fields) {
+			model.setFieldType(f.getFieldName(), f.getType());
+
+			PivotField field = model.getField(f.getFieldName());
+			model.setFieldSubtotals(field, f.getSubtotals());
+		}
 	}
 	/**
 	 * Synchronize the open status of two pivot header trees
@@ -119,6 +158,18 @@ public class PVTUtils {
 			equal = isNodesEqual(rows, rowsTwo, openedOnly) && isNodesEqual(columns, columnsTwo, openedOnly);
 		}
 		return equal;
+	}
+	public static boolean isLastChild (PivotHeaderNode parent, PivotHeaderNode node) {
+		List<? extends PivotHeaderNode> children = parent.getChildren();
+		// use == to make sure they are the same instance
+		return node.getParent() == parent
+				&& children.get(children.size()-1) == node;
+	}
+	public static List<PivotHeaderNode> getRowLeafList (TabularPivotModel model) {
+		return PVTUtils.getNodeList(model.getRowHeaderTree(), true, true);
+	}
+	public static  List<PivotHeaderNode> getColumnLeafList (TabularPivotModel model) {
+		return PVTUtils.getNodeList(model.getColumnHeaderTree(), true, true);
 	}
 	/**
 	 * Get pivot nodes in a pivot header tree
@@ -261,11 +312,11 @@ public class PVTUtils {
 		if (col != null) {
 			colCalIdx = findCalculatorIndex(col, cellAttr.getColCalculatorLabelKey());
 		}
-		if (row == null // row should exists
-			|| col == null // col should exists
-			|| dataIdx == -2 // data field should exists
-			|| rowCalIdx == -2 // row calculator should exists if _rowCalculatorLabelKey is not null
-			|| colCalIdx == -2) { // column calculator should exists if _colCalculatorLabelKey is not null
+		if (row == NODE_NOT_FOUND // row should exists
+			|| col == NODE_NOT_FOUND // col should exists
+			|| dataIdx == INDEX_NOT_FOUND // data field should exists
+			|| rowCalIdx == INDEX_NOT_FOUND // row calculator should exists if _rowCalculatorLabelKey is not null
+			|| colCalIdx == INDEX_NOT_FOUND) { // column calculator should exists if _colCalculatorLabelKey is not null
 			return null;
 		}
 		return model.getValue(row, rowCalIdx, col, colCalIdx, dataIdx);
@@ -274,7 +325,7 @@ public class PVTUtils {
 	 * find the corresponding node in a pivot model
 	 * @param root The root of pivot header tree to search the corresponding node
 	 * @param keys list of node key
-	 * @return PivotHeaderNode the corresponding node, null denotes not found
+	 * @return PivotHeaderNode the corresponding node, NODE_NOT_FOUND denotes not found
 	 */
 	public static PivotHeaderNode findNode (PivotHeaderNode root, List<Object> keys) {
 		PivotHeaderNode node = null;
@@ -299,13 +350,13 @@ public class PVTUtils {
 		}
 
 		return found? node : // header nood
-				null; // not found
+			NODE_NOT_FOUND; // not found
 	}
 	/**
 	 * Search the corresponding data field index in a pivot model
 	 * @param model the model to search
 	 * @param fieldName the name of data field
-	 * @return int the corresponding data field index, -2 denotes not found
+	 * @return int the corresponding data field index, INDEX_NOT_FOUND denotes not found
 	 */
 	public static int findDataFieldIndex (TabularPivotModel model, String fieldName) {
 		// field name should not be null
@@ -317,13 +368,13 @@ public class PVTUtils {
 				}
 			}
 		}
-		return -2; // not found
+		return INDEX_NOT_FOUND; // not found
 	}
 	/**
 	 * Search the corresponding calculator index of a pivot field
 	 * @param field the field to search
 	 * @param labelKey the labelKey of calculator
-	 * @return int the corresponding calculator index, -2 denotes not found
+	 * @return int the corresponding calculator index, INDEX_NOT_FOUND denotes not found
 	 */
 	public static int findCalculatorIndex (PivotHeaderNode node, String labelKey) {
 		if (labelKey == null) return -1;
@@ -333,6 +384,6 @@ public class PVTUtils {
 				return i;
 			}
 		}
-		return -2; // not found
+		return INDEX_NOT_FOUND; // not found
 	}
 }

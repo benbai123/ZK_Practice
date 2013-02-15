@@ -4,7 +4,7 @@ import org.zkoss.pivot.Pivottable;
 import org.zkoss.zk.au.AuRequest;
 import org.zkoss.zk.ui.event.Events;
 
-public class CustomPivottable  extends Pivottable {
+public class CustomPivottable extends Pivottable {
 
 	private static final long serialVersionUID = 4770700380255057252L;
 

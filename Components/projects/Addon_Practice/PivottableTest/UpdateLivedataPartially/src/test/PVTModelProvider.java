@@ -10,6 +10,11 @@ import org.zkoss.pivot.PivotField;
 import org.zkoss.pivot.impl.StandardCalculator;
 import org.zkoss.pivot.impl.TabularPivotModel;
 
+/**
+ * Provide pivot model, create new data
+ * @author benbai123
+ *
+ */
 public class PVTModelProvider {
 	/**
 	 * Get pivottable's model, also make a snapshot of it
