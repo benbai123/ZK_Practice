@@ -45,7 +45,7 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 	private TabularPivotModel _latestPivotModel;
 
 	// used to store the value of current view
-	private List<ValueTracker> _currentValues = null;
+	private List<Number> _currentValues = null;
 
 	// newest raw data
 	private List<List<Object>> _latestRawData;
@@ -155,7 +155,7 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 	 */
 	private void storeValue () {
 
-		_currentValues = new ArrayList<ValueTracker>();
+		_currentValues = new ArrayList<Number>();
 
 		List<PivotHeaderNode> rows = PVTUtils.getRowLeafList(_pivotModel);
 		List<PivotHeaderNode> columns = PVTUtils.getColumnLeafList(_pivotModel);
@@ -264,7 +264,7 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 			// for each data field
 			for (int i = 0; i < dataFieldsLength; i++) {
 				// get data value from pivot model by row node, column node and data index
-				_currentValues.add(new ValueTracker(model.getValue(row, rowCalIdx, column, -1, i)));
+				_currentValues.add(model.getValue(row, rowCalIdx, column, -1, i));
 				//System.out.print(value + ",");
 				
 				// last data and
@@ -280,7 +280,7 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 							// again, for each data field
 							for (int j = 0; j < dataFieldsLength; j++) {
 								// get data value from pivot model by row node, column node and data index
-								_currentValues.add(new ValueTracker(model.getValue(row, rowCalIdx, parentColumn, calIdx, j)));
+								_currentValues.add(model.getValue(row, rowCalIdx, parentColumn, calIdx, j));
 								//System.out.print(value + ",");
 							}
 						}
@@ -369,7 +369,7 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 	 * @param sb StringBuilder contains update script
 	 * @param syncAll whether sync all cell or update changed cell only
 	 */
-	private void addUpdateElement (TabularPivotModel basemodel, List<ValueTracker> valueList,
+	private void addUpdateElement (TabularPivotModel basemodel, List<Number> valueList,
 			CellAttributes cell, Number value, Position pos, StringBuilder sb, boolean syncAll) {
 		String dir;
 		if (syncAll) {
@@ -378,12 +378,18 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 				addUpdateElement(pos.getRowIdx(), pos.getColIdx(), value, dir, sb);
 			}
 		} else {
-			ValueTracker vt = valueList.get(pos.getPtr());
-			if ( value != null &&  vt.isValueChanged(value)) {
-				dir = PVTUtils.getDirection(basemodel, cell, value);
-				addUpdateElement(pos.getRowIdx(), pos.getColIdx(), value, dir, sb);
+			int ptr = pos.getPtr();
+			if (value != null) {
+				Number oldv = valueList.get(ptr);
+				double valToComp = (oldv == null? 0 : oldv.doubleValue());
+				// value changed
+				if (value.doubleValue() != valToComp) {
+					dir = PVTUtils.getDirection(basemodel, cell, value);
+					addUpdateElement(pos.getRowIdx(), pos.getColIdx(), value, dir, sb);
+					// update value
+					valueList.set(ptr, value);
+				}
 			}
-			vt.setLatestValue(value);
 		}
 	}
 	private void addUpdateElement (int rowIdx, int colIdx, Number val, String dir, StringBuilder sb) {

@@ -200,10 +200,22 @@ public class PVTUtils {
 						tmp.addAll(children);
 						foundAllNodes = false;
 					} else {
-						tmp.add(phn);
+						// add to all if haven't found any children
+						// so do not need to loop through them again
+						if (foundAllNodes && leafOnly) {
+							all.add(phn);
+						} else {
+							// already found some children,
+							// add to tmp to make the order correct 
+							tmp.add(phn);
+						}
 					}
 				} else {
-					tmp.add(phn);
+					if (foundAllNodes && leafOnly) {
+						all.add(phn);
+					} else {
+						tmp.add(phn);
+					}
 				}
 			}
 			if (!leafOnly) {
@@ -212,7 +224,7 @@ public class PVTUtils {
 			nodes = tmp;
 			tmp = new ArrayList<PivotHeaderNode>();
 		}
-		return leafOnly? nodes : all;
+		return all;
 	}
 
 	/**

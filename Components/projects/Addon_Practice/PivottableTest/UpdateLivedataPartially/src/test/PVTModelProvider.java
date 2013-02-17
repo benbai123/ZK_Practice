@@ -125,11 +125,11 @@ public class PVTModelProvider {
 			sb.append(o)
 				.append("\t");
 			data.add(o);
-			o = -5 + r.nextInt(10);
+			o = -5 + r.nextInt(11); // -5 ~ 5
 			sb.append(o)
 				.append("\t");
 			data.add(o);
-			o = -5 + r.nextInt(10);
+			o = -5 + r.nextInt(11);
 			sb.append(o)
 				.append("\t\n");
 			data.add(o);
