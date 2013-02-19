@@ -1,7 +1,10 @@
 package test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.zkoss.pivot.Calculator;
 import org.zkoss.pivot.PivotField;
 import org.zkoss.pivot.PivotHeaderNode;
@@ -25,7 +28,10 @@ public class PVTUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	public static TabularPivotModel createModelSnapshot (TabularPivotModel model) {
-		List<List<Object>> rawData = (List<List<Object>>)model.getRawData();
+		// copy raw data
+		List<List<Object>> rawData = new ArrayList<List<Object>>();
+		rawData.addAll((List<List<Object>>)model.getRawData());
+
 		TabularPivotField[] fields = model.getFields();
 
 		// get columns from old model
@@ -88,14 +94,13 @@ public class PVTUtils {
 	 * Synchronize the open status of two pivot header trees
 	 * 
 	 * @param root the root of the base pivot header tree (or its sub trees)
-	 * @param rootTwo the root of the pivot header tree to sync (or its sub trees)
+	 * @param rootTwo the root of the pivot header tree (or its sub trees) to sync
 	 * @param checkAll whether sync whole tree, <br>
 	 * true: sync whole tree, put every node of base pivot header tree into open list to sync<br>
 	 * false: sync only current view, only put the displayed node into open list to sync
 	 */
 	private static void syncOpenStatus (PivotHeaderNode root, PivotHeaderNode rootTwo, boolean checkAll) {
-		List<PivotHeaderNode> originalOpenList = new ArrayList<PivotHeaderNode>();
-		List<PivotHeaderNode> newOpenList = new ArrayList<PivotHeaderNode>();
+		Map<Object, PivotHeaderNode> originalOpenMap = new HashMap<Object, PivotHeaderNode>();
 
 		// sync displayed node only if not checkAll
 		// so do not need to scan whole header tree
@@ -104,31 +109,16 @@ public class PVTUtils {
 			// !checkAll: sync displayed node
 			if (checkAll
 				|| (node.getDepth() == 1 || node.getParent().isOpen())) {
-				originalOpenList.add(node);
+				originalOpenMap.put(node.getKey(), node);
 			}
 		}
-		// for each node in base open list
-		for (PivotHeaderNode node : originalOpenList) {
-			boolean found = false;
-			for (PivotHeaderNode newNode : rootTwo.getChildren()) {
-				if (node.getKey().equals(newNode.getKey())) {
-					found = true;
-					newNode.setOpen(node.isOpen());
-					newOpenList.add(newNode);
-				}
-			}
-			// add null to new open list if not found
-			// so the size of base open list and
-			// the size of new open list will be the same
-			if (!found) {
-				newOpenList.add(null);
-			}
-		}
-
-		// recursively sync sub trees
-		for (int i = 0; i < originalOpenList.size(); i++) {
-			if (newOpenList.get(i) != null) {
-				syncOpenStatus(originalOpenList.get(i), newOpenList.get(i), checkAll);
+		// for each node in children of rootTwo
+		for (PivotHeaderNode newNode : rootTwo.getChildren()) {
+			PivotHeaderNode node = originalOpenMap.get(newNode.getKey());
+			if (node != null) {
+				newNode.setOpen(node.isOpen());
+				// recursively sync sub trees
+				syncOpenStatus(node, newNode, checkAll);
 			}
 		}
 	}
@@ -159,6 +149,12 @@ public class PVTUtils {
 		}
 		return equal;
 	}
+	/**
+	 * check whether a node is the last child of specified parent node
+	 * @param parent
+	 * @param node
+	 * @return
+	 */
 	public static boolean isLastChild (PivotHeaderNode parent, PivotHeaderNode node) {
 		List<? extends PivotHeaderNode> children = parent.getChildren();
 		// use == to make sure they are the same instance
@@ -175,6 +171,7 @@ public class PVTUtils {
 	 * Get pivot nodes in a pivot header tree
 	 * @param headerTree the pivot header tree to get pivot nodes
 	 * @param openedOnly whether get only the opened nodes and leaf
+	 * @param leafOnly whether get only leaf node
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")

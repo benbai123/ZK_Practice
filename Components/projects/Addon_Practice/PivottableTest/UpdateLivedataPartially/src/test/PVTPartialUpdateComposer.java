@@ -36,12 +36,14 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 	private PivotFieldControl pfc;
 
 	// model used by pivottable
+	// the model used by pivottable currently
 	private TabularPivotModel _pivotModel;
 
 	// copy of first model
+	// used to determine the status of cells
 	private TabularPivotModel _pivotModelFirstSnapshot;
 
-	// model contains the newest data
+	// model contains the newest raw data
 	private TabularPivotModel _latestPivotModel;
 
 	// used to store the value of current view
@@ -49,9 +51,11 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 
 	// newest raw data
 	private List<List<Object>> _latestRawData;
+
 	@SuppressWarnings("unchecked")
 	public void doAfterCompose (Component comp) throws Exception {
 		super.doAfterCompose(comp);
+		// init pivot field control
 		pfc.setModel((TabularPivotModel)pivottable.getModel());
 	}
 	/**
@@ -69,6 +73,7 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 			// init latest raw data
 			_latestRawData = new ArrayList<List<Object>>();
 			_latestRawData.addAll((List<List<Object>>)_pivotModel.getRawData());
+			// init latest pivot model
 			_latestPivotModel = _pivotModel;
 		}
 		return _pivotModel;
@@ -80,7 +85,7 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 	 */
 	@Listen ("onClick = #btn")
 	public void addData () throws Exception {
-		//alert(isStructureEqual(_pivotModel, _pivotModelTwo)? "Their structure are equal" : "They are different");
+		// used to collect new data to display in textbox
 		StringBuilder sb = new StringBuilder("");
 		List<List<Object>> newData = PVTModelProvider.getNewDatas(sb);
 		if (newData != null && newData.size() > 0) {
@@ -107,7 +112,7 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 		syncOrReplace();
 	}
 	/**
-	 * called when the fields of first pivottable are changed
+	 * called when the fields of pivottable are changed
 	 */
 	@Listen ("onPivotFieldControlChange = #pfc")
 	public void syncModelStructure () {
@@ -126,11 +131,8 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 		}
 		if (_pivotModel == _latestPivotModel
 			|| PVTUtils.isStructureEqual(_pivotModel, _latestPivotModel, true, false)) {
-			System.out.println("structure equal");
 			doUpdate(true);
 		} else {
-			System.out.println("structure not equal");
-			// clear stored value if structure is changed
 			pivottable.setModel(_latestPivotModel);
 			pfc.setModel((TabularPivotModel)pivottable.getModel());
 			doUpdate(true);
@@ -138,7 +140,7 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 		}
 	}
 	/**
-	 * update only the changed data
+	 * update changed data only
 	 * @param currentModel
 	 * @param newModel
 	 */
@@ -164,18 +166,19 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 		columns.add(_pivotModel.getColumnHeaderTree().getRoot());
 
 		for (PivotHeaderNode row : rows) { // for each row
-			// show original data
+			// store original data
 			storeCurrentValues(_pivotModel, row, columns, -1);
 
 			// not first level row node
 			if (row.getDepth() > 1) {
 				PivotHeaderNode tmpRow = row;
 				PivotHeaderNode parentRow = tmpRow.getParent();
+				// continuously check ancestors
+				// do if not first level and is last child
 				while (tmpRow.getDepth() > 1
 						&& PVTUtils.isLastChild(parentRow, tmpRow)) {
-					// is last child
 					for (int calIdx = 0; calIdx < parentRow.getSubtotalCount(false); calIdx++) {
-						// show row subtotal
+						// store row subtotal
 						storeCurrentValues(_pivotModel, parentRow, columns, calIdx);
 					}
 					tmpRow = parentRow;
@@ -184,74 +187,12 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 			}
 		}
 	}
-	/**
-	 * execute script to update client side cells of pivottable
-	 * @param syncAll
-	 */
-	private void doUpdate (boolean syncAll) {
 
-		StringBuilder sb = new StringBuilder("");
-
-
-		List<PivotHeaderNode> rows = PVTUtils.getRowLeafList(_latestPivotModel);
-		List<PivotHeaderNode> columns = PVTUtils.getColumnLeafList(_latestPivotModel);
-		columns.add(_latestPivotModel.getColumnHeaderTree().getRoot());
-
-		rows.add(_latestPivotModel.getRowHeaderTree().getRoot());
-		Position pos = new Position(0, 0);
-
-		// script start
-		sb.append("update([");
-		CellAttributes cell = new CellAttributes(null, null, null, null, null);
-		// iterate through current view to add the elements to update
-		for (PivotHeaderNode row : rows) { // for each row
-			// clear row calculator if any before next loop
-			cell.updateAttributes(PVTUtils.getNodeKeys(row), null, null, null, null);
-			// show original data
-			addUpdateElements(_latestPivotModel, row, columns, -1, sb, pos, cell, syncAll);
-			pos.toNextRow();
-
-			// not first level row node,
-			// have to display parent sub-total if
-			// current row is the last child
-			if (row.getDepth() > 1) {
-				PivotHeaderNode tmpRow = row;
-				PivotHeaderNode parentRow = tmpRow.getParent();
-				// continuously check ancestors
-				while (tmpRow.getDepth() > 1
-						&& PVTUtils.isLastChild(parentRow, tmpRow)) {
-					parentRow = tmpRow.getParent();
-					// is last child
-					for (int calIdx = 0; calIdx < parentRow.getSubtotalCount(false); calIdx++) {
-						cell.setRowKeys(PVTUtils.getNodeKeys(parentRow));
-						cell.setRowCalculatorLabelKey(parentRow.getField().getSubtotals()[calIdx].getLabelKey());
-						// show row subtotal
-						addUpdateElements(_latestPivotModel, parentRow, columns, calIdx, sb, pos, cell, syncAll);
-						
-						pos.toNextRow();
-					}
-					tmpRow = parentRow;
-					parentRow = tmpRow.getParent();
-				}
-			}
-		}
-
-		if (sb.substring(sb.length()-1).equals(",")) {
-			sb.replace(sb.length()-1, sb.length(), "");
-		}
-		sb.append("]);");
-
-		String cmd = sb.toString();
-		if (!"update([]);".equals(cmd)) {
-			System.out.println();
-			Clients.evalJavaScript(sb.toString());
-		}
-		sb.setLength(0);
-	}
 	/** loop through cells of a row
 	 * store values of current view of pivottable
+	 * 
 	 * @param model the model of current pivottable
-	 * @param row the row to loop through
+	 * @param row the row to loop through each cell
 	 * @param columns columns of row
 	 * @param rowCalIdx calculator index of row
 	 */
@@ -265,7 +206,6 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 			for (int i = 0; i < dataFieldsLength; i++) {
 				// get data value from pivot model by row node, column node and data index
 				_currentValues.add(model.getValue(row, rowCalIdx, column, -1, i));
-				//System.out.print(value + ",");
 				
 				// last data and
 				// not first level node
@@ -273,6 +213,8 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 					&& column.getDepth() > 1) {
 					PivotHeaderNode tmpCol = column;
 					PivotHeaderNode parentColumn = tmpCol.getParent();
+					// continuously check ancestors
+					// do if not first level and is last child
 					while (tmpCol.getDepth() > 1
 							&& PVTUtils.isLastChild(parentColumn, tmpCol)) {
 						// for each column calculator
@@ -281,7 +223,6 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 							for (int j = 0; j < dataFieldsLength; j++) {
 								// get data value from pivot model by row node, column node and data index
 								_currentValues.add(model.getValue(row, rowCalIdx, parentColumn, calIdx, j));
-								//System.out.print(value + ",");
 							}
 						}
 						tmpCol = parentColumn;
@@ -290,13 +231,82 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 				}
 			}
 		}
-		//System.out.println();
 	}
+
+	/**
+	 * execute script to update client side cells of pivottable
+	 * @param syncAll true: sync status of each cell, false: update changed cell only
+	 */
+	private void doUpdate (boolean syncAll) {
+
+		// used to store the update script
+		StringBuilder sb = new StringBuilder("");
+
+		// get row/column nodes from latest pivot model
+		List<PivotHeaderNode> rows = PVTUtils.getRowLeafList(_latestPivotModel);
+		List<PivotHeaderNode> columns = PVTUtils.getColumnLeafList(_latestPivotModel);
+		// add column root for grand total for columns
+		columns.add(_latestPivotModel.getColumnHeaderTree().getRoot());
+		// add row root for grand total for rows
+		rows.add(_latestPivotModel.getRowHeaderTree().getRoot());
+		// init Position object, track the index of row/cell,
+		// also track index of current value if not syncAll as needed
+		Position pos = new Position(0, 0);
+		// init CellAttributes object, track the attributes of a cell while loop through nodes
+		CellAttributes cell = new CellAttributes(null, null, null, null, null);
+
+		// script start
+		sb.append("update([");
+		// iterate through current view to add the elements to update
+		for (PivotHeaderNode row : rows) { // for each row
+			// add row keys and clear other attributes
+			cell.updateAttributes(PVTUtils.getNodeKeys(row), null, null, null, null);
+			// add elements to update
+			addUpdateElements(_latestPivotModel, row, columns, -1, sb, pos, cell, syncAll);
+			// to the first column of next row
+			pos.toNextRow();
+
+			// not first level row node,
+			// have to check and update parent sub-total if
+			// current row is the last child
+			if (row.getDepth() > 1) {
+				PivotHeaderNode tmpRow = row;
+				PivotHeaderNode parentRow = tmpRow.getParent();
+				// continuously check ancestors
+				// do if not first level and is last child
+				while (tmpRow.getDepth() > 1
+						&& PVTUtils.isLastChild(parentRow, tmpRow)) {
+					parentRow = tmpRow.getParent();
+					for (int calIdx = 0; calIdx < parentRow.getSubtotalCount(false); calIdx++) {
+						cell.setRowKeys(PVTUtils.getNodeKeys(parentRow));
+						cell.setRowCalculatorLabelKey(parentRow.getField().getSubtotals()[calIdx].getLabelKey());
+						addUpdateElements(_latestPivotModel, parentRow, columns, calIdx, sb, pos, cell, syncAll);
+						
+						pos.toNextRow();
+					}
+					tmpRow = parentRow;
+					parentRow = tmpRow.getParent();
+				}
+			}
+		}
+
+		// remove last comma
+		if (sb.substring(sb.length()-1).equals(",")) {
+			sb.replace(sb.length()-1, sb.length(), "");
+		}
+		sb.append("]);");
+
+		String cmd = sb.toString();
+		if (!"update([]);".equals(cmd)) {
+			Clients.evalJavaScript(sb.toString());
+		}
+		sb.setLength(0);
+	}
+
 	/**
 	 * loop through whole row to check
 	 * and add elements to update as needed
 	 * @param model the latest model
-	 * @param cRoot column root of model
 	 * @param row the row to loop through
 	 * @param columns all columns of row
 	 * @param rowCalIdx calculator index of row
@@ -322,7 +332,6 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 						model.getValue(row, rowCalIdx, column, -1, i), pos, sb, syncAll);
 				// get data value from pivot model by row node, column node and data index
 
-				//System.out.print(oldValue + "__" + value + ",");
 				pos.increaseCol();
 				// last data and
 				// not first level node
@@ -330,6 +339,8 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 					&& column.getDepth() > 1) {
 					PivotHeaderNode tmpCol = column;
 					PivotHeaderNode parentColumn = tmpCol.getParent();
+					// continuously check ancestors
+					// do if not first level and is last child
 					while (tmpCol.getDepth() > 1
 							&& PVTUtils.isLastChild(parentColumn, tmpCol)) {
 						cell.setColKeys(PVTUtils.getNodeKeys(parentColumn));
@@ -342,11 +353,10 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 							// again, for each data field
 							for (int j = 0; j < dataFieldsLength; j++) {
 								cell.setDataFieldName(dataFields[j].getFieldName());
-								// get data value from pivot model by row node, column node and data index
-
 								addUpdateElement(_pivotModelFirstSnapshot, _currentValues, cell,
 										model.getValue(row, rowCalIdx, parentColumn, calIdx, j), pos, sb, syncAll);
-								//System.out.print(oldValue + "__" + value + ",");
+								// get data value from pivot model by row node, column node and data index
+
 								pos.increaseCol();
 							}
 						}
@@ -372,12 +382,15 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 	private void addUpdateElement (TabularPivotModel basemodel, List<Number> valueList,
 			CellAttributes cell, Number value, Position pos, StringBuilder sb, boolean syncAll) {
 		String dir;
+		// sync all
 		if (syncAll) {
 			dir = PVTUtils.getDirection(basemodel, cell, value);
+			// status 'up' or 'down'
 			if (dir != null && !dir.isEmpty()) {
 				addUpdateElement(pos.getRowIdx(), pos.getColIdx(), value, dir, sb);
 			}
 		} else {
+			// sync changed
 			int ptr = pos.getPtr();
 			if (value != null) {
 				Number oldv = valueList.get(ptr);
@@ -386,7 +399,7 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 				if (value.doubleValue() != valToComp) {
 					dir = PVTUtils.getDirection(basemodel, cell, value);
 					addUpdateElement(pos.getRowIdx(), pos.getColIdx(), value, dir, sb);
-					// update value
+					// update value list
 					valueList.set(ptr, value);
 				}
 			}

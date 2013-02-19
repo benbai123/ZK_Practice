@@ -2,7 +2,9 @@ package test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.zkoss.pivot.Calculator;
@@ -119,8 +121,7 @@ public class TestComposer extends SelectorComposer {
 	 * false: sync only current view, only put the displayed node into open list to sync
 	 */
 	private void syncOpenStatus (PivotHeaderNode root, PivotHeaderNode rootTwo, boolean checkAll) {
-		List<PivotHeaderNode> originalOpenList = new ArrayList<PivotHeaderNode>();
-		List<PivotHeaderNode> newOpenList = new ArrayList<PivotHeaderNode>();
+		Map<Object, PivotHeaderNode> originalOpenMap = new HashMap<Object, PivotHeaderNode>();
 
 		// sync displayed node only if not checkAll
 		// so do not need to scan whole header tree
@@ -129,31 +130,16 @@ public class TestComposer extends SelectorComposer {
 			// !checkAll: sync displayed node
 			if (checkAll
 				|| (node.getDepth() == 1 || node.getParent().isOpen())) {
-				originalOpenList.add(node);
+				originalOpenMap.put(node.getKey(), node);
 			}
 		}
-		// for each node in base open list
-		for (PivotHeaderNode node : originalOpenList) {
-			boolean found = false;
-			for (PivotHeaderNode newNode : rootTwo.getChildren()) {
-				if (node.getKey().equals(newNode.getKey())) {
-					found = true;
-					newNode.setOpen(node.isOpen());
-					newOpenList.add(newNode);
-				}
-			}
-			// add null to new open list if not found
-			// so the size of base open list and
-			// the size of new open list will be the same
-			if (!found) {
-				newOpenList.add(null);
-			}
-		}
-
-		// recursively sync sub trees
-		for (int i = 0; i < originalOpenList.size(); i++) {
-			if (newOpenList.get(i) != null) {
-				syncOpenStatus(originalOpenList.get(i), newOpenList.get(i), checkAll);
+		// for each node in children of rootTwo
+		for (PivotHeaderNode newNode : rootTwo.getChildren()) {
+			PivotHeaderNode node = originalOpenMap.get(newNode.getKey());
+			if (node != null) {
+				newNode.setOpen(node.isOpen());
+				// recursively sync sub trees
+				syncOpenStatus(node, newNode, checkAll);
 			}
 		}
 	}
