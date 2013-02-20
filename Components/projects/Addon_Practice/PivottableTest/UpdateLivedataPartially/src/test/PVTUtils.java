@@ -42,12 +42,7 @@ public class PVTUtils {
 		}
 
 		TabularPivotModel snapShot = new TabularPivotModel(rawData, columns);
-		for (TabularPivotField f : fields) {
-			snapShot.setFieldType(f.getFieldName(), f.getType());
-
-			PivotField field = snapShot.getField(f.getFieldName());
-			snapShot.setFieldSubtotals(field, f.getSubtotals());
-		}
+		syncModelStructure(model, snapShot);
 		return snapShot;
 	}
 	/**
@@ -289,6 +284,16 @@ public class PVTUtils {
 		}
 		return keys;
 	}
+	/**
+	 * get the status of a cell
+	 * @param model the base pivot model to compare
+	 * @param cell the attributes denote a cell
+	 * @param value the new value
+	 * @return<br>
+	 * "up": new value is larger than old value of that cell in base pivot model<br>
+	 * "down": new value is smaller than old value of that cell in base pivot model<br>
+	 * null: otherwise
+	 */
 	public static String getDirection (TabularPivotModel model, CellAttributes cell, Number value) {
 		String dir = null;
 		double base = 0.0;

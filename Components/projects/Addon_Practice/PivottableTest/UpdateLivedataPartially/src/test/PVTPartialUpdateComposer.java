@@ -1,5 +1,6 @@
 package test;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +36,8 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 	@Wire
 	private PivotFieldControl pfc;
 
+	private DecimalFormat floatFormat = new DecimalFormat("##,###.00");
+	private DecimalFormat intFormat = new DecimalFormat("##,###");
 	// model used by pivottable
 	// the model used by pivottable currently
 	private TabularPivotModel _pivotModel;
@@ -410,8 +413,8 @@ public class PVTPartialUpdateComposer extends SelectorComposer {
 			.append(rowIdx).append(",")
 			.append("colIdx:")
 			.append(colIdx).append(",")
-			.append("val:")
-			.append(val).append(",");
+			.append("val:'")
+			.append(val instanceof Integer ? intFormat.format(val) : floatFormat.format(val)).append("',");
 		if (dir != null) {
 			sb.append("dir:")
 				.append("'").append(dir).append("'");
