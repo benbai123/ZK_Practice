@@ -1,0 +1,217 @@
+<!-- 
+	Tested with ZK 6.0.2 (Chrome, IE9)
+ -->
+<zk xmlns:w="client">
+	<style>
+		.custom-sizer {
+			position: absolute;
+			display: none;
+			border: 4px solid #aaa;
+			z-index: 999999;
+		}
+		.custom-sizable-comp {
+			display: block;
+		}
+	</style>
+	<script><![CDATA[
+		// get the dom element of custom resizer div
+		function _getCustomResizer () {
+			return jq('.custom-sizer')[0];
+		}
+		// hide the custom resizer div
+		function _hideCustomResizer () {
+			if (!zk.Widget.customResizing)
+				_getCustomResizer().style.display = 'none';
+		}
+		// override zk.Widget to make components sizable
+		zk.afterLoad("zul", function () {
+			var _wgt = {};
+			zk.override(zk.Widget.prototype, _wgt, {
+				doMouseMove_: function (evt) {
+					_wgt.doMouseMove_.apply(this, arguments);
+					// do nothing if resizing
+					if (zk.Widget.customResizing) return;
+					// is custom sizable component
+					if (this._isSizable()) {
+						// keep widget instance
+						zk.Widget.customResizableWidget = this;
+						// at the right side of the component
+						if (this._atRightSide(evt)) {
+							// keep 'resizing width'
+							zk.Widget.customResizableWidgetDir = 'w';
+							// show custom resizer as vertical bar
+							// at the right side of this component
+							this._showRightResizer();
+						} else if (this._atBottom(evt)) { // at bottom of the component
+							// keep 'resizing height'
+							zk.Widget.customResizableWidgetDir = 'h';
+							// show custom resizer as horizontal bar
+							// at the bottom of this component
+							this._showBottomResizer();
+						} else { // not close to right side/bottom
+							// hide custom resizer
+							_hideCustomResizer();
+						}
+					}
+				},
+				// is sizable if has the specific class
+				// 'custom-sizable-comp'
+				_isSizable: function () {
+					return jq(this.$n()).hasClass('custom-sizable-comp');
+				},
+				// the mouse cursor is near the right side of component
+				_atRightSide: function (evt) {
+					var left = evt.pageX, // cursor x position
+						$n = jq(this.$n()),
+						wRight = $n.offset().left + $n.width(); // the right side of component
+					// their distance is smaller than 3px
+					return (Math.abs(left - wRight) < 3);
+				},
+				// the mouse cursor is near the bottom of component
+				_atBottom: function (evt) {
+					var top = evt.pageY, // cursor y position
+						$n = jq(this.$n()),
+						wBottom = $n.offset().top + $n.height(); // the bottom of component
+					// their distance is smaller than 3px
+					return (Math.abs(top - wBottom) < 3);
+				},
+				// display custom resizer at the right side of component
+				_showRightResizer: function () {
+					// do nothing if resizing
+					if (zk.Widget.customResizing) return;
+					var resizer = _getCustomResizer(),
+						rstyle = resizer.style,
+						$n = jq(this.$n()),
+						noffset = $n.offset();
+
+					// adjust the position of custom resizer
+					rstyle.left = noffset.left + $n.width() + 'px';
+					rstyle.top = noffset.top + 'px';
+					// adjust the size of custom resizer
+					rstyle.width = '0px';
+					rstyle.height = $n.height() + 'px';
+					// show custom resizer
+					rstyle.display = 'block';
+				},
+				_showBottomResizer: function () {
+					if (zk.Widget.customResizing) return;
+					var resizer = _getCustomResizer(),
+						rstyle = resizer.style,
+						$n = jq(this.$n()),
+						noffset = $n.offset();
+	
+					// adjust the position of custom resizer
+					rstyle.left = noffset.left + 'px';
+					rstyle.top = noffset.top + $n.height() + 'px';
+					// adjust the size of custom resizer
+					rstyle.width = $n.width() + 'px';
+					rstyle.height = '0px';
+					// show custom resizer
+					rstyle.display = 'block';
+				}
+			});
+		});
+	]]></script>
+	<div id="customSizer" sclass="custom-sizer" draggable="true" use="test.custom.component.div.CustomResizer">
+		<attribute w:name="doMouseOut_"><![CDATA[
+			function (evt) {
+				// hide custom resizer if mouseout it
+				this.$doMouseOut_(evt);
+				_hideCustomResizer();
+			}
+		]]></attribute>
+		<attribute w:name="getDragOptions_"><![CDATA[
+			function (dragOptions) {
+				var oldBeforeSizing = dragOptions.starteffect,
+					oldAfterSizing = dragOptions.endeffect,
+					oldDragging = dragOptions.change;
+				// at the beginning of dragging
+				dragOptions.starteffect = function (dg) {
+					// mark resizing
+					zk.Widget.customResizing = true;
+					// save the starting x position if resizing width
+					// or save the starting y position if resizing height
+					dg._delta = zk.Widget.customResizableWidgetDir == 'w'?
+							dg._currentDelta()[0] : dg._currentDelta()[1];
+					// do original function
+					oldBeforeSizing(dg);
+				};
+				// at the end of dragging
+				dragOptions.endeffect = function (dg, evt) {
+					// remove resizing mark
+					zk.Widget.customResizing = false;
+					// get resizing direction (w: width, h: height)
+					// evaluate new size
+					// get the uuid of the component to resize
+					var resizeWidth = zk.Widget.customResizableWidgetDir == 'w',
+						$szwgt = jq(zk.Widget.customResizableWidget),
+						delta = resizeWidth?
+							(dg._currentDelta()[0] - dg._delta) : (dg._currentDelta()[1] - dg._delta),
+						newValue = resizeWidth?
+							($szwgt.width() + delta) : ($szwgt.height() + delta),
+						uuid = zk.Widget.customResizableWidget.uuid,
+						data;
+					if (newValue <= 0) newValue = 1;
+					// fire onCustomResize event to custom resizer
+					// 'value', 'reference' and 'resizeAttribute' are
+					// the keys of data map
+					data = {value: newValue,
+							reference: uuid,
+							resizeAttribute: (resizeWidth? 'width' : 'height')};
+					zk.Widget.$('$customSizer').fire('onCustomResize', data);
+					// call original function
+					oldAfterSizing(dg, evt);
+					// hide custom resizer
+					_getCustomResizer().style.display = 'none';
+				};
+				// while dragging
+				dragOptions.change = function (drag, pt, evt) {
+					// call original function
+					oldDragging(drag, pt, evt);
+					var wgt = drag.control,
+						n = wgt.$n(),
+						$szwgt = jq(zk.Widget.customResizableWidget);
+					if (n.style.display != 'block') n.style.display = 'block';
+					// keep 'top' unchanged and make 'left' follow mouse position
+					// if resizing width,
+					// keep 'left' unchanged and make 'top' follow mouse position
+					// if resizing height,
+					n.style.left = (zk.Widget.customResizableWidgetDir == 'h'?
+							$szwgt.offset().left+'px' : evt.pageX+'px');
+					n.style.top = (zk.Widget.customResizableWidgetDir == 'w'?
+							$szwgt.offset().top+'px' : evt.pageY+'px');
+				}
+				// clear ghosting function to
+				// avoid the faker dom element while dragging
+				dragOptions.ghosting = null;
+				return dragOptions;
+			}
+		]]></attribute>
+	</div>
+	<vlayout>
+		<hlayout>
+			<textbox sclass="custom-sizable-comp"
+				value="sizable textbox" />
+			<checkbox sclass="custom-sizable-comp"
+				label="sizable checkbox" />
+			<vlayout>
+				<a sclass="custom-sizable-comp"
+					href="http://www.zkoss.org">
+					sizable link
+				</a>
+				sizable menubar
+				<menubar sclass="custom-sizable-comp">
+					<menu sclass="custom-sizable-comp" label="File (sizable)">
+						<menupopup sclass="custom-sizable-comp">
+							<menuitem sclass="custom-sizable-comp" label="New (sizable)" onClick="alert(self.label)"/>
+							<menuitem sclass="custom-sizable-comp" label="Exit (sizable)" onClick="alert(self.label)"/>
+						</menupopup>
+					</menu>
+				</menubar>
+			</vlayout>
+		</hlayout>
+		<button sclass="custom-sizable-comp"
+			mold="trendy"
+			label="sizable button" />
+	</vlayout>
+</zk>
