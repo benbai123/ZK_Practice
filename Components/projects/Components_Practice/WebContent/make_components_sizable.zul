@@ -9,7 +9,7 @@
 			border: 4px solid #aaa;
 			z-index: 999999;
 		}
-		.custom-sizable-comp {
+		.custom-resizable-comp {
 			display: block;
 		}
 	</style>
@@ -23,7 +23,7 @@
 			if (!zk.Widget.customResizing)
 				_getCustomResizer().style.display = 'none';
 		}
-		// override zk.Widget to make components sizable
+		// override zk.Widget to make components resizable
 		zk.afterLoad("zul", function () {
 			var _wgt = {};
 			zk.override(zk.Widget.prototype, _wgt, {
@@ -31,8 +31,8 @@
 					_wgt.doMouseMove_.apply(this, arguments);
 					// do nothing if resizing
 					if (zk.Widget.customResizing) return;
-					// is custom sizable component
-					if (this._isSizable()) {
+					// is custom resizable component
+					if (this._isResizable()) {
 						// keep widget instance
 						zk.Widget.customResizableWidget = this;
 						// at the right side of the component
@@ -54,10 +54,10 @@
 						}
 					}
 				},
-				// is sizable if has the specific class
-				// 'custom-sizable-comp'
-				_isSizable: function () {
-					return jq(this.$n()).hasClass('custom-sizable-comp');
+				// is resizable if has the specific class
+				// 'custom-resizable-comp'
+				_isResizable: function () {
+					return jq(this.$n()).hasClass('custom-resizable-comp');
 				},
 				// the mouse cursor is near the right side of component
 				_atRightSide: function (evt) {
@@ -90,7 +90,8 @@
 					// adjust the size of custom resizer
 					rstyle.width = '0px';
 					rstyle.height = $n.height() + 'px';
-					// show custom resizer
+					// adjust cursor and show custom resizer
+					rstyle.cursor = 'e-resize';
 					rstyle.display = 'block';
 				},
 				_showBottomResizer: function () {
@@ -106,7 +107,8 @@
 					// adjust the size of custom resizer
 					rstyle.width = $n.width() + 'px';
 					rstyle.height = '0px';
-					// show custom resizer
+					// adjust cursor and show custom resizer
+					rstyle.cursor = 's-resize';
 					rstyle.display = 'block';
 				}
 			});
@@ -190,28 +192,28 @@
 	</div>
 	<vlayout>
 		<hlayout>
-			<textbox sclass="custom-sizable-comp"
-				value="sizable textbox" />
-			<checkbox sclass="custom-sizable-comp"
-				label="sizable checkbox" />
+			<textbox sclass="custom-resizable-comp"
+				value="resizable textbox" />
+			<checkbox sclass="custom-resizable-comp"
+				label="resizable checkbox" />
 			<vlayout>
-				<a sclass="custom-sizable-comp"
+				<a sclass="custom-resizable-comp"
 					href="http://www.zkoss.org">
-					sizable link
+					resizable link
 				</a>
-				sizable menubar
-				<menubar sclass="custom-sizable-comp">
-					<menu sclass="custom-sizable-comp" label="File (sizable)">
-						<menupopup sclass="custom-sizable-comp">
-							<menuitem sclass="custom-sizable-comp" label="New (sizable)" onClick="alert(self.label)"/>
-							<menuitem sclass="custom-sizable-comp" label="Exit (sizable)" onClick="alert(self.label)"/>
+				resizable menubar
+				<menubar sclass="custom-resizable-comp">
+					<menu sclass="custom-resizable-comp" label="File (resizable)">
+						<menupopup sclass="custom-resizable-comp">
+							<menuitem sclass="custom-resizable-comp" label="New (resizable)" onClick="alert(self.label)"/>
+							<menuitem sclass="custom-resizable-comp" label="Exit (resizable)" onClick="alert(self.label)"/>
 						</menupopup>
 					</menu>
 				</menubar>
 			</vlayout>
 		</hlayout>
-		<button sclass="custom-sizable-comp"
+		<button sclass="custom-resizable-comp"
 			mold="trendy"
-			label="sizable button" />
+			label="resizable button" />
 	</vlayout>
 </zk>
