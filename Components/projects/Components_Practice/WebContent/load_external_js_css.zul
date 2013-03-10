@@ -1,0 +1,13 @@
+<!-- load .js file under WebContent -->
+<?script type="text/javascript" src="resources/js/test.js"?>
+<!-- load .css file under WebContent -->
+<?style href="resources/css/test.css" type="text/css" ?>
+<zk xmlns:n="native">
+	<!-- a native (pure html) button,
+		apply custom css style,
+		call the custom js function when clicked-->
+	<n:button class="custom-button"
+		onclick="customjs.sayHello('Ben');">
+		test
+	</n:button>
+</zk>
