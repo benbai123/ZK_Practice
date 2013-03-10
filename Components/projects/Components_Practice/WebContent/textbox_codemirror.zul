@@ -1,0 +1,29 @@
+<?script type="text/javascript" src="resources/js/libsAndTools/codemirror/lib/codemirror.js"?>
+<?style href="resources/js/libsAndTools/codemirror/lib/codemirror.css" type="text/css" ?>
+<?script type="text/javascript" src="resources/js/libsAndTools/codemirror/mode/javascript/javascript.js"?>
+<zk xmlns:w="client">
+	<window title="ZK Textbox Codemirror Test" border="normal">
+		<div width="300px" height="250px" style="overflow: hidden;">
+			<textbox id="tbx" rows="10">
+				<attribute w:name="bind_"><![CDATA[
+					function (a, b, c) {
+						this.$bind_(a, b, c);
+						var wgt = this;
+						myCodeMirror = CodeMirror.fromTextArea(this.$n());
+						myCodeMirror.on('blur', function () {
+							var val = myCodeMirror.getValue();
+							wgt.$n().value = val;
+							wgt.fire('onChange', {value: val}, {toServer: true});
+						});
+					}
+				]]></attribute>
+			</textbox>
+		</div>
+		<button label="test" onClick="alert(tbx.getValue());" />
+		<button label="execute">
+			<attribute name="onClick"><![CDATA[
+				Clients.evalJavaScript(tbx.getValue());
+			]]></attribute>
+		</button>
+	</window>
+</zk>
