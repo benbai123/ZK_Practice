@@ -1,0 +1,17 @@
+<zk>
+	<!-- Tested with ZK 6.0.2 EE and ZK Pivottable 2.0.0 -->
+	<!-- window, apply a SelectorComposer -->
+	<window id="win" xmlns:w="client"
+		apply="test.TestComposer">
+		<!-- pivottable, get model from window's composer -->
+		<pivottable id="pivottable" model="${win$composer.pivotModel}" />
+		<!-- label, show info of clicked row or column field -->
+		<div style="margin: 15px;">
+			<div>
+				clicked field: <label id="lb" />
+			</div>
+			<!-- listbox, show all distinct values of clicked row or column field -->
+			values<listbox id="lbx" />
+		</div>
+	</window>
+</zk>
