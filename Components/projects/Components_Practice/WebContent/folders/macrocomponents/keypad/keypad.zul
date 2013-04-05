@@ -1,0 +1,224 @@
+<zk xmlns:w="client">
+	<script><![CDATA[
+		function updateCursorRange (iwgt) {
+			var inp = iwgt.getInputNode(), // input element
+				range = zk(inp).getSelectionRange(), // get selected range
+				start = range[0],
+				end = range[1];
+
+			// store start/end in input widget
+			iwgt.cursorStartPosition = start;
+			iwgt.cursorEndPosition = end;
+		}
+		function getCursorRange (iwgt) {
+			// get the stored start/end
+			var start = iwgt.cursorStartPosition, // selected range
+				end = iwgt.cursorEndPosition,
+				range = [];
+			// default 0 if undefined
+			range.push(start? start : 0);
+			range.push(end? end : 0);
+			return range;
+		}
+	]]></script>
+	<popup id="pp">
+		<attribute w:name="open"><![CDATA[
+			function (ref, offset, position, opts) {
+				// keep the related input widget
+				var iwgt = zk.Widget.$(ref);
+				this.currentInp = iwgt;
+				// override doKeyUp_ and doMouseUp_ to update selected range
+				// override fire to reduce ajax call
+				this.overrideInp(iwgt);
+				// update selected range at first
+				// or intbox/doublebox will put char at wrong position
+				// since the first mouseup might not the overridden one
+				updateCursorRange(iwgt);
+				if (this.capsLockEnabled)
+					this.switchCapsLock();
+				// call original function
+				this.$open(ref, offset, position, opts);
+			}
+		]]></attribute>
+		<attribute w:name="executeDelete"><![CDATA[
+			function () {
+				var iwgt = this.currentInp, // input widget
+					range = getCursorRange(iwgt),
+					start = range[0], // selected range, never undefined
+					end = range[1],
+					value = iwgt.getInputNode().value,
+					len = value? value.length : 0;
+
+				// nothing selected
+				if (start == end) {
+					if (len >= (end + 1)) {
+						// to delete one char after cursor
+						end++;
+						iwgt.cursorEndPosition = end;
+					} else if (len > 0) {
+						// to delete one char before cursor
+						start--;
+						iwgt.cursorStartPosition = start;
+					}
+				}
+				// do nothing if no selection
+				if (start != end) {
+					// replace selected range by ''
+					// (i.e., delete selected range)
+					this.replaceRange (start, end, '', iwgt);
+				}
+			}
+		]]></attribute>
+		<attribute w:name="executeInsert"><![CDATA[
+			function (str) {
+				var iwgt = this.currentInp, // input widget
+					range = getCursorRange(iwgt),
+					start = range[0], // selected range, never undefined
+					end = range[1];
+
+				// replace selected range by str
+				this.replaceRange (start, end, str, iwgt);
+			}
+		]]></attribute>
+		<attribute w:name="replaceRange"><![CDATA[
+			function (start, end, replacement, iwgt) {
+				iwgt.updatingByKeypad = true;
+				var inp = iwgt.getInputNode(), // dom input element
+					value = inp.value, // current value
+					len,
+					doubleDotTail;
+
+				// snice doublebox will remov
+				// '.' at the tail automatically,
+				// plus one '1' and select it automatically
+				// to keep the '.' and the selected '1'
+				// will be replaced by next input
+				if (iwgt.$instanceof(zul.inp.Doublebox)) {
+					if (end == value.length
+						&& replacement == '.') {
+						doubleDotTail = true;
+						replacement = '.1';
+					}
+				}
+				if (!this.capsLockEnabled)
+					replacement = replacement.toLowerCase();
+				// replace selected range by replacement
+				inp.value = value.substr(0, start) + replacement + value.substr(end);
+				// update change if needed,
+				iwgt.updateChange_();
+
+				if (replacement
+					&& (len = replacement.length)) {
+					var vlen = inp.value.length;
+					if (doubleDotTail) {
+						// to focus the last '1'
+						start = vlen-1;
+						end = vlen;
+					} else {
+						start += len;
+						// in case intbox/doublebox fix 00 to 0
+						if (start > vlen)
+							start = vlen;
+						end = start;
+					}	
+				} else {
+					end = start;
+				}
+				// set cursor back
+				zk(inp).setSelectionRange(start, end);
+				// update selected range
+				updateCursorRange(iwgt);
+				iwgt.updatingByKeypad = null;
+			}
+		]]></attribute>
+		<attribute w:name="bind_"><![CDATA[
+			function (a, b, c) {
+				this.$bind_(a, b, c);
+				// override onFloatUp after bind_
+				// since it is not the normal function as bind_
+				this.overrideFloatup();
+			}
+		]]></attribute>
+		<attribute w:name="overrideFloatup"><![CDATA[
+			function () {
+				if (!this.oldFloatup) {
+					var wgt = this;
+					// keep original function
+					this.oldFloatup = this['onFloatUp'];
+					// override
+					this['onFloatUp'] = function (ctl) {
+						// do nothing if triggered by focus current input widget
+						var cwgt = ctl.origin;
+						if (wgt.currentInp == cwgt)
+							return;
+						wgt.oldFloatup(ctl);
+					}
+				}
+			}
+		]]></attribute>
+		<attribute w:name="switchCapsLock"><![CDATA[
+			function () {
+				// enable/disable caps lock
+				var capsLockEnabled = !this.capsLockEnabled,
+					iwgt = this.currentInp,
+					range = getCursorRange(iwgt),
+					capsLock = jq('.capslock-btn')[0];
+				this.capsLockEnabled = capsLockEnabled;
+				if (capsLock) {
+					if (capsLockEnabled) {
+						capsLock.style.color = 'green';
+					} else {
+						capsLock.style.color = '';
+					}
+				}
+				zk(iwgt.getInputNode()).setSelectionRange(range[0], range[1]);
+			}
+		]]></attribute>
+		<attribute w:name="overrideInp"><![CDATA[
+			function (iwgt) {
+				// override doKeyUp_
+				if (!iwgt.oldKeyUp) {
+					// override doKeyUp_
+					// keep original function
+					iwgt.oldKeyUp = iwgt['doKeyUp_'];
+					// override
+					iwgt['doKeyUp_'] = function (evt) {
+						// run original function
+						iwgt.oldKeyUp(evt);
+						// update selected range
+						updateCursorRange(iwgt);
+					}
+
+					// override doMouseUp_ similarly
+					iwgt.oldMouseUp = iwgt['doMouseUp_'];
+					iwgt['doMouseUp_'] = function (evt) {
+						iwgt.oldMouseUp(evt);
+						updateCursorRange(iwgt);
+					}
+
+					// override fire
+					iwgt.oldFire = iwgt['fire'];
+					iwgt['fire'] = function (evtnm, data, opts, timeout) {
+						// delay onChange event if 
+						// updating by keypad to reduce ajax call
+						if ('onChange' == evtnm) {
+							var oldTimer = iwgt.deferEventTimer;
+							if (oldTimer) {
+								clearTimeout(oldTimer);
+								iwgt.deferEventTimer = null;
+							}
+							if (iwgt.updatingByKeypad) {
+								iwgt.deferEventTimer = setTimeout(function () {
+									iwgt.oldFire(evtnm, data, opts, timeout);
+									iwgt.deferEventTimer = null;
+								}, 500);
+							} else
+								iwgt.oldFire(evtnm, data, opts, timeout);
+						} else
+							iwgt.oldFire(evtnm, data, opts, timeout);
+					}
+				}
+			}
+		]]></attribute>
+	</popup>
+</zk>

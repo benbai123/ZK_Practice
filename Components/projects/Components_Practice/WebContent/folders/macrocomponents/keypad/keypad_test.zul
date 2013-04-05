@@ -1,0 +1,24 @@
+<!-- define macro component -->
+<?component name="keypad" macroURI="/folders/macrocomponents/keypad/keypad.zul"
+	class="test.marcro.component.keypad.Keypad"?>
+<zk>
+	<div apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('test.marcro.component.keypad.KeypadVM')"
+		style="margin: 50px;">
+		<hlayout>
+			<textbox onFocus="@command('focusInput')" value="@bind(vm.txtValue)" />
+			<label value="@load(vm.txtValue)" />
+		</hlayout>
+		<hlayout>
+			<intbox onFocus="@command('focusInput')" value="@bind(vm.intValue)" />
+			<label value="@load(vm.intValue)" />
+		</hlayout>
+		<hlayout>
+			<doublebox onFocus="@command('focusInput')" value="@bind(vm.doubleValue)" />
+			<label value="@load(vm.doubleValue)" />
+		</hlayout>
+		<!-- use macro component -->
+		<keypad charSeq="@load(vm.charSeq)" inp="@load(vm.inp)"
+			open="@bind(vm.open)" />
+	</div>
+</zk>
