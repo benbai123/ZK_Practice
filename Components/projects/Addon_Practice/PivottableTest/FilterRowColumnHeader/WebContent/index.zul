@@ -1,0 +1,15 @@
+<zk>
+	<!-- Tested with ZK 6.0.1 CE and ZK Pivottable 2.0.0 -->
+	<!-- window, apply a SelectorComposer -->
+	<window id="win" xmlns:w="client"
+		apply="test.TestComposer">
+		<!-- pivottable, get model from window's composer -->
+		<pivottable id="pivottable" model="${win$composer.pivotModel}" />
+		<div style="margin-top: 10px;">
+			Filter info:
+			<label id="lb" />
+		</div>
+		<!-- filter list -->
+		<div id="filter" />
+	</window>
+</zk>
