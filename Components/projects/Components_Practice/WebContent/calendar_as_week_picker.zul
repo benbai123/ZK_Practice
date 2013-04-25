@@ -1,0 +1,54 @@
+<zk xmlns:w="client">
+	<style>
+		.custom-selected-node {
+			background-color: #99FF99 !important;
+		}
+	</style>
+	<vlayout>
+		<label value="selected dates" />
+		<textbox rows="7" id="tbx" width="300px" />
+	</vlayout>
+	<calendar id="cal" use="test.custom.component.WeekPicker">
+		<attribute w:name="_markCal"><![CDATA[
+			function (opts) {
+				// clear old custom-selected-node
+				jq('.custom-selected-node').each(function () {
+					jq(this).removeClass('custom-selected-node');
+				});
+				this.$_markCal(opts);
+				if (this._view == 'day') {
+					// target: current focused date (td)
+					// parent: tr
+					var target = jq('.z-calendar-seld')[0],
+						parent = target.parentNode,
+						node = parent.firstChild,
+						beforeCnt = 0,
+						found;
+					// loop through each td
+					while (node) {
+						// add selected style
+						jq(node).addClass('custom-selected-node');
+						if (node == target) {
+							found = true;
+						} else if (!found) {
+							// count nodes before target
+							beforeCnt++;
+						}
+						node = node.nextSibling;
+					}
+					// fire event to server
+					this.fire('onCustomSelect', {bcnt: beforeCnt});
+				}
+			}
+		]]></attribute>
+		<attribute name="onCustomSelect"><![CDATA[
+			List dates = self.getSelectedDates();
+			java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd / MM / yyyy");
+			String value = "";
+			for (int i = 0; i < dates.size(); i++) {
+				value = value + sdf.format((Date)dates.get(i)) + "\n";
+			}
+			tbx.setValue(value);
+		]]></attribute>
+	</calendar>
+</zk>
