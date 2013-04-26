@@ -1,0 +1,8 @@
+<zk>
+	// put data into native session while onCreate event
+	<button label="test">
+		<attribute name="onCreate"><![CDATA[
+		self.getDesktop().getSession().getNativeSession().setAttribute("CREATE_TAB", "123");
+		]]></attribute>
+	</button>
+</zk>

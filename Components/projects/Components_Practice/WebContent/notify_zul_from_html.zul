@@ -1,0 +1,45 @@
+<zk>
+	<zscript><![CDATA[
+		import java.lang.Exception;
+		class WorkingThread extends Thread {
+			Tabbox _tbx;
+			WorkingThread (Tabbox tbx) {
+				_tbx = tbx;
+			}
+			public void run () {
+				Random rand = new Random();
+				while (true) {
+					Desktop dt = _tbx.getDesktop();
+					try {
+						// create tab if there is a "CREATE_TAB" property in native session
+						if (dt.getSession().getNativeSession().getAttribute("CREATE_TAB") != null) {
+							System.out.println("CREATE_TAB");
+							dt.getSession().getNativeSession().removeAttribute("CREATE_TAB");
+							Executions.activate(dt);
+
+							new Tab("tab" + (System.currentTimeMillis())).setParent(_tbx.getTabs());
+							Tabpanel tp = new Tabpanel();
+							new Label("tabpanel" + System.currentTimeMillis()).setParent(tp);
+							tp.setParent(_tbx.getTabpanels());
+
+							Executions.deactivate(dt);
+						}
+						Thread.sleep(500);
+					} catch (java.lang.Exception e) {
+						break;
+					}
+				}
+			}
+		}
+	]]></zscript>
+	<tabbox id="tbx">
+		<attribute name="onCreate">
+			// enable and start server push
+			Desktop dt = self.getDesktop();
+			dt.enableServerPush(true);
+			new WorkingThread(self).start();
+		</attribute>
+		<tabs />
+		<tabpanels />
+	</tabbox>
+</zk>
