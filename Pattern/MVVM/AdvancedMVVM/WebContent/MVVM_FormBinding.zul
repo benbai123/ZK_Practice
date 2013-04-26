@@ -1,0 +1,17 @@
+<zk>
+	<div apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('blog.ben.test.mvvm.formbinding.FormBindingTestVM')">
+		<!-- form binding, the before/after in @save is required,
+			you should always indicate when (before/after a command)
+			to save form content -->
+		<div form="@id('fx') @load(vm.person) @save(vm.person, before='savePerson')">
+			<vlayout>
+				<textbox value="@bind(fx.firstName)" />
+				<textbox value="@bind(fx.lastName)" />
+				<intbox value="@bind(fx.age)" />
+			</vlayout>
+		</div>
+		<button label="save" onClick="@command('savePerson')" />
+		<label value="@load(vm.personContent)" />
+	</div>
+</zk>

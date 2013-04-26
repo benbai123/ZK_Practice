@@ -1,0 +1,31 @@
+<zk>
+	<div apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('blog.ben.test.mvvm.formbinding.FormBindingWithValidatorTestVM')"
+		validationMessages="@id('vmsgs')">
+		<!-- form binding, the before/after in @save is required,
+			you should always indicate when (before/after a command)
+			to save form content -->
+		<div form="@id('fx') @load(vm.person) @save(vm.person, before='savePerson') @validator(vm.formValidator)">
+			<vlayout>
+				<hlayout>
+					<textbox value="@bind(fx.firstName)" />
+					<label value="@bind(vmsgs['firstNameContentError'])" style="color: red;" />
+					<label value="@bind(vmsgs['firstNameError'])" style="color: red;" />
+				</hlayout>
+				<hlayout>
+					<textbox value="@bind(fx.lastName)" />
+					<label value="@bind(vmsgs['lastNameContentError'])" style="color: red;" />
+					<label value="@bind(vmsgs['lastNameError'])" style="color: red;" />
+				</hlayout>
+				<hlayout>
+					<intbox value="@bind(fx.age)" />
+					<label value="@bind(vmsgs['ageContentError'])" style="color: red;" />
+					<label value="@bind(vmsgs['ageTooSmallError'])" style="color: red;" />
+					<label value="@bind(vmsgs['ageTooLargeError'])" style="color: red;" />
+				</hlayout>
+			</vlayout>
+		</div>
+		<button label="save" onClick="@command('savePerson')" />
+		<label value="@load(vm.personContent)" />
+	</div>
+</zk>
