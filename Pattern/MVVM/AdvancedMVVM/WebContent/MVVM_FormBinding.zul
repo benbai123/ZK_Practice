@@ -1,17 +1,44 @@
 <zk>
+	<!-- 
+		tested with ZK 6.0.2
+	 -->
 	<div apply="org.zkoss.bind.BindComposer"
 		viewModel="@id('vm') @init('blog.ben.test.mvvm.formbinding.FormBindingTestVM')">
-		<!-- form binding, the before/after in @save is required,
+		<!-- form binding,
+			@id('fx') @load(vm.person)
+			here the id (fx) is mapping to vm.person
+
+			@save(vm.person, before='savePerson')"
+			save to vm.person before savePerson command
+			the before/after in @save is required,
 			you should always indicate when (before/after a command)
-			to save form content -->
+			to save form content
+
+			save to vm.person means
+			call vm.getPerson().setFirstName() to save firstName
+		-->
 		<div form="@id('fx') @load(vm.person) @save(vm.person, before='savePerson')">
 			<vlayout>
-				<textbox value="@bind(fx.firstName)" />
-				<textbox value="@bind(fx.lastName)" />
-				<intbox value="@bind(fx.age)" />
+				<!-- fx.firstName, i.e., vm.person.firstName -->
+				<hlayout>
+					<label value="First Name" />
+					<textbox value="@bind(fx.firstName)" />
+				</hlayout>
+				<hlayout>
+					<label value="Last Name" />
+					<textbox value="@bind(fx.lastName)" />
+				</hlayout>
+				<hlayout>
+					<label value="Age" />
+					<intbox value="@bind(fx.age)" />
+				</hlayout>
 			</vlayout>
 		</div>
+		<!-- click this button will execute savePerson() method in vm
+			and trigger save action of the form above -->
 		<button label="save" onClick="@command('savePerson')" />
+		<!-- show content of person,
+			will be updated after savePerson command -->
 		<label value="@load(vm.personContent)" />
 	</div>
 </zk>

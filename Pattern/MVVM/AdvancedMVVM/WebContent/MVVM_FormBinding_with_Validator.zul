@@ -1,23 +1,42 @@
 <zk>
+	<!-- 
+		tested with ZK 6.0.2
+
+		validationMessages="@id('vmsgs')"
+		means all validation message will be stored in a map
+		that mapped by the id 'vmsgs'
+		
+		i.e., you can get messages from that map by 
+		@bind(vmsgs['keyOfMessageContent'])
+	-->
 	<div apply="org.zkoss.bind.BindComposer"
 		viewModel="@id('vm') @init('blog.ben.test.mvvm.formbinding.FormBindingWithValidatorTestVM')"
 		validationMessages="@id('vmsgs')">
-		<!-- form binding, the before/after in @save is required,
-			you should always indicate when (before/after a command)
-			to save form content -->
+		<!-- 
+			@validator(vm.formValidator)
+			do validation before save form with this validator
+		 -->
 		<div form="@id('fx') @load(vm.person) @save(vm.person, before='savePerson') @validator(vm.formValidator)">
 			<vlayout>
 				<hlayout>
+					<label value="First Name" />
 					<textbox value="@bind(fx.firstName)" />
+					<!-- 
+						@bind(vmsgs['firstNameContentError'])
+						show error message of the key 'firstNameContentError' in
+						vmsgs map after form validation as needed
+					 -->
 					<label value="@bind(vmsgs['firstNameContentError'])" style="color: red;" />
 					<label value="@bind(vmsgs['firstNameError'])" style="color: red;" />
 				</hlayout>
 				<hlayout>
+					<label value="Last Name" />
 					<textbox value="@bind(fx.lastName)" />
 					<label value="@bind(vmsgs['lastNameContentError'])" style="color: red;" />
 					<label value="@bind(vmsgs['lastNameError'])" style="color: red;" />
 				</hlayout>
 				<hlayout>
+					<label value="Age" />
 					<intbox value="@bind(fx.age)" />
 					<label value="@bind(vmsgs['ageContentError'])" style="color: red;" />
 					<label value="@bind(vmsgs['ageTooSmallError'])" style="color: red;" />

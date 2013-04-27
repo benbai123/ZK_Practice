@@ -2,7 +2,11 @@ package blog.ben.test.mvvm.formbinding;
 
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
-
+/**
+ * tested with ZK 6.0.2
+ * @author benbai123
+ *
+ */
 public class FormBindingTestVM {
 	private Person _person;
 	public Person getPerson () {
@@ -21,6 +25,5 @@ public class FormBindingTestVM {
 	@Command
 	@NotifyChange("personContent")
 	public void savePerson () {
-		
 	}
 }
