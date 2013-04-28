@@ -1,0 +1,27 @@
+<zk>
+	<!-- tested with ZK 6.0.2 -->
+	<div apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('blog.ben.test.mvvm.ComponentRenderingTestVM')">
+		<!-- render children with the textboxNode list -->
+		<div children="@load(vm.textboxNode)">
+			<!-- for each element in textboxNode list,
+				render it with the 'children' template
+
+				Note: 'children' is the default template name to use,
+				you can change it with '@template' as needed
+			-->
+			<template name="children" var="node">
+				<textbox value="status a" />
+			</template>
+		</div>
+		<!-- similar to textbox part above -->
+		<div children="@load(vm.labelNode)">
+			<template name="children" var="node">
+				<label value="status b" />
+			</template>
+		</div>
+		<!-- update the render status -->
+		<button label="show/hide textbox" onClick="@command('changeTextboxRenderStatus')" />
+		<button label="show/hide label" onClick="@command('changeLabelRenderStatus')" />
+	</div>
+</zk>
