@@ -1,0 +1,88 @@
+<zk>
+	<!-- 
+		tested with ZK 6.0.2
+
+		validationMessages="@id('vmsgs')"
+		means all validation message will be stored in a map
+		that mapped by the id 'vmsgs'
+		
+		i.e., you can get messages from that map by 
+		@bind(vmsgs['keyOfMessageContent'])
+	-->
+	<div apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('blog.ben.test.mvvm.formbinding.ShowMessageInModalWinTestVM')"
+		validationMessages="@id('vmsgs')">
+		<!-- 
+			@validator(vm.formValidator)
+			do validation before save form with this validator
+		 -->
+		<div form="@id('fx') @load(vm.person) @save(vm.person, before='savePerson') @validator(vm.formValidator)">
+			<vlayout>
+				<hlayout>
+					<label value="First Name" />
+					<textbox value="@bind(fx.firstName)" />
+					<!-- 
+						@bind(vmsgs['firstNameContentError'])
+						show error message of the key 'firstNameContentError' in
+						vmsgs map after form validation as needed
+					 -->
+				</hlayout>
+				<hlayout>
+					<label value="Last Name" />
+					<textbox value="@bind(fx.lastName)" />
+				</hlayout>
+				<hlayout>
+					<label value="Age" />
+					<intbox value="@bind(fx.age)" />
+				</hlayout>
+			</vlayout>
+		</div>
+		<button label="save" onClick="@command('savePerson')" />
+		<label value="@load(vm.personContent)" />
+		<window mode="modal" title="msg win"
+			width="300px"
+			border="normal"
+			visible="@bind(not empty vmsgs)">
+			<grid>
+				<rows>
+					<row visible="@bind(not empty vmsgs['firstNameContentError'])">
+						<cell>
+							<label value="@bind(vmsgs['firstNameContentError'])" style="color: red;" />
+						</cell>
+					</row>
+					<row visible="@bind(not empty vmsgs['firstNameError'])">
+						<cell>
+							<label value="@bind(vmsgs['firstNameError'])" style="color: red;" />
+						</cell>
+					</row>
+					<row visible="@bind(not empty vmsgs['lastNameContentError'])">
+						<cell>
+							<label value="@bind(vmsgs['lastNameContentError'])" style="color: red;" />
+						</cell>
+					</row>
+					<row visible="@bind(not empty vmsgs['lastNameError'])">
+						<cell>
+							<label value="@bind(vmsgs['lastNameError'])" style="color: red;" />
+						</cell>
+					</row>
+					<row visible="@bind(not empty vmsgs['ageContentError'])">
+						<cell>
+							<label value="@bind(vmsgs['ageContentError'])" style="color: red;" />
+						</cell>
+					</row>
+					<row visible="@bind(not empty vmsgs['ageTooSmallError'])">
+						<cell>
+							<label value="@bind(vmsgs['ageTooSmallError'])" style="color: red;" />
+						</cell>
+					</row>
+					<row visible="@bind(not empty vmsgs['ageTooLargeError'])">
+						<cell>
+							<label value="@bind(vmsgs['ageTooLargeError'])" style="color: red;" />
+						</cell>
+					</row>
+				</rows>
+			</grid>
+			<button label="OK" onClick="@command('hideModal')" />
+		</window>
+	</div>
+</zk>
