@@ -1,4 +1,9 @@
 <zk>
+	<style>
+		.errmsg-grid .z-label {
+			color: red !important;
+		}
+	</style>
 	<!-- 
 		tested with ZK 6.0.2
 
@@ -16,7 +21,7 @@
 			@validator(vm.formValidator)
 			do validation before save form with this validator
 		 -->
-		<div form="@id('fx') @load(vm.person) @save(vm.person, before='savePerson') @validator(vm.formValidator)">
+		<div form="@id('fx') @load(vm.person) @save(vm.person, after='savePerson') @validator(vm.formValidator)">
 			<vlayout>
 				<hlayout>
 					<label value="First Name" />
@@ -39,49 +44,14 @@
 		</div>
 		<button label="save" onClick="@command('savePerson')" />
 		<label value="@load(vm.personContent)" />
+		<!-- modal window contains validation messages
+			bind to vm.messages -->
 		<window mode="modal" title="msg win"
 			width="300px"
 			border="normal"
-			visible="@bind(not empty vmsgs)">
-			<grid>
-				<rows>
-					<row visible="@bind(not empty vmsgs['firstNameContentError'])">
-						<cell>
-							<label value="@bind(vmsgs['firstNameContentError'])" style="color: red;" />
-						</cell>
-					</row>
-					<row visible="@bind(not empty vmsgs['firstNameError'])">
-						<cell>
-							<label value="@bind(vmsgs['firstNameError'])" style="color: red;" />
-						</cell>
-					</row>
-					<row visible="@bind(not empty vmsgs['lastNameContentError'])">
-						<cell>
-							<label value="@bind(vmsgs['lastNameContentError'])" style="color: red;" />
-						</cell>
-					</row>
-					<row visible="@bind(not empty vmsgs['lastNameError'])">
-						<cell>
-							<label value="@bind(vmsgs['lastNameError'])" style="color: red;" />
-						</cell>
-					</row>
-					<row visible="@bind(not empty vmsgs['ageContentError'])">
-						<cell>
-							<label value="@bind(vmsgs['ageContentError'])" style="color: red;" />
-						</cell>
-					</row>
-					<row visible="@bind(not empty vmsgs['ageTooSmallError'])">
-						<cell>
-							<label value="@bind(vmsgs['ageTooSmallError'])" style="color: red;" />
-						</cell>
-					</row>
-					<row visible="@bind(not empty vmsgs['ageTooLargeError'])">
-						<cell>
-							<label value="@bind(vmsgs['ageTooLargeError'])" style="color: red;" />
-						</cell>
-					</row>
-				</rows>
-			</grid>
+			visible="@bind(not empty vm.messages)">
+			<grid model="@load(vm.messages)"
+				sclass="errmsg-grid" />
 			<button label="OK" onClick="@command('hideModal')" />
 		</window>
 	</div>
