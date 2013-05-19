@@ -1,0 +1,23 @@
+<language-addon>
+	<addon-name>zkQuickNote</addon-name>
+	<language-name>xul/html</language-name>
+	<version>
+		<version-class>custom.zk.components.Version</version-class>
+		<version-uid>0.8.0</version-uid>
+		<zk-version>5.0.0</zk-version><!-- or later -->
+	</version>
+
+	<!-- the first, basic mask component -->
+	<component>
+		<component-name>mask</component-name>
+		<component-class>custom.zk.components.quicknote.Mask</component-class>
+		<widget-class>custom.zk.components.quicknote.Mask</widget-class>
+		<mold>
+			<mold-name>default</mold-name>
+			<mold-uri>mold/mask.js</mold-uri>
+			<css-uri>css/mask.css.dsp</css-uri>
+		</mold>
+	</component>
+
+	<!-- more components will be added -->
+</language-addon>

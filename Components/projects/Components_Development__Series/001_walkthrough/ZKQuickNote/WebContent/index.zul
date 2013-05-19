@@ -1,0 +1,10 @@
+<zk>
+	<div style="margin: 35px">
+		<vlayout>
+			<label value="samples:" />
+			<vlayout style="margin-left: 25px;">
+				<a href="samples/mask.zul">mask.zul</a>
+			</vlayout>
+		</vlayout>
+	</div>
+</zk>
