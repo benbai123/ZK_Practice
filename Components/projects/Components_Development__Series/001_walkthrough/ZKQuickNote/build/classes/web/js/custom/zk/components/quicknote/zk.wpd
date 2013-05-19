@@ -1,4 +1,7 @@
 <package name="custom.zk.components.quicknote" language="xul/html" depends="zul">
 	<widget name="Mask" />
+	<widget name="EnhancedMask" />
+
 	<!-- more components will be added -->
+
 </package>

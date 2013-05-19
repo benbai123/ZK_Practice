@@ -19,5 +19,21 @@
 		</mold>
 	</component>
 
+	<!-- the second, enhancedmask component
+		can dynamically change the opacity and
+		background-color of mask
+	-->
+	<component>
+		<component-name>enhancedmask</component-name>
+		<component-class>custom.zk.components.quicknote.EnhancedMask</component-class>
+		<widget-class>custom.zk.components.quicknote.EnhancedMask</widget-class>
+		<mold>
+			<mold-name>default</mold-name>
+			<mold-uri>mold/enhancedMask.js</mold-uri>
+			<css-uri>css/enhancedMask.css.dsp</css-uri>
+		</mold>
+	</component>
+
 	<!-- more components will be added -->
+
 </language-addon>

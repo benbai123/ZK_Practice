@@ -4,6 +4,7 @@
 			<label value="samples:" />
 			<vlayout style="margin-left: 25px;">
 				<a href="samples/mask.zul">mask.zul</a>
+				<a href="samples/enhancedmask.zul">enhancedmask.zul</a>
 			</vlayout>
 		</vlayout>
 	</div>

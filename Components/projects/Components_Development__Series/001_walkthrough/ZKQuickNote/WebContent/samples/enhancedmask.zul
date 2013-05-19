@@ -1,0 +1,30 @@
+<zk>
+	<hlayout>
+		<!-- The enhancedmask component that will cover
+			its children by a mask -->
+		<enhancedmask width="500px" id="emask"
+			opacity="20" maskColor="#00FF00">
+			<button label="ZK Website" />
+			<iframe width="100%"
+				height="1000px"
+				src="http://www.zkoss.org/"></iframe>
+		</enhancedmask>
+		<div>
+			<!-- slider used to control opacity of enhancedmask -->
+			<slider curpos="20" maxpos="100">
+				<attribute name="onScroll"><![CDATA[
+					emask.setOpacity(((ScrollEvent)event).getPos());
+				]]></attribute>
+				<attribute name="onScrolling"><![CDATA[
+					emask.setOpacity(((ScrollEvent)event).getPos());
+				]]></attribute>
+			</slider>
+			<!-- colorbox used to control mask color of enhancedmask -->
+			<colorbox color="#00FF00">
+				<attribute name="onChange"><![CDATA[
+					emask.setMaskColor(self.getValue());
+				]]></attribute>
+			</colorbox>
+		</div>
+	</hlayout>
+</zk>
