@@ -1,0 +1,33 @@
+<zk>
+	<hlayout>
+		<!-- The simpletextnote component that will cover
+			its children by a mask
+			you can click on the mask to add a textarea
+			and type text in it
+		-->
+		<simpletextnote width="700px" id="stn"
+			opacity="20" maskColor="#00FF00">
+			<button label="ZK Website" />
+			<iframe width="100%"
+				height="1000px"
+				src="http://www.zkoss.org/"></iframe>
+		</simpletextnote>
+		<div>
+			<!-- slider used to control opacity of simpletextnote -->
+			<slider curpos="20" maxpos="100">
+				<attribute name="onScroll"><![CDATA[
+					stn.setOpacity(((ScrollEvent)event).getPos());
+				]]></attribute>
+				<attribute name="onScrolling"><![CDATA[
+					stn.setOpacity(((ScrollEvent)event).getPos());
+				]]></attribute>
+			</slider>
+			<!-- colorbox used to control mask color of simpletextnote -->
+			<colorbox color="#00FF00">
+				<attribute name="onChange"><![CDATA[
+					stn.setMaskColor(self.getValue());
+				]]></attribute>
+			</colorbox>
+		</div>
+	</hlayout>
+</zk>

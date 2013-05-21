@@ -34,6 +34,19 @@
 		</mold>
 	</component>
 
+	<!-- 3rd, simpletextnote component
+		extends enhancedmask and handle click event to
+		create input field for note
+		
+		reuse the java class, redraw function and css style of
+		enhancedmask, only create a new widget class
+	-->
+	<component>
+		<component-name>simpletextnote</component-name>
+		<extends>enhancedmask</extends>
+		<widget-class>custom.zk.components.quicknote.SimpleTextNote</widget-class>
+	</component>
+
 	<!-- more components will be added -->
 
 </language-addon>
