@@ -2,6 +2,7 @@
 	<widget name="Mask" />
 	<widget name="EnhancedMask" />
 	<widget name="SimpleTextNote" />
+	<widget name="RenderableTextNote" />
 
 	<!-- more components will be added -->
 

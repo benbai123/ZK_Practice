@@ -50,14 +50,18 @@ custom.zk.components.quicknote.SimpleTextNote = zk.$extends(custom.zk.components
 		var n = this.$n(),
 			ofs = jq(n).offset(), // offset
 			x = evt.pageX - ofs.left, // left for note block
-			y = evt.pageY - ofs.top; // top for note block
+			y = evt.pageY - ofs.top, // top for note block
+			noteBlock = this._createNoteBlock(x, y); // note block
 
 		// add note block under root element of widget
-		n.appendChild(this._createNoteBlock(n, x, y));
+		n.appendChild(noteBlock);
+		// focus textarea
+		jq(noteBlock.firstChild).focus();
 	},
-	_createNoteBlock: function (n, x, y) {
+	_createNoteBlock: function (x, y) {
 		var div = document.createElement('div'), // note block div
 			textarea = document.createElement('textarea'), // note block textarea
+			tstyle = textarea.style,
 			zcls = this.getZclass();
 		// add styles,
 		// also add a class name even we will not use it
@@ -67,10 +71,15 @@ custom.zk.components.quicknote.SimpleTextNote = zk.$extends(custom.zk.components
 					'top': y+'px',
 					'z-index': 999999}) // on the top of mask element
 			.addClass(zcls + '-noteblock');
+
 		// set cols of textarea to 1 so
 		// its width can be shrinked to 1 column
 		jq(textarea).prop('cols', '1')
-			.addClass(zcls + '-noteblock-textarea');
+			.addClass(zcls + '-noteblock-textarea')
+			.css({'resize': 'both'});
+		
+		tstyle.width = '50px';
+		tstyle.height = '30px';
 		// append textarea to div
 		div.appendChild(textarea);
 		return div;

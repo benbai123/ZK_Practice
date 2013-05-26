@@ -46,6 +46,19 @@
 		<extends>enhancedmask</extends>
 		<widget-class>custom.zk.components.quicknote.SimpleTextNote</widget-class>
 	</component>
+	<!-- 4th, renderabletextnote component
+		extends simpletextnote and handle data rendering with model
+		
+		reuse css style,
+		extends java and widget classes,
+		add functions to handle model rendering
+	 -->
+	 <component>
+		<component-name>renderabletextnote</component-name>
+		<extends>simpletextnote</extends>
+		<component-class>custom.zk.components.quicknote.RenderableTextNote</component-class>
+		<widget-class>custom.zk.components.quicknote.RenderableTextNote</widget-class>
+	</component>
 
 	<!-- more components will be added -->
 

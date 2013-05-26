@@ -6,6 +6,7 @@
 				<a href="samples/mask.zul">mask.zul</a>
 				<a href="samples/enhancedmask.zul">enhancedmask.zul</a>
 				<a href="samples/simpletextnote.zul">simpletextnote.zul</a>
+				<a href="samples/renderabletextnote.zul">renderabletextnote.zul</a>
 			</vlayout>
 		</vlayout>
 	</div>

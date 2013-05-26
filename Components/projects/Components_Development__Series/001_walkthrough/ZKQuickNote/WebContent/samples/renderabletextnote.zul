@@ -1,0 +1,67 @@
+<zk>
+	<div apply="org.zkoss.bind.BindComposer"
+        viewModel="@id('vm') @init('custom.zk.samples.quicknote.RenderableTextNoteVM')">
+		<hlayout>
+			<!-- The renderabletextnote component that will cover
+				its children by a mask
+				you can click on the mask to add a textarea
+				and type text in it
+			-->
+			<renderabletextnote width="700px" id="stn"
+				opacity="20" maskColor="#00FF00"
+				model="@load(vm.model)">
+				<button label="ZK Website" />
+				<iframe width="100%"
+					height="1000px"
+					src="http://www.zkoss.org/"></iframe>
+			</renderabletextnote>
+			<vlayout>
+				<!-- controll block for add/update/clear note blocks -->
+				<vlayout>
+					<hlayout>
+						x: <intbox value="@bind(vm.textNoteData.posX)" />
+					</hlayout>
+					<hlayout>
+						y: <intbox value="@bind(vm.textNoteData.posY)" />
+					</hlayout>
+					<hlayout>
+						width: <intbox value="@bind(vm.textNoteData.width)" />
+					</hlayout>
+					<hlayout>
+						height: <intbox value="@bind(vm.textNoteData.height)" />
+					</hlayout>
+					<hlayout>
+						text: <textbox value="@bind(vm.textNoteData.text)" />
+					</hlayout> 
+					<hlayout>
+						<button label="add" onClick="@command('addNoteBlock')" />
+					</hlayout>
+					<hlayout>
+						index to update: <intbox value="@save(vm.indexToUpdate)" />
+						<button label="update" onClick="@command('updateNoteBlock')" />
+					</hlayout>
+					<hlayout>
+						<button label="clear" onClick="@command('clearAllBlocks')" />
+					</hlayout>
+				</vlayout>
+				<hlayout>
+					<!-- slider used to control opacity of renderabletextnote -->
+					<slider curpos="20" maxpos="100">
+						<attribute name="onScroll"><![CDATA[
+							stn.setOpacity(((ScrollEvent)event).getPos());
+						]]></attribute>
+						<attribute name="onScrolling"><![CDATA[
+							stn.setOpacity(((ScrollEvent)event).getPos());
+						]]></attribute>
+					</slider>
+					<!-- colorbox used to control mask color of renderabletextnote -->
+					<colorbox color="#00FF00">
+						<attribute name="onChange"><![CDATA[
+							stn.setMaskColor(self.getValue());
+						]]></attribute>
+					</colorbox>
+				</hlayout>
+			</vlayout>
+		</hlayout>
+	</div>
+</zk>
