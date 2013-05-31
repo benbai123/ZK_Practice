@@ -1,12 +1,18 @@
 package custom.zk.components.quicknote.Data;
 
+/** Java bean that represent a text note block
+ * 
+ * @author benbai123
+ *
+ */
 public class TextNoteData {
-	private int _posX;
-	private int _posY;
-	private int _width;
-	private int _height;
-	private String _text;
+	private int _posX; // left
+	private int _posY; // top
+	private int _width; // width
+	private int _height; // height
+	private String _text; // text
 
+	// constructor that construct with each attributes
 	public TextNoteData (int posX, int posY, int width, int height, String text) {
 		_posX = posX;
 		_posY = posY;
@@ -14,6 +20,7 @@ public class TextNoteData {
 		_height = height;
 		_text = text;
 	}
+	// constructor that construct with another data bean
 	public TextNoteData (TextNoteData dataToCopy) {
 		_posX = dataToCopy.getPosX();
 		_posY = dataToCopy.getPosY();
@@ -21,6 +28,7 @@ public class TextNoteData {
 		_height = dataToCopy.getHeight();
 		_text = dataToCopy.getText();
 	}
+	// setters, getters
 	public void setPosX (int posX) {
 		_posX = posX;
 	}

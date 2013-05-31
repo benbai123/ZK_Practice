@@ -1,0 +1,68 @@
+<zk>
+	<!-- two new things
+	
+		selectedTextNoteIndex="@save(vm.indexToUpdate)":
+		that will save selectedTextNoteIndex of selectabletextnote to vm
+		chek the component definition in lang-addon.xml to see
+		how it can work
+		
+		control of opacity and maskColor are moved into VM
+	 -->
+	<div apply="org.zkoss.bind.BindComposer"
+        viewModel="@id('vm') @init('custom.zk.samples.quicknote.SelectableTextNoteVM')">
+		<hlayout>
+			<!-- The selectabletextnote component that will cover
+				its children by a mask
+				you can click on the mask to add a textarea
+				and type text in it
+			-->
+			<selectabletextnote width="700px" id="stn"
+				opacity="@load(vm.opacity)" maskColor="@load(vm.maskColor)"
+				model="@load(vm.model)"
+				selectedTextNoteIndex="@save(vm.indexToUpdate)">
+				<button label="ZK Website" />
+				<iframe width="100%"
+					height="1000px"
+					src="http://www.zkoss.org/"></iframe>
+			</selectabletextnote>
+			<vlayout>
+				<!-- controll block for add/update/clear note blocks -->
+				<vlayout>
+					<hlayout>
+						x: <intbox value="@bind(vm.textNoteData.posX)" />
+					</hlayout>
+					<hlayout>
+						y: <intbox value="@bind(vm.textNoteData.posY)" />
+					</hlayout>
+					<hlayout>
+						width: <intbox value="@bind(vm.textNoteData.width)" />
+					</hlayout>
+					<hlayout>
+						height: <intbox value="@bind(vm.textNoteData.height)" />
+					</hlayout>
+					<hlayout>
+						text: <textbox value="@bind(vm.textNoteData.text)" />
+					</hlayout> 
+					<hlayout>
+						<button label="add" onClick="@command('addNoteBlock')" />
+					</hlayout>
+					<hlayout>
+						index to update: <label value="@load(vm.indexToUpdate)" />
+						<button label="update" onClick="@command('updateNoteBlock')" />
+					</hlayout>
+					<hlayout>
+						<button label="clear" onClick="@command('clearAllBlocks')" />
+					</hlayout>
+				</vlayout>
+				<hlayout>
+					<!-- slider used to control opacity of selectabletextnote -->
+					<slider curpos="@bind(vm.opacity)" maxpos="100"
+						onScroll="@command('updateOpacity')" />
+					<!-- colorbox used to control mask color of selectabletextnote -->
+					<colorbox color="@bind(vm.maskColor)"
+						onChange="@command('updateMaskColor')" />
+				</hlayout>
+			</vlayout>
+		</hlayout>
+	</div>
+</zk>

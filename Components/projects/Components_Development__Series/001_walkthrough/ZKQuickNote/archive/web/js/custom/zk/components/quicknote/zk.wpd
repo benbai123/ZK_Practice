@@ -3,6 +3,8 @@
 	<widget name="EnhancedMask" />
 	<widget name="SimpleTextNote" />
 	<widget name="RenderableTextNote" />
+	<widget name="SelectableTextNote" />
+	<widget name="RecordableTextNote" />
 
 	<!-- more components will be added -->
 

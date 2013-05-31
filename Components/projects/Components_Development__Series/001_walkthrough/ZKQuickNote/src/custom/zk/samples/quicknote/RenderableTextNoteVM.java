@@ -9,10 +9,16 @@ import org.zkoss.bind.annotation.NotifyChange;
 import custom.zk.components.quicknote.Data.TextNoteData;
 import custom.zk.components.quicknote.model.TextNoteModel;
 
+/** VM used in renderabletextnote.zul
+ * 
+ * @author benbai123
+ *
+ */
 public class RenderableTextNoteVM {
 	private TextNoteModel _model;
 	private TextNoteData _textNoteDataToUpdate;
 	private int _indexToUpdate;
+	// getters, setters
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public TextNoteModel getModel () {
 		if (_model == null) {
@@ -30,19 +36,25 @@ public class RenderableTextNoteVM {
 		}
 		return _textNoteDataToUpdate;
 	}
+	public int getIndexToUpdate () {
+		return _indexToUpdate;
+	}
 	public void setIndexToUpdate (int indexToUpdate) {
 		_indexToUpdate = indexToUpdate;
 	}
+	// add note block then update model to client
 	@Command
 	@NotifyChange ("model")
 	public void addNoteBlock () {
 		_model.add(new TextNoteData(_textNoteDataToUpdate));
 	}
+	// update note block then update model to client
 	@Command
 	@NotifyChange ("model")
 	public void updateNoteBlock () {
 		_model.update(_indexToUpdate, new TextNoteData(_textNoteDataToUpdate));
 	}
+	// clear note blocks then update model to client
 	@Command
 	@NotifyChange ("model")
 	public void clearAllBlocks () {

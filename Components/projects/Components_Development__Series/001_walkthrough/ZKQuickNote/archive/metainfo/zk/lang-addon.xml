@@ -60,6 +60,65 @@
 		<widget-class>custom.zk.components.quicknote.RenderableTextNote</widget-class>
 	</component>
 
+	<!-- 5th, selectabletextnote component
+		extends renderabletextnote and fire event to server
+		to update the selected note block index
+
+		one new thing, the 'annotation' block that define
+		how an attribute works with ZKBIND
+		
+		as you can see opacity and maskColor are not defined here
+		since they only require the 'load' direction
+		the 'load' direction is supported by default so
+		you just need to provide setter (in component) and getter (in VM) properly
+		
+		refer to:
+		Document: http://books.zkoss.org/wiki/ZK_Developer's_Reference/MVVM/Advanced/Binding_Annotation_for_a_Custom_Component
+		Code: https://github.com/zkoss/zk/blob/master/zkbind/src/archive/metainfo/zk/lang-addon.xml
+	 -->
+	 <component>
+		<component-name>selectabletextnote</component-name>
+		<extends>renderabletextnote</extends>
+		<component-class>custom.zk.components.quicknote.SelectableTextNote</component-class>
+		<widget-class>custom.zk.components.quicknote.SelectableTextNote</widget-class>
+		<annotation>
+			<!-- ZKBIND is the zkbind system annotation -->
+			<annotation-name>ZKBIND</annotation-name>
+			<!-- property name -->
+			<property-name>selectedTextNoteIndex</property-name>
+			<attribute>
+				<!-- ACCESS is the access direction:
+					can be "both", "save", "load";
+					default to "load" if not found -->
+				<attribute-name>ACCESS</attribute-name>
+				<attribute-value>both</attribute-value>
+			</attribute>
+			<attribute>
+				<!-- SAVE_EVENT is the save trigger event;
+					meaningful only when ACCESS is "both" or "save" -->
+				<attribute-name>SAVE_EVENT</attribute-name>
+				<attribute-value>onTextNoteBlockSelect</attribute-value>
+			</attribute>
+			<attribute>
+				<!-- LOAD_TYPE is the type of attribute for loading -->
+				<attribute-name>LOAD_TYPE</attribute-name>
+				<attribute-value>java.lang.Integer</attribute-value>
+			</attribute>
+		</annotation>
+	</component>
+
+	<!-- 6th, recordabletextnote component
+		extends selectabletextnote and fire event to server
+		to update server side data
+
+	 -->
+	 <component>
+		<component-name>recordabletextnote</component-name>
+		<extends>selectabletextnote</extends>
+		<component-class>custom.zk.components.quicknote.RecordableTextNote</component-class>
+		<widget-class>custom.zk.components.quicknote.RecordableTextNote</widget-class>
+	</component>
+
 	<!-- more components will be added -->
 
 </language-addon>
