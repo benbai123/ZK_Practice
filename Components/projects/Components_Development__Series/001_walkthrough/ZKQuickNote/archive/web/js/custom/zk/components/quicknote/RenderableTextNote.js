@@ -1,7 +1,8 @@
 /**
  * Widget class of RenderableTextNote component,
- * extends custom.zk.components.quicknote.SimpleTextNote, change zclass and
- * handle client side click event
+ * extends custom.zk.components.quicknote.SimpleTextNote,
+ * handle update command (setNoteBlocks) to render note blocks
+ * with the data updated from server
  * 
  * one new thing:
  * bind_: Callback when this widget is bound (aka., attached) to the DOM tree.
@@ -22,9 +23,11 @@ custom.zk.components.quicknote.RenderableTextNote = zk.$extends(custom.zk.compon
 			this._renderNoteBlocks();
 		}
 	},
+	// doms are ready
 	bind_: function (desktop, skipper, after) {
+		// call super
 		this.$supers(custom.zk.components.quicknote.RenderableTextNote, 'bind_', arguments);
-		var noteBlocks = this._noteBlocks;
+		// render note blocks if any
 		this._renderNoteBlocks();
 	},
 	// render note blocks

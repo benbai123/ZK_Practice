@@ -14,37 +14,53 @@ custom.zk.components.quicknote.SelectableTextNote = zk.$extends(custom.zk.compon
 	doClick_: function (evt) {
 		// call super at first
 		this.$supers('doClick_', arguments);
+		var target = evt.domTarget;
+		// clicked in textarea in text note block
+		if (jq(target).hasClass(this.getZclass() + '-noteblock-textarea')) {
+			this._doTextNoteBlockClick(evt);
+		}
+	},
+	/** processing onclick of textarea in note block
+	 * pass event into this function (instead of just pass target)
+	 * since we probably need some information (e.g., pageX/Y, etc) in
+	 * the future
+	 * 
+	 * @param evt
+	 */
+	_doTextNoteBlockClick: function (evt) {
 		// cls: css class of textarea within text note block
 		// target: the clicked dom element
 		var cls = this.getZclass() + '-noteblock-textarea',
 			scls = this.getZclass() + '-noteblock-selected',
 			target = evt.domTarget;
 
-		// clicked in textarea in text note block
-		if (jq(target).hasClass(cls)) {
-			// firstTextNote: the first text note block
-			// current: a copy of text note block for while loop
-			// idx: index of current text note block
-			var firstTextNote = this.$n('mask').nextSibling,
-				current = firstTextNote,
-				idx = 0;
-			// clear style and class of old selected block
-			jq('.' + scls).each(function () {
-				jq(this).css('z-index', '999999').removeClass(scls);
-			});
-			// for each text note block
-			while (current) {
-				// found clicked block
-				if (jq(current).find('.'+cls)[0] == target) {
-					jq(current).css('z-index', '1000000') // make clicked block top most
-						.addClass(scls); // add a specific so can find it easily next time
-					// fire event to update index to server side
-					this.fire('onTextNoteBlockSelect', {index: idx});
-					break;
-				}
-				current = current.nextSibling;
-				idx++;
+		// firstTextNote: the first text note block
+		// current: a copy of text note block for while loop
+		// idx: index of current text note block
+		var firstTextNote = this.$n('mask').nextSibling,
+			current = firstTextNote,
+			idx = 0;
+		// clear selected class of old selected block
+		jq('.' + scls).each(function () {
+			jq(this).removeClass(scls);
+		});
+		// for each text note block
+		while (current) {
+			// found clicked block
+			if (jq(current).find('.'+cls)[0] == target) {
+				// add class to make it become top most note block
+				jq(current).addClass(scls); 
+				// fire event to update index to server side
+				this.fire('onTextNoteBlockSelect', {index: idx});
+				break;
 			}
+			current = current.nextSibling;
+			idx++;
 		}
+	},
+	// override with new css class name
+	getZclass: function () {
+		var zcls = this._zclass;
+		return zcls? zcls : 'z-selectabletextnote';
 	}
 });

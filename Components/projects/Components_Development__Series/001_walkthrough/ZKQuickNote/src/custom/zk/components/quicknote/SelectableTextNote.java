@@ -17,6 +17,7 @@ import org.zkoss.zk.ui.event.Events;
  *
  * postEvent: post an event to self instance so the composer can be notified
  * 			this is also required for save data with MVVM
+ * 			refer to http://books.zkoss.org/wiki/ZK_Developer's_Reference/Event_Handling/Event_Firing
  * 
  * @author benbai123
  *

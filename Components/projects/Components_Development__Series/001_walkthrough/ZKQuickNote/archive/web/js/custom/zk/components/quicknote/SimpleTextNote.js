@@ -5,13 +5,15 @@
  * 
  * Several new things:
  * 
- * extends another widget class: this is not that new, we have extended from
+ * extends another widget class:
+ * 			this is not that new, we have extended from
  * 			zk.Widget in mask and enhancedmask components.
  * 			but in this widget class we can see that we do not define the
  * 			getZclass, setOpacity and setMaskColor methods again, we can
  * 			use them directly since they are defined in EnhancedMask.js
  * 			(The super widget class of this widget)
- * handling client side event (doClick_): the doClick_ is a predefined API
+ * handling client side event (doClick_):
+ * 			the doClick_ is a predefined API
  * 			that will be called automatically with an onclick event in ZK
  * 			There are lots of such API in ZK, e.g., doClick_, doDoubleClick_,
  * 			doRightClick_, doMouseOver_, doMouseOut_, etc, etc
@@ -19,17 +21,20 @@
  * 			currently they are defined in widget.js under 'zk' project,
  * 			you can override it if you want to process a click event of this widget
  * 
- * evt:		the ZK wrapped event that will be passed into event-handling API automatically
+ * evt:
+ * 			the ZK wrapped event that will be passed into event-handling API automatically
  * 			two major content:
  * 				evt.target: the widget that received this event
  * 				evt.domTarget: the dom element that received this event
  * 
- * override widget function: you can override a widget function that has been defined in
+ * override widget function:
+ * 			you can override a widget function that has been defined in
  * 			ancestor widget class by define it again in widget class
  * 			e.g., the doClick_ is defined in zk.Widget,
  * 				and we override it by define it again in this widget class
  * 
- * call ancestor's widget function: use this.$supers('functionName', arguments)
+ * call ancestor's widget function:
+ * 			use this.$supers('functionName', arguments)
  * 			to call the mathod defined in ancestor's widget class
  * 			where functionName is the method to call, arguments is the parameters
  * 			to pass
@@ -64,24 +69,28 @@ custom.zk.components.quicknote.SimpleTextNote = zk.$extends(custom.zk.components
 			tstyle = textarea.style,
 			zcls = this.getZclass();
 		// add styles,
-		// also add a class name even we will not use it
-		// so user can customize style as needed
-		jq(div).css({'position': 'absolute', // absolute positioned
-					'left': x+'px', // position left and top
-					'top': y+'px',
-					'z-index': 999999}) // on the top of mask element
+		// also add a class name to apply the style defined
+		// with selector '.z-simpletextnote .z-simpletextnote-noteblock'
+		// in simpleTextNote.css.dsp
+		jq(div).css({'left': x+'px', // position left and top
+					'top': y+'px'})
 			.addClass(zcls + '-noteblock');
 
 		// set cols of textarea to 1 so
-		// its width can be shrinked to 1 column
+		// its width can be shrinked
+		// also add a class name to apply the style defined
+		// with selector '.z-simpletextnote .z-simpletextnote-noteblock-textarea'
+		// in simpleTextNote.css.dsp
 		jq(textarea).prop('cols', '1')
-			.addClass(zcls + '-noteblock-textarea')
-			.css({'resize': 'both'});
-		
-		tstyle.width = '50px';
-		tstyle.height = '30px';
+			.addClass(zcls + '-noteblock-textarea');
+
 		// append textarea to div
 		div.appendChild(textarea);
 		return div;
+	},
+	// override with new css class name
+	getZclass: function () {
+		var zcls = this._zclass;
+		return zcls? zcls : 'z-simpletextnote';
 	}
 });

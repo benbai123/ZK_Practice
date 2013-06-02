@@ -38,14 +38,20 @@
 		extends enhancedmask and handle click event to
 		create input field for note
 		
-		reuse the java class, redraw function and css style of
-		enhancedmask, only create a new widget class
+		reuse the java class and redraw function of
+		enhancedmask, create a new widget class and
+		update zclass
 	-->
 	<component>
 		<component-name>simpletextnote</component-name>
 		<extends>enhancedmask</extends>
 		<widget-class>custom.zk.components.quicknote.SimpleTextNote</widget-class>
+		<mold>
+			<mold-name>default</mold-name>
+			<css-uri>css/simpleTextNote.css.dsp</css-uri>
+		</mold>
 	</component>
+
 	<!-- 4th, renderabletextnote component
 		extends simpletextnote and handle data rendering with model
 		
@@ -61,11 +67,13 @@
 	</component>
 
 	<!-- 5th, selectabletextnote component
-		extends renderabletextnote and fire event to server
+		extends renderabletextnote,
+		update zclass, handle click event of
+		textareas and fire event to server
 		to update the selected note block index
 
 		one new thing, the 'annotation' block that define
-		how an attribute works with ZKBIND
+		how an attribute (selectedTextNoteIndex here) works with ZKBIND
 		
 		as you can see opacity and maskColor are not defined here
 		since they only require the 'load' direction
@@ -81,6 +89,10 @@
 		<extends>renderabletextnote</extends>
 		<component-class>custom.zk.components.quicknote.SelectableTextNote</component-class>
 		<widget-class>custom.zk.components.quicknote.SelectableTextNote</widget-class>
+		<mold>
+			<mold-name>default</mold-name>
+			<css-uri>css/selectableTextNote.css.dsp</css-uri>
+		</mold>
 		<annotation>
 			<!-- ZKBIND is the zkbind system annotation -->
 			<annotation-name>ZKBIND</annotation-name>
