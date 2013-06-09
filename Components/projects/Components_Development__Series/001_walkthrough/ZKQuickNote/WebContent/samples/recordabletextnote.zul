@@ -1,67 +1,128 @@
 <zk>
-	<!-- two new things
+	<!-- several new things
 	
-		selectedTextNoteIndex="@save(vm.indexToUpdate)":
-		that will save selectedTextNoteIndex of selectabletextnote to vm
-		chek the component definition in lang-addon.xml to see
-		how it can work
-		
-		control of opacity and maskColor are moved into VM
+		selectedTextNoteData="@save(vm.selectedTextNoteData, before='updateAttrs,addNoteBlock')"
+				denotes save attribute selectedTextNoteData to VM before the
+				command 'updateAttrs' in VM is triggered
+
+				we need to update the data of selectedTextNoteData when
+				the selected text note block is changed or when
+				the attributes of selected text note block is changed
+				
+				but ZKBIND currently does not support specify multiple save event
+				so we use @save annotation in MVVM to specify extra event
+
+				however we still need to specify selectedTextNoteData in lang-addon.xml to
+				change its direction to save at first
+
+				without this line the data of selected text note block will be changed with
+				onSelectedTextNoteBlockChanged event only
+
+				also save it before add a new block with add button
+				
+				ref: http://books.zkoss.org/wiki/ZK_Developer's_Reference/MVVM/Syntax/Data_Binding/@save
+
+		onTextNoteBlockSelect="@command('updateAttrs')"
+				trigger updateAttrs while onTextNoteBlockSelect event so it will
+				trigger save action of selectedTextNoteData
+
+		bind value of selected note block
+				value="@bind(vm.selectedTextNoteData.xxx)"
+				this will load/save attributes from/to selected text note data
+
+				onChange="@command('updateModel')"
+				this will trigger 'updateModel' command in VM,
+				the command will refresh model with NotifyChange annotation
+				update model manually since we didn't implement update mechanism
+				of model
+
+		added 'changed data' block to show which block is changed
 	 -->
 	<div apply="org.zkoss.bind.BindComposer"
         viewModel="@id('vm') @init('custom.zk.samples.quicknote.RecordableTextNoteVM')">
 		<hlayout>
-			<!-- The selectabletextnote component that will cover
+			<!-- The recordabletextnote component that will cover
 				its children by a mask
 				you can click on the mask to add a textarea
 				and type text in it
 			-->
-			<selectabletextnote width="700px" id="stn"
+			<recordabletextnote width="700px" id="stn"
 				opacity="@load(vm.opacity)" maskColor="@load(vm.maskColor)"
 				model="@load(vm.model)"
-				selectedTextNoteIndex="@save(vm.indexToUpdate)">
+				selectedTextNoteData="@save(vm.selectedTextNoteData, before={'updateAttrs','addNoteBlock'})"
+				selectedTextNoteIndex="@save(vm.indexToUpdate)"
+				onTextNoteBlockSelect="@command('updateAttrs')"
+				onSelectedTextNoteBlockChanged="@command('updateAttrs')"
+				onTextNoteBlockChanged="@command('updateChangedTextNoteData')">
 				<button label="ZK Website" />
 				<iframe width="100%"
 					height="1000px"
 					src="http://www.zkoss.org/"></iframe>
-			</selectabletextnote>
+			</recordabletextnote>
 			<vlayout>
 				<!-- controll block for add/update/clear note blocks -->
 				<vlayout>
+					<label value="controll block for add/update/clear note blocks" />
 					<hlayout>
-						x: <intbox value="@bind(vm.textNoteData.posX)" />
+						index: <intbox value="@load(vm.indexToUpdate)" readonly="true" />
 					</hlayout>
 					<hlayout>
-						y: <intbox value="@bind(vm.textNoteData.posY)" />
+						x: <intbox value="@bind(vm.textNoteData.posX)"
+								onChange="@command('updateModel')" />
 					</hlayout>
 					<hlayout>
-						width: <intbox value="@bind(vm.textNoteData.width)" />
+						y: <intbox value="@bind(vm.textNoteData.posY)"
+								onChange="@command('updateModel')" />
 					</hlayout>
 					<hlayout>
-						height: <intbox value="@bind(vm.textNoteData.height)" />
+						width: <intbox value="@bind(vm.textNoteData.width)"
+									onChange="@command('updateModel')" />
 					</hlayout>
 					<hlayout>
-						text: <textbox value="@bind(vm.textNoteData.text)" />
+						height: <intbox value="@bind(vm.textNoteData.height)"
+									onChange="@command('updateModel')" />
+					</hlayout>
+					<hlayout>
+						text: <textbox value="@bind(vm.textNoteData.text)"
+									onChange="@command('updateModel')" />
 					</hlayout> 
 					<hlayout>
 						<button label="add" onClick="@command('addNoteBlock')" />
 					</hlayout>
 					<hlayout>
-						index to update: <label value="@load(vm.indexToUpdate)" />
-						<button label="update" onClick="@command('updateNoteBlock')" />
-					</hlayout>
-					<hlayout>
 						<button label="clear" onClick="@command('clearAllBlocks')" />
 					</hlayout>
 				</vlayout>
-				<hlayout>
-					<!-- slider used to control opacity of selectabletextnote -->
+				<hlayout style="margin-top: 10px;">
+					<!-- slider used to control opacity of recordabletextnote -->
 					<slider curpos="@bind(vm.opacity)" maxpos="100"
 						onScroll="@command('updateOpacity')" />
-					<!-- colorbox used to control mask color of selectabletextnote -->
+					<!-- colorbox used to control mask color of recordabletextnote -->
 					<colorbox color="@bind(vm.maskColor)"
 						onChange="@command('updateMaskColor')" />
 				</hlayout>
+				<!-- information of changed note block data -->
+				<vlayout style="margin-top: 10px;">
+					<label value="information of changed note block data" />
+					<hlayout>
+						changed idnex: <intbox readonly="true" value="@load(vm.changedIndex)" />
+					</hlayout>
+					<hlayout>
+						x: <intbox readonly="true" value="@load(vm.changedTextNoteData.posX)" />
+					</hlayout>
+					<hlayout>
+						y: <intbox readonly="true" value="@load(vm.changedTextNoteData.posY)" />
+					</hlayout>
+					<hlayout>
+						width: <intbox readonly="true" value="@load(vm.changedTextNoteData.width)" />
+					</hlayout>
+					<hlayout>
+						height: <intbox readonly="true" value="@load(vm.changedTextNoteData.height)" />
+					</hlayout>
+					<hlayout>
+						text: <textbox readonly="true" value="@load(vm.changedTextNoteData.text)" />
+					</hlayout> 
+				</vlayout>
 			</vlayout>
 		</hlayout>
 	</div>

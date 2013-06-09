@@ -2,60 +2,119 @@
  * Widget class of RecordableTextNote component,
  * extends custom.zk.components.quicknote.SelectableTextNote
  * 
- * one new thing:
- * bind_: Callback when this widget is bound (aka., attached) to the DOM tree.
- * 
+ * actually no new thing, just handle more events and do more
+ * works to make it recordable
  * 
  */
 custom.zk.components.quicknote.RecordableTextNote = zk.$extends(custom.zk.components.quicknote.SelectableTextNote, {
-	doClick_: function (evt) {
-		this.$supers('doClick_', arguments);
-		zk.log(evt.domTarget);
-	},
 	_createNoteBlock: function (x, y) {
 		// call super
 		var noteBlock = this.$supers('_createNoteBlock', arguments),
-			textArea = noteBlock.firstChild,
+			textarea = noteBlock.firstChild,
 			wgt = this;
-		textArea.onfocus = function () {
-			wgt._storeOldText(textArea);
+		// add event listener for onfocus and onblur of textarea
+		textarea.onfocus = function () {
+			wgt.doTextNoteBlockFocus(textarea);
 		};
-		// bind event
-		textArea.onblur = function () {
-			wgt._checkUpdate(textArea);
+		textarea.onblur = function () {
+			wgt.doTextNoteBlockBlur(textarea);
 		};
-		textArea.onmousemove = function () {
-			wgt._storeOldSize(textArea);
-		};
-		textArea.onmouseup = function () {
-			var textAreas = jq(wgt.$n()).find('textarea'),
-				len = textAreas.length,
-				idx = 0;
-			for ( ; idx < len; idx++ ) {
-				if (textAreas[idx] == textArea) {
-					zk.log(idx);
-					break;
-				}
-			}
-		};
+		// define an object to hold attributes of text note block
+		// and store it at textarea
+		textarea.zkAttributes = {};
+		this.storeTextBlockAttributes(textarea);
 		return noteBlock;
 	},
-	_storeOldText: function (textArea) {
-		textArea._oldText = jq(textArea).val();
-		zk.log(textArea._oldText);
+	// rewrite _renderNoteBlock to add _afterRenderNoteBlock
+	// at the tail
+	_renderNoteBlock: function (x, y, w, h, txt) {
+		var noteBlock = this._createNoteBlock(x, y),
+			textarea = noteBlock.firstChild;
+		jq(textarea).css({'width': w+'px',
+						'height': h+'px'});
+		textarea.innerHTML = txt;
+		this.$n().appendChild(noteBlock);
+		// add _afterRenderNoteBlock
+		this._afterRenderNoteBlock(noteBlock);
 	},
-	_checkUpdate: function (textArea) {
-		var old = textArea._oldText,
-			newText = jq(textArea).val();
-		zk.log(old);
-		zk.log(newText);
+	// called after _renderNoteBlock
+	_afterRenderNoteBlock: function (noteBlock) {
+		var idx = this._selectedTextNoteIndex;
+		if (idx >= 0
+			&& idx == this.getTextBlockIndex(noteBlock.firstChild))
+			jq(noteBlock).addClass(this.getZclass() + '-noteblock-selected');
+		// simply update textarea.zkAttributes
+		this.storeTextBlockAttributes(noteBlock.firstChild);
 	},
-	_storeOldSize: function (textArea) {
-		var $textArea = jq(textArea);
-		textArea._oldWidth = $textArea.width();
-		textArea._oldHeight = $textArea.height();
-
-		zk.log(textArea._oldWidth);
-		zk.log(textArea._oldHeight);
+	// store/update attributes of text note block
+	// to textarea.zkAttributes
+	storeTextBlockAttributes: function (textarea) {
+		var $textarea = jq(textarea),
+			$div = jq(textarea.parentNode),
+			zattr = textarea.zkAttributes;
+		// store current value
+		zattr.left = $div.css('left');
+		zattr.top = $div.css('top');
+		zattr.width = $textarea.css('width');
+		zattr.height = $textarea.css('height');
+		zattr.text = $textarea.val();
+	},
+	// called while onfocus of textarea in text note block
+	doTextNoteBlockFocus: function (textarea) {
+		// store changed attributes
+		// and fire event as needed
+		this.recordTextBlock(textarea);
+	},
+	// called while onblur of textarea in text note block
+	doTextNoteBlockBlur: function (textarea) {
+		this.recordTextBlock(textarea);
+	},
+	// update changed attributes and fire event as needed
+	recordTextBlock: function (textarea) {
+		// update attributes and fire event
+		// if attributes are changed
+		if (this.isTextNoteBlockChanged(textarea)) {
+			this.storeTextBlockAttributes(textarea);
+			this.fireOnTextNoteBlockChanged(textarea);
+		}
+	},
+	// check whether attributes of a text note block
+	// are changed
+	isTextNoteBlockChanged: function (textarea) {
+		var $textarea = jq(textarea),
+			$div = jq(textarea.parentNode),
+			zattr = textarea.zkAttributes;
+		// store current value
+		return zattr.left != $div.css('left')
+			||	zattr.top != $div.css('top')
+			|| zattr.width != $textarea.css('width')
+			|| zattr.height != $textarea.css('height')
+			|| zattr.text != $textarea.val();
+	},
+	// fire text note block changed event
+	fireOnTextNoteBlockChanged: function (textarea) {
+		var zattr = textarea.zkAttributes,
+			idx = this.getTextBlockIndex(textarea),
+			selected = jq('.' + this.getZclass() + '-noteblock-selected')[0];
+		// has attributes object and index exists
+		if (zattr
+			&& idx >= 0) {
+			// create data
+			var data = {index: idx,
+					left: parseInt(zattr.left),
+					top: parseInt(zattr.top),
+					width: parseInt(zattr.width),
+					height: parseInt(zattr.height),
+					text: zattr.text
+			};
+			// always fire onTextNoteBlockChanged
+			this.fire('onTextNoteBlockChanged', data);
+			// also fire onSelectedTextNoteBlockChanged if
+			// changed text note block is selected one
+			if (selected 
+				&& this.getTextBlockIndex(selected.firstChild) == idx) {
+				this.fire('onSelectedTextNoteBlockChanged', data);
+			}
+		}
 	}
 });

@@ -9,6 +9,7 @@
  * 
  */
 custom.zk.components.quicknote.SelectableTextNote = zk.$extends(custom.zk.components.quicknote.RenderableTextNote, {
+	_selectedTextNoteIndex: -1,
 	// called while onclick of any dom elements
 	// under root element is triggered
 	doClick_: function (evt) {
@@ -30,33 +31,40 @@ custom.zk.components.quicknote.SelectableTextNote = zk.$extends(custom.zk.compon
 	_doTextNoteBlockClick: function (evt) {
 		// cls: css class of textarea within text note block
 		// target: the clicked dom element
-		var cls = this.getZclass() + '-noteblock-textarea',
-			scls = this.getZclass() + '-noteblock-selected',
-			target = evt.domTarget;
+		var scls = this.getZclass() + '-noteblock-selected',
+			target = evt.domTarget,
+			idx;
 
-		// firstTextNote: the first text note block
-		// current: a copy of text note block for while loop
-		// idx: index of current text note block
-		var firstTextNote = this.$n('mask').nextSibling,
-			current = firstTextNote,
-			idx = 0;
 		// clear selected class of old selected block
 		jq('.' + scls).each(function () {
 			jq(this).removeClass(scls);
 		});
+		// add class to make it become top most note block
+		jq(target.parentNode).addClass(scls);
+		// fire event to update index to server side
+		if ((idx = this.getTextBlockIndex(target)) >= 0) {
+			this._selectedTextNoteIndex = idx;
+			this.fire('onTextNoteBlockSelect', {index: idx});
+		}
+	},
+	getTextBlockIndex: function (textarea) {
+		var cls = this.getZclass() + '-noteblock-textarea';
+		// current: a copy of text note block for while loop
+		// idx: index of current text note block
+		var current = this.$n('mask').nextSibling,
+			idx = 0;
+
 		// for each text note block
 		while (current) {
 			// found clicked block
-			if (jq(current).find('.'+cls)[0] == target) {
-				// add class to make it become top most note block
-				jq(current).addClass(scls); 
-				// fire event to update index to server side
-				this.fire('onTextNoteBlockSelect', {index: idx});
-				break;
+			if (jq(current).find('.'+cls)[0] == textarea) {
+				// return index
+				return idx;
 			}
 			current = current.nextSibling;
 			idx++;
 		}
+		return -1;
 	},
 	// override with new css class name
 	getZclass: function () {

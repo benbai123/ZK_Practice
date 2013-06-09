@@ -1,0 +1,151 @@
+<zk xmlns:w="client">
+	frozen: <intbox id="ibx" value="2" />
+	<button label="change">
+		<attribute name="onClick"><![CDATA[
+			tbs.setFrozen(ibx.getValue());
+		]]></attribute>
+	</button>
+	<div />
+	<button label="change orient">
+		<attribute name="onClick"><![CDATA[
+			if ("vertical".equals(tbx.getOrient())) {
+				tbx.setOrient("horizontal");
+			} else {
+				tbx.setOrient("vertical");
+			}
+		]]></attribute>
+	</button>
+	<div />
+	<button label="add tab">
+		<attribute name="onClick"><![CDATA[
+			tbs.insertBefore(new Tab("added tab"), tbs.getFirstChild());
+		]]></attribute>
+	</button>
+	<button label="remove tab">
+		<attribute name="onClick"><![CDATA[
+			tbs.getFirstChild().setParent(null);
+		]]></attribute>
+	</button>
+	<borderlayout>
+		<north size="20%" />
+		<south size="20%" />
+		<west size="20%" />
+		<east size="20%" />
+		<center>
+			<tabbox id="tbx" width="250px" height="150px">
+				<tabs id="tbs" use="test.custom.component.FrozenTabs" frozen="2">
+					<attribute w:name="setFrozen"><![CDATA[
+						function (v) {
+							if (v != this._frozen) {
+								this._frozen = v;
+								if (this.$n())
+									this.fixFrozen();
+							}
+						}
+					]]></attribute>
+					<attribute w:name="bind_"><![CDATA[
+						function (a, b, c) {
+							this.$bind_(a, b, c);
+							var oldAdded = this.onChildAdded_,
+								oldRemoved = this.onChildRemoved_,
+								wgt = this;
+							this.onChildAdded_ = function () {
+								oldAdded.apply(wgt, arguments);
+								if (wgt.$n())
+									wgt.fixFrozen();
+							};
+							this.onChildRemoved_ = function (child) {
+								oldRemoved.apply(wgt, arguments);
+								if (wgt.$n())
+									wgt.fixFrozen();
+							};
+							setTimeout (function () {
+								wgt.fixFrozen();
+							}, 0);
+						}
+					]]></attribute>
+					<attribute w:name="fixFrozen"><![CDATA[
+						function () {
+							var tabbox = this.getTabbox();
+							if (tabbox._mold == 'accordion')
+								return;
+							var frozen = this._frozen,
+								n = this.$n(),
+								$n = jq(n),
+								old = $n.find('.z-tabs-fakefrozen')[0];
+							if (old) n.removeChild(old);
+							if (frozen) {
+								var cave = this.$n('cave'),
+									children = cave.childNodes,
+									len = children.length;
+								if (len >= frozen) {
+									var copyN = $n.clone()[0],
+										$copyN = jq(copyN),
+										copyHeader = $copyN.find('.z-tabs-header')[0]
+													|| $copyN.find('.z-tabs-ver-header')[0],
+										copyCave = $copyN.find('.z-tabs-cnt')[0]
+													|| $copyN.find('.z-tabs-ver-cnt')[0],
+										child = copyN.childNodes[0],
+										vertical = tabbox._orient == 'vertical',
+										size = 0,
+										tmp;
+									while (child) {
+										tmp = child.nextSibling;
+										if (child != copyHeader)
+											copyN.removeChild(child);
+										child = tmp;
+									}
+									child = copyCave.childNodes[frozen];
+									while (child) {
+										tmp = child.nextSibling;
+										copyCave.removeChild(child);
+										child = tmp;
+									}
+									child = cave.childNodes[0];
+									tmp = cave.childNodes[frozen];
+									while (child) {
+										size += vertical?
+											jq(child).outerHeight(true) : jq(child).outerWidth(true);
+										child = child.nextSibling;
+										if (child == tmp)
+											break;
+									}
+									copyN.id = '';
+									$copyN.addClass('z-tabs-fakefrozen').css({
+										'position': 'absolute',
+										'left': '0px',
+										'top': '0px',
+										'border-bottom': '1px solid white'
+									});
+									if (vertical)
+										$copyN.css('height', size+20 + 'px');
+									else
+										$copyN.css('width', size+25 + 'px');
+									n.appendChild(copyN);
+								}
+							}
+						}
+					]]></attribute>
+					<attribute name="onCreate"><![CDATA[
+						new Tab("tab 1").setParent(self);
+						new Tab("tab 2").setParent(self);
+						new Tab("tab 3").setParent(self);
+						new Tab("tab 4 long").setParent(self);
+						new Tab("tab 5 long").setParent(self);
+						new Tab("tab 6 long long long").setParent(self);
+						new Tab("tab 7").setParent(self);
+					]]></attribute>
+				</tabs>
+				<tabpanels>
+					<tabpanel>tabpanel 1</tabpanel>
+					<tabpanel>tabpanel 2</tabpanel>
+					<tabpanel>tabpanel 3</tabpanel>
+					<tabpanel>tabpanel 4</tabpanel>
+					<tabpanel>tabpanel 5</tabpanel>
+					<tabpanel>tabpanel 6</tabpanel>
+					<tabpanel>tabpanel 7</tabpanel>
+				</tabpanels>
+			</tabbox>
+		</center>
+	</borderlayout>
+</zk>

@@ -17,7 +17,7 @@ import custom.zk.components.quicknote.model.TextNoteModel;
 public class RenderableTextNoteVM {
 	private TextNoteModel _model;
 	private TextNoteData _textNoteDataToUpdate;
-	private int _indexToUpdate;
+	private int _indexToUpdate = -1;
 	// getters, setters
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public TextNoteModel getModel () {
