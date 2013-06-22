@@ -9,6 +9,7 @@
 				<a href="samples/renderabletextnote.zul">renderabletextnote.zul</a>
 				<a href="samples/selectabletextnote.zul">selectabletextnote.zul</a>
 				<a href="samples/recordabletextnote.zul">recordabletextnote.zul</a>
+				<a href="samples/updatabletextnote.zul">updatabletextnote.zul</a>
 			</vlayout>
 		</vlayout>
 	</div>

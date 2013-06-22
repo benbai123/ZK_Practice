@@ -25,12 +25,7 @@ public class RenderableTextNote extends EnhancedMask {
 	 */
 	public void setModel (TextNoteModel model) {
 		_model = model;
-		String blockToRender = getRenderedTextNoteData();
-		if (blockToRender == null) {
-			blockToRender = "";
-		}
-		// update client note blocks while setter is called
-		smartUpdate("noteBlocks", blockToRender);
+		updateNoteBlocks();
 	}
 	/**
 	 * getter
@@ -38,6 +33,17 @@ public class RenderableTextNote extends EnhancedMask {
 	 */
 	public TextNoteModel getModel () {
 		return _model;
+	}
+	/**
+	 * used to update text note blocks at client side
+	 */
+	public void updateNoteBlocks () {
+		String blockToRender = getRenderedTextNoteData();
+		if (blockToRender == null) {
+			blockToRender = "";
+		}
+		// update client note blocks while setter is called
+		smartUpdate("noteBlocks", blockToRender);
 	}
 	/**
 	 * create a json string used to update text note blocks at client side

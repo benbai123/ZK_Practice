@@ -5,6 +5,7 @@
 	<widget name="RenderableTextNote" />
 	<widget name="SelectableTextNote" />
 	<widget name="RecordableTextNote" />
+	<widget name="UpdatableTextNote" />
 
 	<!-- more components will be added -->
 

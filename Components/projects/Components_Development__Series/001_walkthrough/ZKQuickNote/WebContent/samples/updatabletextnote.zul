@@ -1,0 +1,43 @@
+<zk>
+	<!-- 
+		completely new sample for updatabletextnote,
+		two updatabletextnote use the same model,
+		will sync automatically
+	 -->
+	<div apply="org.zkoss.bind.BindComposer"
+        viewModel="@id('vm') @init('custom.zk.samples.quicknote.UpdatableTextNoteVM')">
+        <button label="remove selected" onClick="@command('removeSelected')" />
+        <button label="clear" onClick="@command('clear')" />
+		<hlayout>
+			<!-- The updatabletextnote component that will cover
+				its children by a mask
+				you can click on the mask to add a textarea
+				and type text in it
+			-->
+			<updatabletextnote width="150px" height="55px"
+				model="@load(vm.model)"
+				selectedTextNoteIndex="@save(vm.selectedIndex)"
+				onTextNoteBlockChanged="@command('checkResult')">
+				<hlayout style="margin-top: 15px;">
+					<div width="35px" />
+					<label value=" x " />
+					<div width="35px" />
+					<label value=" = 6" />
+				</hlayout>
+			</updatabletextnote>
+			<updatabletextnote width="150px" height="55px"
+				model="@load(vm.model)"
+				selectedTextNoteIndex="@save(vm.selectedIndex)"
+				onTextNoteBlockChanged="@command('checkResult')">
+				<hlayout style="margin-top: 15px;">
+					<div width="35px" />
+					<label value=" + " />
+					<div width="35px" />
+					<label value=" = 5" />
+				</hlayout>
+			</updatabletextnote>
+			Result: <label value="@load(vm.result)"
+						style="@load(vm.result eq 'Wrong'? 'color: red;' : '')" />
+		</hlayout>
+	</div>
+</zk>

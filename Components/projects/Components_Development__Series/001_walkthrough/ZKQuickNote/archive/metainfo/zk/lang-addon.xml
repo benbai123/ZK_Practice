@@ -147,6 +147,18 @@
 		</annotation>
 	</component>
 
+	<!-- 7th, updatabletextnote component
+		extends recordabletextnote and handle data change event
+		within model to update component at client side as needed
+
+	 -->
+	<component>
+		<component-name>updatabletextnote</component-name>
+		<extends>recordabletextnote</extends>
+		<component-class>custom.zk.components.quicknote.UpdatableTextNote</component-class>
+		<widget-class>custom.zk.components.quicknote.UpdatableTextNote</widget-class>
+	</component>
+
 	<!-- more components will be added -->
 
 </language-addon>

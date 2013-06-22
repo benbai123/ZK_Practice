@@ -1,5 +1,7 @@
 package custom.zk.components.quicknote;
 
+import java.util.List;
+
 import org.zkoss.zk.ui.UiException;
 import org.zkoss.zk.ui.event.Events;
 
@@ -38,7 +40,9 @@ public class RecordableTextNote extends SelectableTextNote {
 		return null;
 	}
 	public TextNoteData getTextNoteData (int index) {
-		return (TextNoteData)getModel().getTextNoteData().get(index);
+		List datas = getModel().getTextNoteData();
+		return (datas != null && datas.size() > index)?
+				(TextNoteData)datas.get(index) : null;
 	}
 	// process client event
 	public void service(org.zkoss.zk.au.AuRequest request, boolean everError) {
@@ -63,8 +67,7 @@ public class RecordableTextNote extends SelectableTextNote {
 			TextNoteModel model = getModel();
 			if (model != null) {
 				TextNoteBlockUpdateEvent event = TextNoteBlockUpdateEvent.getTextNoteBlockUpdateEvent(cmd, this, request);
-				model.update(event.getIndex(), event.getTextNoteData());
-				// post event to trigger listeners if any
+				// simply post event to trigger listeners if any
 				Events.postEvent(event);
 			} else {
 				throw new UiException("Model is required !!");
