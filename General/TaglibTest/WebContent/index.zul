@@ -1,0 +1,8 @@
+<zk>
+	<div style="margin: 35px">
+		<vlayout>
+			<a href="test_built_in.zul">test_built_in.zul</a>
+			<a href="test_by_path.zul">test_by_path.zul</a>
+		</vlayout>
+	</div>
+</zk>

@@ -1,0 +1,6 @@
+<!-- specify custom taglib by path 
+	the path here starts from WebContent -->
+<?taglib uri="/WEB-INF/tld/custom.tld" prefix="t"?>
+<zk>
+	${t:hello('Ben')}
+</zk>

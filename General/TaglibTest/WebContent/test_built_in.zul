@@ -1,0 +1,6 @@
+<!-- specify custom taglib by specify a uri
+	defined in built in config.xml (metainfo/tld/config.xml) -->
+<?taglib uri="http://benbai.blog.test/taglib" prefix="t"?>
+<zk>
+	${t:hello('Ben')}
+</zk>

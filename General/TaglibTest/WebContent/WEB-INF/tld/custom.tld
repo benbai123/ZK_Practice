@@ -1,0 +1,16 @@
+<!-- The root element must be called taglib -->
+<taglib>
+	<!-- declare a function -->
+	<function>
+		<!-- required: name, function-class and function-signature -->
+		<name>hello</name>
+		<function-class>test.Hello</function-class>
+		<function-signature>
+			String sayHello(java.lang.String)
+		</function-signature>
+		<!-- optional: description -->
+		<description>
+			Say hello to someone.
+		</description>
+	</function>
+</taglib>

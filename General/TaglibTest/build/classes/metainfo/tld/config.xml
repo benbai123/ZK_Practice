@@ -1,0 +1,9 @@
+<config>
+	<taglib>
+		<taglib-uri>http://benbai.blog.test/taglib</taglib-uri>
+		<!-- NOTE: The path here starts from classpath,
+			e.g., build/classes,
+			not WebContent -->
+		<taglib-location>/metainfo/tld/custom.tld</taglib-location>
+	</taglib>
+</config>
