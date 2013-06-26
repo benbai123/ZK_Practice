@@ -1,0 +1,18 @@
+<zk>
+	<!-- Tested with ZK 6.0.2 -->
+	decimal box:
+	<decimalbox use="test.components.DecimalboxSupportScientificNotation">
+		<attribute name="onChange"><![CDATA[
+			lb.setValue(self.getValue() + "");
+			lbTwo.setValue(self.getValue().intValue() + "");
+		]]></attribute>
+		<attribute name="onScientificNotation"><![CDATA[
+			lb.setValue(self.getValue() + "");
+			lbTwo.setValue(self.getValue().intValue() + "");
+		]]></attribute>
+	</decimalbox>
+	<div />
+	BigDecimal value: <label id="lb" />
+	<div />
+	int value: <label id="lbTwo" />
+</zk>
