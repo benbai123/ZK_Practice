@@ -3,10 +3,10 @@
 	<!-- declare a function -->
 	<function>
 		<!-- required: name, function-class and function-signature -->
-		<name>hello</name>
-		<function-class>test.Hello</function-class>
+		<name>hi</name>
+		<function-class>test.Hi</function-class>
 		<function-signature>
-			String sayHello(java.lang.String)
+			String sayHi(java.lang.String)
 		</function-signature>
 		<!-- optional: description -->
 		<description>
