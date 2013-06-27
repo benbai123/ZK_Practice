@@ -1,0 +1,3 @@
+<package name="test.components" language="xul/html" depends="zul.inp">
+	<widget name="Decimalbox" />
+</package>

@@ -1,7 +1,7 @@
 <zk>
-	<!-- Tested with ZK 6.0.2 -->
-	decimal box:
-	<decimalbox use="test.components.DecimalboxSupportScientificNotation">
+	decimalbox:
+	<decimalbox constraint="no empty"
+		textAlign="right">
 		<attribute name="onChange"><![CDATA[
 			lb.setValue(self.getValue() + "");
 			lbTwo.setValue(self.getValue().intValue() + "");
@@ -15,4 +15,21 @@
 	BigDecimal value: <label id="lb" />
 	<div />
 	int value: <label id="lbTwo" />
+	<div style="margin-top: 30px;" />
+	rounded decimalbox
+	<decimalbox mold="rounded" constraint="no empty"
+		textAlign="right">
+		<attribute name="onChange"><![CDATA[
+			lbThree.setValue(self.getValue() + "");
+			lbFour.setValue(self.getValue().intValue() + "");
+		]]></attribute>
+		<attribute name="onScientificNotation"><![CDATA[
+			lbThree.setValue(self.getValue() + "");
+			lbFour.setValue(self.getValue().intValue() + "");
+		]]></attribute>
+	</decimalbox>
+	<div />
+	BigDecimal value: <label id="lbThree" />
+	<div />
+	int value: <label id="lbFour" />
 </zk>

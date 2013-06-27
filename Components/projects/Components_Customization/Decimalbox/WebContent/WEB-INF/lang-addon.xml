@@ -1,0 +1,17 @@
+<language-addon>
+	<addon-name>decimalboxcustomization</addon-name>
+	<language-name>xul/html</language-name>
+
+	<!-- extends ZK Decimalbox and use custom classes -->
+	<component>
+		<component-name>decimalbox</component-name>
+		<component-class>test.components.Decimalbox</component-class>
+		<widget-class>test.components.Decimalbox</widget-class>
+		<mold>
+			<mold-name>default</mold-name>
+		</mold>		
+		<mold>
+			<mold-name>rounded</mold-name>
+		</mold>
+	</component>
+</language-addon>
