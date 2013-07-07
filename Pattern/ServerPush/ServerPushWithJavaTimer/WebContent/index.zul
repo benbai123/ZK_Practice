@@ -1,0 +1,7 @@
+<zk>
+	<div apply="test.TestComposer">
+		<intbox id="ibx" readonly="true" />
+		<button id="startBtn" label="start" />
+		<button id="stopBtn" label="stop" />
+	</div>
+</zk>
