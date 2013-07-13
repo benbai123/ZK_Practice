@@ -3,11 +3,16 @@
 		<device-type>ajax</device-type>
 		<embed><![CDATA[
 			<script type="text/javascript">
+				// after package 'zul.inp' loaded
 				zk.afterLoad("zul.inp", function () {
+					// this object contains original functions
 					var _wgt = {};
 					zk.override(zul.inp.Textbox.prototype, _wgt, {
+						// override functions
 						bind_: function (dt, skipper, after) {
+							// call original function as needed
 							_wgt.bind_.apply(this, arguments);
+							// do something new as needed
 							zk.log('bind_');
 						},
 						doKeyDown_: function (evt) {
