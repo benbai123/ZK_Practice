@@ -1,0 +1,26 @@
+<zk>
+	<device-config>
+		<device-type>ajax</device-type>
+		<embed><![CDATA[
+			<script type="text/javascript">
+				zk.afterLoad("zul.inp", function () {
+					var _wgt = {};
+					zk.override(zul.inp.Textbox.prototype, _wgt, {
+						bind_: function (dt, skipper, after) {
+							_wgt.bind_.apply(this, arguments);
+							zk.log('bind_');
+						},
+						doKeyDown_: function (evt) {
+							_wgt.doKeyDown_.apply(this, arguments);
+							zk.log('doKeyDown_');
+						},
+						doKeyUp_: function (evt) {
+							_wgt.doKeyUp_.apply(this, arguments);
+							zk.log('doKeyUp_');
+						}
+					});
+				});
+			</script>
+		]]></embed>
+	</device-config>
+</zk>
