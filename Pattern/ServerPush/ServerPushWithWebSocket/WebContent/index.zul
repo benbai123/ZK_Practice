@@ -1,0 +1,46 @@
+<zk xmlns:w="client">
+	<div apply="test.TestComposer">
+		Self:
+		<!-- custom intbox,
+			use custom java class test.Intbox
+			also customize widget in WEB-INF/zk.xml
+			support Web Socket
+			
+			socket context is 'self' denotes does
+			not listen to any context,
+			for component only -->
+		<intbox id="ibx" readonly="true"
+			socketContext="self" use="test.Intbox" />
+		<!-- button for start server push -->
+		<button id="startBtn" label="start" />
+		<!-- button for stop server push -->
+		<button id="stopBtn" label="stop" />
+		<!-- button for show value of intbox 'ibx'
+			to make sure both client/server are updated properly -->
+		<button label="show value" onClick="alert(ibx.getValue());" />
+		<div />
+		<!-- custom intbox listen to socket context 'counter' -->
+		Counter: <intbox id="ibxCounter" readonly="true"
+			socketContext="counter" use="test.Intbox" />
+		<div />
+		Negative Counter: <intbox id="ibxNegativeCounter" readonly="true"
+			socketContext="negativeCounter" use="test.Intbox" />
+		<div />
+		<!-- button for update value of context 'counter -->
+		<button id="updateCounterBtn" label="updaet counter and negative counter" />
+		<div />
+		<button label="show value of counter" onClick="alert(ibxCounter.getValue());" />
+		<button label="show value of negative counter" onClick="alert(ibxNegativeCounter.getValue());" />
+		<!-- button for switch context of 'ibxCounter' and 'ibxNegativeCounter'
+			write in zul page directly for keeping composer clear
+			since this is not the major part -->
+		<button label="switch context">
+			<attribute name="onClick"><![CDATA[
+				String cOne = ibxCounter.getSocketContext();
+				String cTwo = ibxNegativeCounter.getSocketContext();
+				ibxCounter.setSocketContext(cTwo);
+				ibxNegativeCounter.setSocketContext(cOne);
+			]]></attribute>
+		</button>
+	</div>
+</zk>

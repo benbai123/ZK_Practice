@@ -1,0 +1,76 @@
+<zk>
+	<device-config>
+		<device-type>ajax</device-type>
+		<embed><![CDATA[
+			<script type="text/javascript">
+				zk.afterLoad("zul.inp", function () {
+					var _iwgt = {};
+					zk.override(zul.inp.InputWidget.prototype, _iwgt, {
+						// called when receive message from web socket
+						doWebSocketMessage_: function (msg) {
+							// update value of input node
+							jq(this.getInputNode()).val(msg.data);
+						}
+					});
+				});
+				zk.afterLoad("zul", function () {
+					var _wgt = {};
+					zk.override(zk.Widget.prototype, _wgt, {
+						// setter for set context of web socket
+						setSocketContext: function (v) {
+							this._socketContext = v;
+							if (this.$n())
+								this.initWebSocket();
+						},
+						bind_: function (dt, skipper, after) {
+							_wgt.bind_.apply(this, arguments);
+							// initiate web socket after bind_
+							this.initWebSocket();
+						},
+						// init web socket
+						initWebSocket: function () {
+							// close old at first
+							if (this.TestWebSocket)
+								this.TestWebSocket.disconnect();
+							// create new if a context specified
+							if (this._socketContext) {
+								var wgt = this;
+								this.TestWebSocket = {
+									socket: null,
+									connect: (function() {
+										// .wsreq for servlet mapping
+										var path = window.location.host + window.location.pathname,
+											host = 'ws://' + path + wgt._socketContext + '.wsreq';
+										if ('WebSocket' in window) {
+											this.socket = new WebSocket(host);
+										} else if ('MozWebSocket' in window) {
+											this.socket = new MozWebSocket(host);
+										} else {
+											alert('Error: WebSocket is not supported by this browser.');
+											return;
+										}
+										// process message from server
+										this.socket.onmessage = function (msg) {
+											wgt.doWebSocketMessage_(msg);
+										};
+									}),
+									disconnect: function () {
+										// close and clear
+										this.socket.close();
+										this.socket = null;
+										wgt.TestWebSocket = null;
+									}
+								};
+								
+								this.TestWebSocket.connect();
+							}
+						},
+						doWebSocketMessage_: function (msg) {
+							// for child override
+						}
+					});
+				});
+			</script>
+		]]></embed>
+	</device-config>
+</zk>
