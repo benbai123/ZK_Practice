@@ -4,7 +4,7 @@
 		<!-- custom intbox,
 			use custom java class test.Intbox
 			also customize widget in WEB-INF/zk.xml
-			support Web Socket
+			support WebSocket
 			
 			socket context is 'self' denotes does
 			not listen to any context,

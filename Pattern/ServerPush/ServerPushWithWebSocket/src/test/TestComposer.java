@@ -23,7 +23,7 @@ public class TestComposer extends SelectorComposer {
 	private final static AtomicInteger _cntCounter = new AtomicInteger(0);
 	private Timer timer;
 	/**
-	 * start server push with Web Socket for
+	 * start server push with WebSocket for
 	 * specific component 'ibx'
 	 */
 	@Listen("onClick = #startBtn")
@@ -34,7 +34,7 @@ public class TestComposer extends SelectorComposer {
 		}
 	}
 	/**
-	 * stop server push with Web Socket for
+	 * stop server push with WebSocket for
 	 * specific component 'ibx'
 	 */
 	@Listen("onClick = #stopBtn")
@@ -46,7 +46,7 @@ public class TestComposer extends SelectorComposer {
 	}
 	/**
 	 * update value to context 'counter' and 'negativeCounter' via
-	 * Web Socket
+	 * WebSocket
 	 * 
 	 * All components that listen to these context will be updated
 	 */

@@ -6,7 +6,7 @@
 				zk.afterLoad("zul.inp", function () {
 					var _iwgt = {};
 					zk.override(zul.inp.InputWidget.prototype, _iwgt, {
-						// called when receive message from web socket
+						// called when receive message from WebSocket
 						doWebSocketMessage_: function (msg) {
 							// update value of input node
 							jq(this.getInputNode()).val(msg.data);
@@ -16,7 +16,7 @@
 				zk.afterLoad("zul", function () {
 					var _wgt = {};
 					zk.override(zk.Widget.prototype, _wgt, {
-						// setter for set context of web socket
+						// setter for set context of WebSocket
 						setSocketContext: function (v) {
 							this._socketContext = v;
 							if (this.$n())
@@ -24,10 +24,10 @@
 						},
 						bind_: function (dt, skipper, after) {
 							_wgt.bind_.apply(this, arguments);
-							// initiate web socket after bind_
+							// initiate WebSocket after bind_
 							this.initWebSocket();
 						},
-						// init web socket
+						// init WebSocket
 						initWebSocket: function () {
 							// close old at first
 							if (this.TestWebSocket)

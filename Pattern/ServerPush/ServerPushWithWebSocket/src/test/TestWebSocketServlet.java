@@ -95,7 +95,7 @@ public class TestWebSocketServlet extends WebSocketServlet {
 	}
 
 	/**
-	 * send message via Web Socket with specified socket context
+	 * send message via WebSocket with specified socket context
 	 * all components that connect to this context will be updated
 	 * @param msg message to send
 	 * @param socketContext target socket context
@@ -108,7 +108,7 @@ public class TestWebSocketServlet extends WebSocketServlet {
 				// ignore self context and other different context
 				if (!"self".equals(connection.getContext())
 					&& connection.getContext().equals(socketContext)) {
-					// send message via Web Socket
+					// send message via WebSocket
 					connection.getWsOutbound().writeTextMessage(CharBuffer.wrap(msg));
 					// pass sent message to component
 					// so the component can update itself if needed
@@ -120,7 +120,7 @@ public class TestWebSocketServlet extends WebSocketServlet {
 		}
 	}
 	/**
-	 * send message via Web Socket to specific component
+	 * send message via WebSocket to specific component
 	 * @param msg message to send
 	 * @param comp target component
 	 */

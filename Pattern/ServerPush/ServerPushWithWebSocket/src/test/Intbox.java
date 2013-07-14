@@ -1,7 +1,7 @@
 package test;
 
 /**
- * Enhanced Intbox that support Web Socket action
+ * Enhanced Intbox that support WebSocket action
  * @author benbai123
  *
  */
@@ -49,10 +49,10 @@ public class Intbox extends org.zkoss.zul.Intbox implements IWebsocketEnhancedCo
 		return _socketContext + "_" + _mappingId;
 	}
 	/**
-	 * Update value to client side via Web Socket
+	 * Update value to client side via WebSocket
 	 * two steps:
 	 * 1. Set value at server side without any 'update client' action
-	 * 2. Update value to client side via Web Socket
+	 * 2. Update value to client side via WebSocket
 	 * @param value
 	 * @see test.TestWebSocketServlet#sendByComponent(String, org.zkoss.zk.ui.Component)
 	 */
