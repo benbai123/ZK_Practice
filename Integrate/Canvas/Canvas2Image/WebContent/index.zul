@@ -1,0 +1,98 @@
+<zk xmlns:h="xhtml">
+	<script><![CDATA[
+		window.onload = function () {
+			var canvas = document.getElementById('testCanvas');
+			var ctx = canvas.getContext('2d'); // get Canvas context
+			ctx.strokeStyle = '#AAAAAA'; // line color
+			ctx.lineWidth = 3; // line width
+			ctx.beginPath(); // start
+			ctx.moveTo(30, 30); // start point
+			ctx.lineTo(350, 350); // end point
+			ctx.stroke(); // draw line
+		}
+		function saveToServer (pathToSave) {
+			var canvas = document.getElementById('testCanvas'),
+				base64String = canvas.toDataURL(),
+				base64Inp = zk.Widget.$('$base64Str'),
+				pathInp = zk.Widget.$('$pathStr');
+			// update value to server to save
+			jq(base64Inp.getInputNode()).val(base64String);
+			base64Inp.updateChange_();
+			jq(pathInp.getInputNode()).val(pathToSave);
+			pathInp.updateChange_();
+			// clear for next turn
+			setTimeout(function () {
+				jq(base64Inp.getInputNode()).val('');
+				base64Inp.updateChange_();
+				jq(pathInp.getInputNode()).val('');
+				pathInp.updateChange_();
+			}, 1000);
+		}
+	]]></script>
+	<zscript><![CDATA[
+		import java.io.File;
+		import java.io.IOException;
+
+		import sun.misc.BASE64Encoder;
+		import sun.misc.BASE64Decoder;
+		import java.io.ByteArrayInputStream;
+		import java.io.ByteArrayOutputStream;
+		import java.io.File;
+		import java.awt.image.BufferedImage;
+		import javax.imageio.ImageIO;
+		/**
+		 * Decode string to image
+		 * @param imageString The string to decode
+		 * @return decoded image
+		 */
+		public static BufferedImage decodeToImage(String imageString) {
+	
+			BufferedImage image = null;
+			byte[] imageByte;
+			try {
+				BASE64Decoder decoder = new BASE64Decoder();
+				imageByte = decoder.decodeBuffer(imageString);
+				ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
+				image = ImageIO.read(bis);
+				bis.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return image;
+		}
+	]]></zscript>
+	path: images/pngImages/test.png
+	<button label="save to server">
+		<attribute name="onClick"><![CDATA[
+			Clients.evalJavaScript("saveToServer('images/pngImages/test.png');");
+		]]></attribute>
+	</button>
+	<div />
+	<h:canvas id="testCanvas" height="500px" width="500px" style="border: 1px solid #3648AE;">
+		current browser does not support canvas
+	</h:canvas>
+	<textbox id="base64Str" style="display: none" />
+	<textbox id="pathStr" style="display: none">
+		<attribute name="onChange"><![CDATA[
+			String base64String = base64Str.getValue();
+			String path = pathStr.getValue();
+			if (base64String != null && !base64String.isEmpty()
+				&& path != null && !path.isEmpty()) {
+				String imgData = base64String.substring(base64String.indexOf("base64") + 7);
+				String type = base64String.substring(base64String.indexOf("image") + 6, base64String.indexOf("base64") - 1);
+				String folderPath = Executions.getCurrent().getDesktop().getWebApp().getRealPath("/")
+							+ File.separator
+							+ path.substring(0, path.lastIndexOf("/") - 1).replaceAll("/", "\\"+File.separator);
+				String filePath = folderPath + File.separator + path.substring(path.lastIndexOf("/") + 1);
+
+				File folder = new File(folderPath);
+				if (!folder.exists()) {
+					folder.mkdirs();
+				}
+				ImageIO.write(decodeToImage(imgData),
+					type,
+					new File(filePath));
+			}
+		]]></attribute>
+	</textbox>
+</zk>
