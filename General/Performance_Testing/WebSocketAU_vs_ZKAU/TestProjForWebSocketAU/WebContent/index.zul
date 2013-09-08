@@ -1,0 +1,23 @@
+<zk>
+	<!-- Tested with ZK 6.5.2 -->
+	<include src="included.zul" />
+	<include src="included.zul" />
+	<include src="included.zul" />
+	<include src="included.zul" />
+	<include src="included.zul" />
+	<include src="included.zul" />
+	<include src="included.zul" />
+	<include src="included.zul" />
+	<include src="included.zul" />
+	<include src="included.zul" />
+	<include src="included.zul" />
+	<include src="included.zul" />
+	<include src="included.zul" />
+	<include src="included.zul" />
+	<include src="included.zul" />
+	<include src="included.zul" />
+	<include src="included.zul" />
+	<include src="included.zul" />
+	<include src="included.zul" />
+	<include src="included.zul" />
+</zk>

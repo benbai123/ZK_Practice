@@ -1,0 +1,144 @@
+<zk>
+	<device-config>
+		<device-type>ajax</device-type>
+		<embed><![CDATA[
+			<script type="text/javascript">
+				zk.afterLoad("zul", function () {
+					var _wgt = {};
+
+					zk.override(zk.Widget.prototype, _wgt, {
+						// setter for set context of WebSocket
+						setUseWebSocketAU: function (v) {
+							if (v != this._useWebSocketAU)
+								this._useWebSocketAU = v;
+						},
+						bind_: function (dt, skipper, after) {
+							// call original function
+							_wgt.bind_.apply(this, arguments);
+							// initiate WebSocket after bind_
+							if (this._useWebSocketAU)
+								this.helpDesktopToInitWebSocket();
+						},
+						// init WebSocket
+						helpDesktopToInitWebSocket: function () {
+							var desktop = this.desktop;
+							// if didn't init
+							if (desktop && !desktop.TestWebSocket) {
+								// override desktop to support WebSocket
+								overrideDesktop(desktop);
+								desktop.TestWebSocket.connect();
+							}
+						}
+					});
+				});
+				// Override Timer widget and desktop since
+				// we do not want to override zAu / jq.xhr for this POC
+				zk.afterLoad("zul.utl", function () {
+					var _tmWgt = {};
+
+					zk.override(zul.utl.Timer.prototype, _tmWgt, {
+						// onTimer
+						_tmfn: function () {
+							if (!this._repeats) this._running = false;
+							// whether _useWebSocketAU?
+							if (this._useWebSocketAU
+								&& this.desktop.webSocketReady) {
+								// build and send request via WebSocket
+								var req = {uuid: this.uuid,
+											evtnm: 'onTimer',
+											data: {}
+										};
+								this.desktop.sendRequestToWebSocket(req);
+							} else // call original function
+								this.fire('onTimer', null, {ignorable: true});
+						}
+					});
+				});
+				function overrideDesktop (desktop) {
+					desktop.TestWebSocket = {
+						socket: null,
+						connect: (function() {
+							// .wsreq for servlet mapping defined in web.xml
+							var path = window.location.host + window.location.pathname,
+								host = 'ws://' + path + desktop.id + '.wsreq';
+							if ('WebSocket' in window) {
+								this.socket = new WebSocket(host);
+							} else if ('MozWebSocket' in window) {
+								this.socket = new MozWebSocket(host);
+							} else {
+								alert('Error: WebSocket is not supported by this browser.');
+								return;
+							}
+							// process message from server
+							this.socket.onmessage = function (msg) {
+								desktop.doWebSocketMessage_(msg);
+							};
+							// store ready state for components to check
+							this.socket.onopen = function () {
+								desktop.webSocketReady = true;
+							};
+						}),
+						disconnect: function () {
+							// close and clear
+							this.socket.close();
+							this.socket = null;
+							desktop.TestWebSocket = null;
+						},
+						// send message to server
+		                sendRequestToWebSocket: (function(msg) {
+		                    this.socket.send(msg);
+		                })
+					};
+					desktop.doWebSocketMessage_ = function (msg) {
+						// parse response (msg.data)
+						// pattern: {
+						//			componentId: {prop: val, prop2: val2, ...},
+						//			componentId2: {prop: val, prop2: val2, ...}, ...
+						//		}
+						// Enable the line below to see (merged) response from server
+						// zk.log(msg.data);
+						var resp = jq.evalJSON(msg.data),
+							props, // properties ({key: value, ...}) to update
+							val,
+							setter,
+							wgt;
+						// for each component (ID)
+						for (var key in resp) {
+							// get widget by ID
+							wgt = zk.Widget.$('#'+key);
+							// get properties to update by ID
+							props = resp[key];
+							// for each property
+							for (var prop in props) {
+								// get value by property name
+								val = props[prop];
+								// build setter by property name (xyz -> setXyz)
+								setter = 'set' + prop.charAt(0).toUpperCase() + prop.slice(1);
+								// call setter to set value to widget
+								wgt[setter](val);
+							}
+						}
+					};
+					// API for widget to send request to server
+					desktop.sendRequestToWebSocket = function (req) {
+						if (!desktop.eventArrayForWebSocket)
+							desktop.eventArrayForWebSocket = [];
+						// push req into an array
+						desktop.eventArrayForWebSocket.push(req);
+						// send multiple req with single request
+						if (!desktop.sendRequestTimerForWebSocket) {
+							desktop.sendRequestTimerForWebSocket = setTimeout(function () {
+								var jsonToSend = jq.toJSON({
+									dtid: desktop.id,
+									requests: jq.toJSON(desktop.eventArrayForWebSocket)
+								});
+								desktop.TestWebSocket.sendRequestToWebSocket(jsonToSend);
+								desktop.eventArrayForWebSocket = desktop.sendRequestTimerForWebSocket = null;
+							}, 50);
+						}
+					};
+				}
+			</script>
+		]]></embed>
+	</device-config>
+</zk>

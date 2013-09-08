@@ -1,0 +1,11 @@
+<zk>
+	<!-- Tested with ZK 6.5.2 -->
+	<div apply="test.TestComposer">
+		<timer id="timer"
+			repeats="true" running="true" delay="100" />
+		<timer id="timer2"
+			repeats="true" running="true" delay="100" />
+		<intbox id="ibx" value="0" />
+		<intbox id="ibx2" value="0" />
+	</div>
+</zk>

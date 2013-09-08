@@ -1,0 +1,20 @@
+<zk>
+	<!-- Tested with ZK 6.5.2 -->
+	<div apply="test.TestComposer">
+		<!-- use custom timer and intbox -->
+		<timer id="timer"
+			repeats="true" running="true" delay="100"
+			use="components.Timer"
+			useWebSocketAU="true" />
+		<timer id="timer2"
+			repeats="true" running="true" delay="100"
+			use="components.Timer"
+			useWebSocketAU="true" />
+		<intbox id="ibx" value="0"
+			use="components.Intbox"
+			useWebSocketAU="true" />
+		<intbox id="ibx2" value="0"
+			use="components.Intbox"
+			useWebSocketAU="true" />
+	</div>
+</zk>
