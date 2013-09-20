@@ -1,0 +1,21 @@
+<!-- Tested with ZK 6.5.2
+	Define param component
+-->
+
+<language-addon>
+	<addon-name>param</addon-name>
+	<language-name>xul/html</language-name>
+
+	<!-- It specifies what language addons this addon
+		depends on. If specified, this addon will be
+		parsed after all the specified addons are parsed -->
+	<depends>zul</depends>
+
+	<!-- define param -->
+	<component>
+		<component-name>param</component-name>
+		<!-- extends div and change java class -->
+		<extends>div</extends>
+		<component-class>helper.Param</component-class>
+	</component>
+</language-addon>

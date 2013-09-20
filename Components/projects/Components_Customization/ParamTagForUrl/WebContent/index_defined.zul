@@ -1,0 +1,92 @@
+<zk>
+	<!-- test link available at wiki: http://en.wikipedia.org/wiki/Google_Chart_API -->
+
+	<!-- Do the same as index.zul with
+		predefined param component.
+	 -->
+	<div>
+		<a href="http://chart.apis.google.com/chart?chs=200x200&amp;chdlp=b&amp;chtt=Uberman&amp;chdl=Asleep%7CAwake&amp;chd=t:1,11,1,11,1,11,1,11,1,11,1,11&amp;cht=p&amp;chco=586F8E%7C7D858F"
+			target="blank">
+			open chart
+		</a>
+	</div>
+	<div>
+		<button href="http://chart.apis.google.com/chart?chs=200x200&amp;chdlp=b&amp;chtt=Uberman&amp;chdl=Asleep%7CAwake&amp;chd=t:1,11,1,11,1,11,1,11,1,11,1,11&amp;cht=p&amp;chco=586F8E%7C7D858F"
+			target="blank" label="open chart, too" />
+	</div>
+	<div>
+		<a href="http://chart.apis.google.com/chart" target="blank">
+			also open chart
+			<param name="chs" value="200x200"
+				stubonly="true" />
+			<param name="chdlp" value="b"
+				stubonly="true" />
+			<param name="chtt" value="Uberman"
+				stubonly="true" />
+			<param name="chdl" value="Asleep%7CAwake"
+				stubonly="true" />
+			<param name="chd" value="t:1,11,1,11,1,11,1,11,1,11,1,11"
+				stubonly="true" />
+			<param name="cht" value="p"
+				stubonly="true" />
+			<param name="chco" value="586F8E%7C7D858F"
+				stubonly="true" />
+		</a>
+	</div>
+	<div>
+		<button id="btn" label="still open chart" href="http://chart.apis.google.com/chart"
+			target="blank" />
+		<param name="chs" value="200x200"
+			target="btn"
+			stubonly="true" />
+		<param name="chdlp" value="b"
+			target="btn"
+			stubonly="true" />
+		<param name="chtt" value="Uberman"
+			target="btn"
+			stubonly="true" />
+		<param name="chdl" value="Asleep%7CAwake"
+			target="btn"
+			stubonly="true" />
+		<param name="chd" value="t:1,11,1,11,1,11,1,11,1,11,1,11"
+			target="btn"
+			stubonly="true" />
+		<param name="cht" value="p"
+			target="btn"
+			stubonly="true" />
+		<param name="chco" value="586F8E%7C7D858F"
+			target="btn"
+			stubonly="true" />
+	</div>
+	<div>
+		Display an image
+		<image id="img" src="http://chart.apis.google.com/chart" />
+		<param name="chs" value="200x200"
+			target="img"
+			stubonly="true" />
+		<param name="chdlp" value="b"
+			target="img"
+			stubonly="true" />
+		<param name="chtt" value="Uberman"
+			target="img"
+			stubonly="true" />
+		<param name="chdl" value="Asleep%7CAwake"
+			target="img"
+			stubonly="true" />
+		<param name="chd" value="t:1,11,1,11,1,11,1,11,1,11,1,11"
+			target="img"
+			id="dynaParam"
+			use="helper.Param" />
+		<param name="cht" value="p"
+			target="img"
+			stubonly="true" />
+		<param name="chco" value="586F8E%7C7D858F"
+			target="img"
+			stubonly="true" />
+		and change it dynamically
+		<combobox onSelect="dynaParam.setValue(self.getValue());">
+			<comboitem label="t:1,11,1,11,1,11,1,11,1,11,1,11" />
+			<comboitem label="t:2,10,2,10,2,10,2,10,2,10,2,10" />
+		</combobox>
+	</div>
+</zk>

@@ -1,0 +1,119 @@
+<zk>
+	<!-- Tested with ZK 6.5.2
+		test link available at wiki: http://en.wikipedia.org/wiki/Google_Chart_API
+	-->
+
+	<!-- basically you can write something as below,
+		now assume that you need to
+		find a typo
+			or
+		change some params...
+	 -->
+	<div>
+		<a href="http://chart.apis.google.com/chart?chs=200x200&amp;chdlp=b&amp;chtt=Uberman&amp;chdl=Asleep%7CAwake&amp;chd=t:1,11,1,11,1,11,1,11,1,11,1,11&amp;cht=p&amp;chco=586F8E%7C7D858F"
+			target="blank">
+			open chart
+		</a>
+	</div>
+	<div>
+		<button href="http://chart.apis.google.com/chart?chs=200x200&amp;chdlp=b&amp;chtt=Uberman&amp;chdl=Asleep%7CAwake&amp;chd=t:1,11,1,11,1,11,1,11,1,11,1,11&amp;cht=p&amp;chco=586F8E%7C7D858F"
+			target="blank" label="open chart, too" />
+	</div>
+	<!-- or you can define a helper component to
+		make those params clear as below
+		to reduce server memory you can specify
+		stubonly="true" to helper tags
+
+		Of course this probably is not needed if
+		you load those params from DB/Java-Beans and
+		build link at server side
+
+		Just show a possibility that such kind of helper
+		can help you do some fast prototyping in zul page
+		without server side (AP level) support
+
+		And it is possible to change params dynamically so
+		probably will be useful when using it with MVVM
+
+		You can also define the helper tag as another component with
+		another name in lang-addon.xml, see index_defined.zul
+	-->
+	<div>
+		<a href="http://chart.apis.google.com/chart" target="blank">
+			also open chart
+			<div name="chs" value="200x200"
+				stubonly="true" use="helper.Param" />
+			<div name="chdlp" value="b"
+				stubonly="true" use="helper.Param" />
+			<div name="chtt" value="Uberman"
+				stubonly="true" use="helper.Param" />
+			<div name="chdl" value="Asleep%7CAwake"
+				stubonly="true" use="helper.Param" />
+			<div name="chd" value="t:1,11,1,11,1,11,1,11,1,11,1,11"
+				stubonly="true" use="helper.Param" />
+			<div name="cht" value="p"
+				stubonly="true" use="helper.Param" />
+			<div name="chco" value="586F8E%7C7D858F"
+				stubonly="true" use="helper.Param" />
+		</a>
+	</div>
+	<!-- for components that do not support child, you can
+		use give it an ID and specify the ID as target of param
+	 -->
+	<div>
+		<button id="btn" label="still open chart" href="http://chart.apis.google.com/chart"
+			target="blank" />
+		<div name="chs" value="200x200"
+			target="btn"
+			stubonly="true" use="helper.Param" />
+		<div name="chdlp" value="b"
+			target="btn"
+			stubonly="true" use="helper.Param" />
+		<div name="chtt" value="Uberman"
+			target="btn"
+			stubonly="true" use="helper.Param" />
+		<div name="chdl" value="Asleep%7CAwake"
+			target="btn"
+			stubonly="true" use="helper.Param" />
+		<div name="chd" value="t:1,11,1,11,1,11,1,11,1,11,1,11"
+			target="btn"
+			stubonly="true" use="helper.Param" />
+		<div name="cht" value="p"
+			target="btn"
+			stubonly="true" use="helper.Param" />
+		<div name="chco" value="586F8E%7C7D858F"
+			target="btn"
+			stubonly="true" use="helper.Param" />
+	</div>
+	<div>
+		Display an image
+		<image id="img" src="http://chart.apis.google.com/chart" />
+		<div name="chs" value="200x200"
+			target="img"
+			stubonly="true" use="helper.Param" />
+		<div name="chdlp" value="b"
+			target="img"
+			stubonly="true" use="helper.Param" />
+		<div name="chtt" value="Uberman"
+			target="img"
+			stubonly="true" use="helper.Param" />
+		<div name="chdl" value="Asleep%7CAwake"
+			target="img"
+			stubonly="true" use="helper.Param" />
+		<div name="chd" value="t:1,11,1,11,1,11,1,11,1,11,1,11"
+			target="img"
+			id="dynaParam"
+			use="helper.Param" />
+		<div name="cht" value="p"
+			target="img"
+			stubonly="true" use="helper.Param" />
+		<div name="chco" value="586F8E%7C7D858F"
+			target="img"
+			stubonly="true" use="helper.Param" />
+		and change it dynamically
+		<combobox onSelect="dynaParam.setValue(self.getValue());">
+			<comboitem label="t:1,11,1,11,1,11,1,11,1,11,1,11" />
+			<comboitem label="t:2,10,2,10,2,10,2,10,2,10,2,10" />
+		</combobox>
+	</div>
+</zk>
