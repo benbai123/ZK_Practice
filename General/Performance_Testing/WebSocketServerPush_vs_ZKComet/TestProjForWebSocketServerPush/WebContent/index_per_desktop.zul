@@ -1,0 +1,130 @@
+<zk>
+	<!-- Tested with ZK 6.5.2 -->
+	<!-- Create Class with Name
+		http://stackoverflow.com/questions/6094575/creating-an-instance-using-the-class-name-and-calling-constructor
+	 -->
+	<window apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('test.TestPerDesktopVM')"
+		onCreate="@command('start')">
+		<hlayout>
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.counter)" />
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.inverseCounter)" />
+		</hlayout>
+		<hlayout>
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.counter)" />
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.inverseCounter)" />
+		</hlayout>
+		<hlayout>
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.counter)" />
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.inverseCounter)" />
+		</hlayout>
+		<hlayout>
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.counter)" />
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.inverseCounter)" />
+		</hlayout>
+		<hlayout>
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.counter)" />
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.inverseCounter)" />
+		</hlayout>
+		<hlayout>
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.counter)" />
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.inverseCounter)" />
+		</hlayout>
+		<hlayout>
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.counter)" />
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.inverseCounter)" />
+		</hlayout>
+		<hlayout>
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.counter)" />
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.inverseCounter)" />
+		</hlayout>
+		<hlayout>
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.counter)" />
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.inverseCounter)" />
+		</hlayout>
+		<hlayout>
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.counter)" />
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.inverseCounter)" />
+		</hlayout>
+		<hlayout>
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.counter)" />
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.inverseCounter)" />
+		</hlayout>
+		<hlayout>
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.counter)" />
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.inverseCounter)" />
+		</hlayout>
+		<hlayout>
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.counter)" />
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.inverseCounter)" />
+		</hlayout>
+		<hlayout>
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.counter)" />
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.inverseCounter)" />
+		</hlayout>
+		<hlayout>
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.counter)" />
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.inverseCounter)" />
+		</hlayout>
+		<hlayout>
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.counter)" />
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.inverseCounter)" />
+		</hlayout>
+		<hlayout>
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.counter)" />
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.inverseCounter)" />
+		</hlayout>
+		<hlayout>
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.counter)" />
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.inverseCounter)" />
+		</hlayout>
+		<hlayout>
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.counter)" />
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.inverseCounter)" />
+		</hlayout>
+		<hlayout>
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.counter)" />
+			<intbox value="0" />
+				<contextBinding field="value" context="@load(vm.inverseCounter)" />
+		</hlayout>
+	</window>
+</zk>

@@ -1,0 +1,86 @@
+<zk>
+	<!-- Tested with ZK 6.5.3 -->
+	<div apply="test.TestComposer">
+		<hlayout>
+			<intbox id="ibx" value="0" />
+			<intbox id="ibx2" value="0" />
+		</hlayout>
+		<hlayout>
+			<intbox id="ibx3" value="0" />
+			<intbox id="ibx4" value="0" />
+		</hlayout>
+		<hlayout>
+			<intbox id="ibx5" value="0" />
+			<intbox id="ibx6" value="0" />
+		</hlayout>
+		<hlayout>
+			<intbox id="ibx7" value="0" />
+			<intbox id="ibx8" value="0" />
+		</hlayout>
+		<hlayout>
+			<intbox id="ibx9" value="0" />
+			<intbox id="ibx10" value="0" />
+		</hlayout>
+		<hlayout>
+			<intbox id="ibx11" value="0" />
+			<intbox id="ibx12" value="0" />
+		</hlayout>
+		<hlayout>
+			<intbox id="ibx13" value="0" />
+			<intbox id="ibx14" value="0" />
+		</hlayout>
+		<hlayout>
+			<intbox id="ibx15" value="0" />
+			<intbox id="ibx16" value="0" />
+		</hlayout>
+		<hlayout>
+			<intbox id="ibx17" value="0" />
+			<intbox id="ibx18" value="0" />
+		</hlayout>
+		<hlayout>
+			<intbox id="ibx19" value="0" />
+			<intbox id="ibx20" value="0" />
+		</hlayout>
+
+		<hlayout>
+			<intbox id="nibx" value="0" />
+			<intbox id="nibx2" value="0" />
+		</hlayout>
+		<hlayout>
+			<intbox id="nibx3" value="0" />
+			<intbox id="nibx4" value="0" />
+		</hlayout>
+		<hlayout>
+			<intbox id="nibx5" value="0" />
+			<intbox id="nibx6" value="0" />
+		</hlayout>
+		<hlayout>
+			<intbox id="nibx7" value="0" />
+			<intbox id="nibx8" value="0" />
+		</hlayout>
+		<hlayout>
+			<intbox id="nibx9" value="0" />
+			<intbox id="nibx10" value="0" />
+		</hlayout>
+		<hlayout>
+			<intbox id="nibx11" value="0" />
+			<intbox id="nibx12" value="0" />
+		</hlayout>
+		<hlayout>
+			<intbox id="nibx13" value="0" />
+			<intbox id="nibx14" value="0" />
+		</hlayout>
+		<hlayout>
+			<intbox id="nibx15" value="0" />
+			<intbox id="nibx16" value="0" />
+		</hlayout>
+		<hlayout>
+			<intbox id="nibx17" value="0" />
+			<intbox id="nibx18" value="0" />
+		</hlayout>
+		<hlayout>
+			<intbox id="nibx19" value="0" />
+			<intbox id="nibx20" value="0" />
+		</hlayout>
+	</div>
+</zk>
