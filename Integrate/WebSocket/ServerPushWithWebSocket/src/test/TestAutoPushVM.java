@@ -85,7 +85,6 @@ public class TestAutoPushVM {
 	 * 
 	 * @param val value to push
 	 * @param context context to push
-	 * @param desktopOnly whether push to current desktop only
 	 */
 	private void push (Object val, String context) {
 		try {
