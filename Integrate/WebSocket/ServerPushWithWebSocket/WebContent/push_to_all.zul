@@ -1,0 +1,24 @@
+<zk>
+	<!-- Tested with ZK 6.5.2 -->
+	<window apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('test.TestPushToAllVM')">
+		Counter:
+		<!-- intbox, listen to positive integer in the begining -->
+		<intbox readonly="true" />
+			<contextBinding field="value" context="@load(vm.counter)" />
+		listen to: <label value="@load(vm.counter)" />
+		<div />
+		inverse Counter:
+		<!-- intbox, listen to negative integer in the begining -->
+		<intbox id="inverseCounter" readonly="true" />
+			<contextBinding field="value" context="@load(vm.inverseCounter)" />
+		listen to: <label value="@load(vm.inverseCounter)" />
+		<div />
+		<!-- update value of positive/negative integer -->
+		<button id="updateCounterBtn" label="updaet counter and negative counter"
+			onClick="@command('updateCounter')" />
+		<!-- switch listening context of the two intboxess above -->
+		<button label="switch context" id="switchBtn"
+			onClick="@command('switchCounter')" />
+	</window>
+</zk>

@@ -1,0 +1,30 @@
+<!-- Tested with ZK 6.5.2
+	Define components
+-->
+
+<language-addon>
+	<addon-name>param</addon-name>
+	<language-name>xul/html</language-name>
+
+	<!-- It specifies what language addons this addon
+		depends on. If specified, this addon will be
+		parsed after all the specified addons are parsed -->
+	<depends>zul</depends>
+
+	<!-- define param -->
+	<component>
+		<component-name>contextBinding</component-name>
+		<extends>div</extends>
+		<component-class>components.helper.ContextBinding</component-class>
+	</component>
+	<component>
+		<component-name>intbox</component-name>
+		<extends>intbox</extends>
+		<component-class>components.serverpush.Intbox</component-class>
+	</component>
+	<component>
+		<component-name>textbox</component-name>
+		<extends>textbox</extends>
+		<component-class>components.serverpush.Textbox</component-class>
+	</component>
+</language-addon>

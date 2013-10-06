@@ -1,0 +1,18 @@
+<zk>
+	<!-- Tested with ZK 6.5.2 -->
+	<window apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('test.TestAutoPushVM')">
+		Self:
+		<!-- intbox that will be updated -->
+		<intbox readonly="true" />
+			<contextBinding field="value" context="@load(vm.task)" />
+		<!-- start update -->
+		<button label="start" onClick="@command('start')" />
+		<!-- stop update -->
+		<button label="stop" onClick="@command('stop')" />
+		<!-- textbox that bind rows/cols to integer -->
+		<textbox />
+			<contextBinding id="cbd" field="@load(vm.prop)" context="@load(vm.task)" />
+		<button label="switch field (rows/cols)" onClick="@command('switchRowCol')" />
+	</window>
+</zk>

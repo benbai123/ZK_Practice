@@ -1,0 +1,6 @@
+<zk>
+	<vlayout style="margin: 50px;">
+		<a href="/push_to_all.zul">push_to_all.zul</a>
+		<a href="/automatic_push.zul">automatic_push.zul</a>
+	</vlayout>
+</zk>
