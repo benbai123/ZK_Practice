@@ -1,0 +1,5 @@
+<zk>
+	<system-config>
+		<id-generator-class>test.TestIdGenerator</id-generator-class>
+	</system-config>
+</zk>

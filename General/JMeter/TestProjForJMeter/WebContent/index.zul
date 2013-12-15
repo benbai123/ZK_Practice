@@ -1,0 +1,24 @@
+<zk>
+	<window apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('test.TestVM')">
+		<!-- first button -->
+		<button label="click to start tast"
+			visible="@load(not vm.testStarted)"
+			onClick="@command('showTestItems')" />
+		<!-- test items -->
+		<hlayout visible="@load(vm.testStarted)">
+			<vlayout>
+				<intbox readonly="true"
+					value="@load(vm.intOne)" />
+				<button label="increase first intbox"
+					onClick="@command('increaseOne')" />
+			</vlayout>
+			<vlayout>
+				<intbox readonly="true"
+					value="@load(vm.intTwo)" />
+				<button label="increase first intbox"
+					onClick="@command('increaseTwo')" />
+			</vlayout>
+		</hlayout>
+	</window>
+</zk>
