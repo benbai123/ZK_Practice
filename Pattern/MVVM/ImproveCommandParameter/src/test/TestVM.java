@@ -8,7 +8,7 @@ import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.ListModelList;
 
-import test.component.parameterr.ComponentParameterInterceptor;
+import test.component.parameter.ComponentParameterInterceptor;
 
 /** VM with new binding approach command
  * Tested with ZK 6.5.5

@@ -1,4 +1,4 @@
-package test.component.parameterr;
+package test.component.parameter;
 
 import java.util.List;
 
