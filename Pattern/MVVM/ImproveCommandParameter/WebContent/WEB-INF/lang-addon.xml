@@ -1,0 +1,15 @@
+<!-- Tested with ZK 6.5.5
+	Define components
+-->
+
+<language-addon>
+	<addon-name>cparam</addon-name>
+	<language-name>xul/html</language-name>
+
+	<!-- define cparam -->
+	<component>
+		<component-name>cparam</component-name>
+		<extends>div</extends>
+		<component-class>test.component.parameter.helper.Cparam</component-class>
+	</component>
+</language-addon>

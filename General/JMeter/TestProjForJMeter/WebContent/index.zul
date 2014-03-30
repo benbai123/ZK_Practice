@@ -16,7 +16,7 @@
 			<vlayout>
 				<intbox readonly="true"
 					value="@load(vm.intTwo)" />
-				<button label="increase first intbox"
+				<button label="increase second intbox"
 					onClick="@command('increaseTwo')" />
 			</vlayout>
 		</hlayout>

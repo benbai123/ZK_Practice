@@ -1,0 +1,11 @@
+<zk>
+	<!-- 
+		declare lang-addon.xml and EventInterceptor
+	 -->
+	<language-config>
+		<addon-uri>/WEB-INF/lang-addon.xml</addon-uri>
+	</language-config>
+	<listener>
+		<listener-class>test.component.parameterr.ComponentParameterInterceptor</listener-class>
+	</listener>
+</zk>

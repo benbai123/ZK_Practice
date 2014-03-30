@@ -1,0 +1,41 @@
+<zk>
+	<!-- Sample copied and modified from official document
+		http://books.zkoss.org/wiki/ZK_Developer's_Reference/MVVM/Advanced/Parameters
+	 -->
+	<div apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('test.TestVM')">
+		<grid id="outergrid" width="700px" model="@bind(vm.model)">
+		    <columns>
+		        <column label="index"/>
+		        <column label="name"/>
+		        <column label="action" width="300px"/>
+		    </columns>
+		     
+		    <template name="model" var="item">
+		        <row>
+		            <label value="@bind(itemStatus.index)"/>
+		            <textbox value="@bind(item.name)"/>
+		            <hbox>
+		                <button label="Index" onClick="@command('showIndex')" />
+			                <!-- Bind data with event name
+			                	implemented by custom component tag here
+			                 -->
+		                	<cparam name="onClick" data="@load(itemStatus.index)" />
+		                <button label="Name" onClick="@command('showName')" />
+		                	<!-- set keep="true" to keep cparam alive
+		                		and receive the update of item.name
+			                 -->
+		                	<cparam name="onClick" data="@load(item.name)"
+		                		keep="true" />
+		                <button label="Index and Name" onClick="@command('showIndexAndName')" />
+		                	<cparam name="onClick" data="@load(itemStatus.index)" />
+		                	<cparam name="onClick" data="@load(item.name)"
+		                		keep="true" />
+		                <button label="Delete" onClick="@command('delete')" />
+		                	<cparam name="onClick" data="@load(item)" />
+		            </hbox>
+		        </row>
+		    </template>
+		</grid>
+	</div>
+</zk>
