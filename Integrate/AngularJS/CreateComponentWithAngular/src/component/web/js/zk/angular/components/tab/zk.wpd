@@ -1,0 +1,4 @@
+<package name="zk.angular.components.tab" language="xul/html" depends="zk.angular.components">
+	<widget name="Tabs" />
+	<widget name="Pane" />
+</package>

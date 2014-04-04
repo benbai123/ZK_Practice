@@ -1,0 +1,3 @@
+<package name="zk.angular.components.wgt" language="xul/html" depends="zk.angular.components">
+	<widget name="SimpleButton" />
+</package>

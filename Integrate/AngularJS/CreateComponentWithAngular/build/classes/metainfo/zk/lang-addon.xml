@@ -1,0 +1,45 @@
+<language-addon>
+	<addon-name>AngularZK</addon-name>
+	<language-name>xul/html</language-name>
+	<stylesheet href="~./ngzk/css/bootstrap.min.css" type="text/css"/>
+	<javascript src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.1/angular.min.js"/>
+	<javascript src="~./js/zk/angular/zacomponents.js"/>
+	<version>
+		<version-class>zk.angular.Version</version-class>
+		<version-uid>0.8.0</version-uid>
+		<zk-version>7.0.0</zk-version><!-- or later -->
+	</version>
+
+	<component>
+		<component-name>ngComp</component-name>
+		<component-class>zk.angular.components.NgComp</component-class>
+		<widget-class>zk.angular.components.NgComp</widget-class>
+		<mold>
+			<mold-name>default</mold-name>
+		</mold>
+	</component>
+	<component>
+		<component-name>tabs</component-name>
+		<component-class>zk.angular.components.Tabs</component-class>
+		<widget-class>zk.angular.components.tab.Tabs</widget-class>
+		<mold>
+			<mold-name>default</mold-name>
+		</mold>
+	</component>
+	<component>
+		<component-name>pane</component-name>
+		<component-class>zk.angular.components.Pane</component-class>
+		<widget-class>zk.angular.components.tab.Pane</widget-class>
+		<mold>
+			<mold-name>default</mold-name>
+		</mold>
+	</component>
+	<component>
+		<component-name>simpleButton</component-name>
+		<component-class>zk.angular.components.SimpleButton</component-class>
+		<widget-class>zk.angular.components.wgt.SimpleButton</widget-class>
+		<mold>
+			<mold-name>default</mold-name>
+		</mold>
+	</component>
+</language-addon>

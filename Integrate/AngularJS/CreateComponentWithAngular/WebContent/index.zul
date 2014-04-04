@@ -1,0 +1,68 @@
+<zk>
+	<!-- Tested with ZK 7.0.1 CE -->
+	<style>
+		.z-notification-content {
+			font-size: 14px !important;
+		}
+	</style>
+	<!-- common ZK vlayout -->
+	<vlayout hflex="1" vflex="1" apply="composer.TestComposer">
+		<!-- tabs component created with AngularJS directive -->
+		<tabs id="tbx" hflex="1" vflex="1"
+			selectedIndex="1">
+			<!-- pane component created with AngularJS directive -->
+			<pane title="pane 1">
+				<!-- simpleButton component created with AngularJS directive -->
+				<simpleButton label="test" id="btn0" />
+				<simpleButton label="select second pane" id="btn1" />
+			</pane>
+			<pane title="pane 2">
+				second pane
+			</pane>
+		</tabs>
+		<!-- common ZK div -->
+		<div hflex="1" vflex="1">
+			<vlayout hflex="1" vflex="1">
+				<div hflex="1" vflex="1">
+					previous
+				</div>
+				<tabs id="tbx2" hflex="1" vflex="1" preventBlink="true"
+					selectedIndex="1">
+					<pane title="pane 1">
+						<!-- simpleButton component created with AngularJS directive
+
+							Basic case
+						-->
+
+<!-- 						<simpleButton id="btn" label="add" /> -->
+<!-- 						<simpleButton id="rbtn" label="remove" /> -->
+<!-- 						<simpleButton id="cbtn" label="change title" /> -->
+
+						<!-- simpleButton component created with AngularJS directive
+							change Template Url to use bootstrape button template
+							and set sclass accordingly
+
+							Customize case
+						-->
+
+						<simpleButton id="btn" label="add"
+							ngTemplateUrl="/bsbutton.html" sclass="btn-default" />
+						<simpleButton id="rbtn" label="remove"
+							ngTemplateUrl="/bsbutton.html" sclass="btn-primary" />
+						<simpleButton id="cbtn" label="change title" />
+						<simpleButton id="ubtn" label="change previous to bs-success" />
+
+					</pane>
+					<pane title="pane 2">
+						second pane
+						<simpleButton id="hbtn" label="hide first" />
+						<simpleButton id="sbtn" label="show first" />
+					</pane>
+				</tabs>
+				<div hflex="1" vflex="1">
+					next
+				</div>
+			</vlayout>
+		</div>
+	</vlayout>
+</zk>

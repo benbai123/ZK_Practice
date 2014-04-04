@@ -1,0 +1,13 @@
+<div class="tabbable"> <!-- tabs root -->
+	<ul class="nav nav-tabs">
+		<!-- pane titles -->
+		<li id="{{pane.id}}-header" ng-repeat="pane in panes" ng-class="{active:pane.selected}">
+			<!-- call scope select while clicked -->
+			<a href="" ng-click="select(pane)">{{pane.title}}</a>
+		</li>
+	</ul>
+	<!-- tab content, will insert panes here since
+		ng-transclude specified
+	 -->
+	<div class="tab-content" ng-transclude></div>
+</div>

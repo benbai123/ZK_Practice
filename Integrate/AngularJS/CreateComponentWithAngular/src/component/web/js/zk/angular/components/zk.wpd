@@ -1,0 +1,3 @@
+<package name="zk.angular.components" language="xul/html" depends="zul">
+	<widget name="NgComp" />
+</package>
